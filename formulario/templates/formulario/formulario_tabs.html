@@ -1,0 +1,1124 @@
+{% extends "formulario/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}ESTUDIO DE SEGURIDAD DE PERSONAL{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">ESTUDIO DE SEGURIDAD DE PERSONAL</h2>
+
+<form method="post" enctype="multipart/form-data" id="wizardForm" novalidate>
+  {% csrf_token %}
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" id="formTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="tab-datos-personales" data-bs-toggle="tab" data-bs-target="#datos_personales" type="button" role="tab" aria-controls="datos_personales" aria-selected="true">Datos Personales</button>
+    </li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#direcciones_anteriores" type="button" role="tab">Direcciones Anteriores</button></li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="tab-datos-familiares" data-bs-toggle="tab" data-bs-target="#datos_familiares" type="button" role="tab" aria-controls="datos_familiares" aria-selected="false">Datos Familiares</button>
+    </li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#informacion_academica" type="button" role="tab">Información Académica</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ReferenciasPersonales" type="button" role="tab">Referencias Personales</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#SectorDefensa" type="button" role="tab">Sector Defensa</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#BienesRentasAEP" type="button" role="tab">Bienes, Rentas y Actividad Económica Privada</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#SituacionJuridica" type="button" role="tab">Situación Jurídica</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#OtrosDatos" type="button" role="tab">Otros Datos de Interés</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#confirmar" type="button" role="tab">Confirmar</button></li>
+  </ul>
+
+  <!-- Tab content -->
+<div class="tab-content p-3 border border-top-0">
+  <div class="tab-pane fade show active" id="datos_personales" role="tabpanel" aria-labelledby="tab-datos-personales">{% crispy f_recluta %}</div>
+
+  <div class="tab-pane fade" id="direcciones_anteriores" role="tabpanel">{% crispy f_direcciones_anteriores %}</div>
+
+  <div class="tab-pane fade" id="datos_familiares" role="tabpanel" aria-labelledby="tab-datos-familiares">
+    {% crispy f_DatosFamiliares %}
+  </div>  {# ← este cierre era el que faltaba #}
+
+  <div class="tab-pane fade" id="informacion_academica" role="tabpanel">{% crispy f_informacion_academica %}</div>
+  <div class="tab-pane fade" id="ReferenciasPersonales" role="tabpanel">{% crispy f_ReferenciasPersonales %}</div>
+  <div class="tab-pane fade" id="SectorDefensa" role="tabpanel">{% crispy f_SectorDefensa %}</div>
+  <div class="tab-pane fade" id="BienesRentasAEP" role="tabpanel">{% crispy f_BienesRentasAEP %}</div>
+  <div class="tab-pane fade" id="SituacionJuridica" role="tabpanel">{% crispy f_SituacionJuridica %}</div>
+  <div class="tab-pane fade" id="OtrosDatos" role="tabpanel">{% crispy f_OtrosDatos %}</div>
+  <div class="tab-pane fade" id="confirmar" role="tabpanel">{% crispy f_confirm %}</div>
+</div>
+
+  <button type="submit" class="btn btn-success mt-4">Enviar</button>
+</form>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+<!-- Dirección RECLUTA -->
+<script>
+(function () {
+  const prefix = "recluta";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  
+  //Dirección de la persona a ingresar
+
+  function actualizarDireccion() {
+    const partes = [
+      v('tipo_via'), v('numero_principal'), v('letra_principal'),
+      ck('bis') ? 'BIS' : '',
+      v('letra_bis'), v('cuadrante')
+    ];
+
+    if (v('numero_secundario')) {
+      partes.push('#', v('numero_secundario'), v('letra_secundaria'), v('cuadrante_dos'));
+    }
+
+    partes.push(v('nro'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento')) dir += ', ' + v('complemento');
+
+    const div = document.getElementById('direccion-preview');
+    const hidden = document.getElementById(id('direccion_preview'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via', 'numero_principal', 'letra_principal',
+      'bis', 'letra_bis', 'cuadrante',
+      'numero_secundario', 'letra_secundaria', 'cuadrante_dos',
+      'nro', 'complemento'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccion);
+      }
+    });
+    actualizarDireccion();
+  });
+})();
+</script>
+<!-- Dirección Anteriores_1 -->
+<script>
+(function () {
+  const prefix = "DireccionesAnteriores";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccion_anterior_1() {
+    const partes = [
+      v('tipo_via_anterior_1'), v('numero_principal_anterior_1'), v('letra_principal_anterior_1'),
+      ck('bis_anterior_1') ? 'BIS' : '',
+      v('letra_bis_anterior_1'), v('cuadrante_anterior_1')
+    ];
+
+    if (v('numero_secundario_anterior_1')) {
+      partes.push('#', v('numero_secundario_anterior_1'),
+                        v('letra_secundaria_anterior_1'),
+                        v('cuadrante_dos_anterior_1'));
+    }
+
+    partes.push(v('nro_anterior_1'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_anterior_1')) dir += ', ' + v('complemento_anterior_1');
+
+    const div = document.getElementById('direccion-preview_anterior_1');
+    const hidden = document.getElementById(id('direccion_preview_anterior_1'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_anterior_1', 'numero_principal_anterior_1', 'letra_principal_anterior_1',
+      'bis_anterior_1', 'letra_bis_anterior_1', 'cuadrante_anterior_1',
+      'numero_secundario_anterior_1', 'letra_secundaria_anterior_1',
+      'cuadrante_dos_anterior_1', 'nro_anterior_1', 'complemento_anterior_1'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccion_anterior_1);
+      }
+    });
+    actualizarDireccion_anterior_1();
+  });
+})();
+</script>
+
+<!-- Dirección Anteriores_2 -->
+<script>
+(function () {
+  const prefix = "DireccionesAnteriores";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccion_anterior_2() {
+    const partes = [
+      v('tipo_via_anterior_2'), v('numero_principal_anterior_2'), v('letra_principal_anterior_2'),
+      ck('bis_anterior_2') ? 'BIS' : '',
+      v('letra_bis_anterior_2'), v('cuadrante_anterior_2')
+    ];
+
+    if (v('numero_secundario_anterior_2')) {
+      partes.push('#', v('numero_secundario_anterior_2'),
+                        v('letra_secundaria_anterior_2'),
+                        v('cuadrante_dos_anterior_2'));
+    }
+
+    partes.push(v('nro_anterior_2'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_anterior_2')) dir += ', ' + v('complemento_anterior_2');
+
+    const div = document.getElementById('direccion-preview_anterior_2');
+    const hidden = document.getElementById(id('direccion_preview_anterior_2'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_anterior_2', 'numero_principal_anterior_2', 'letra_principal_anterior_2',
+      'bis_anterior_2', 'letra_bis_anterior_2', 'cuadrante_anterior_2',
+      'numero_secundario_anterior_2', 'letra_secundaria_anterior_2',
+      'cuadrante_dos_anterior_2', 'nro_anterior_2', 'complemento_anterior_2'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccion_anterior_2);
+      }
+    });
+    actualizarDireccion_anterior_2();
+  });
+})();
+</script>
+
+<!-- Dirección CÓNYUGE -->
+<script>
+(function () {
+  const prefix = "DatosFamiliares";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionConyugue() {
+    const partes = [
+      v('tipo_via_conyugue'), v('numero_principal_conyugue'), v('letra_principal_conyugue'),
+      ck('bis_conyugue') ? 'BIS' : '',
+      v('letra_bis_conyugue'), v('cuadrante_conyugue')
+    ];
+
+    if (v('numero_secundario_conyugue')) {
+      partes.push('#', v('numero_secundario_conyugue'),
+                        v('letra_secundaria_conyugue'),
+                        v('cuadrante_dos_conyugue'));
+    }
+
+    partes.push(v('nro_conyugue'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_conyugue')) dir += ', ' + v('complemento_conyugue');
+
+    const div = document.getElementById('direccion-preview_conyugue');
+    const hidden = document.getElementById(id('direccion_preview_conyugue'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_conyugue', 'numero_principal_conyugue', 'letra_principal_conyugue',
+      'bis_conyugue', 'letra_bis_conyugue', 'cuadrante_conyugue',
+      'numero_secundario_conyugue', 'letra_secundaria_conyugue',
+      'cuadrante_dos_conyugue', 'nro_conyugue', 'complemento_conyugue'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionConyugue);
+      }
+    });
+    actualizarDireccionConyugue();
+  });
+})();
+</script>
+
+<!-- Dirección PADRE -->
+<script>
+(function () {
+  const prefix = "DatosFamiliares";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionPadre() {
+    const partes = [
+      v('tipo_via_padre'), v('numero_principal_padre'), v('letra_principal_padre'),
+      ck('bis_padre') ? 'BIS' : '',
+      v('letra_bis_padre'), v('cuadrante_padre')
+    ];
+
+    if (v('numero_secundario_padre')) {
+      partes.push('#', v('numero_secundario_padre'),
+                        v('letra_secundaria_padre'),
+                        v('cuadrante_dos_padre'));
+    }
+
+    partes.push(v('nro_padre'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_padre')) dir += ', ' + v('complemento_padre');
+
+    const div = document.getElementById('direccion-preview_padre');
+    const hidden = document.getElementById(id('direccion_preview_padre'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_padre', 'numero_principal_padre', 'letra_principal_padre',
+      'bis_padre', 'letra_bis_padre', 'cuadrante_padre',
+      'numero_secundario_padre', 'letra_secundaria_padre',
+      'cuadrante_dos_padre', 'nro_padre', 'complemento_padre'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionPadre);
+      }
+    });
+    actualizarDireccionPadre();
+  });
+})();
+</script>
+
+
+<script>
+(function () {
+  const prefix = "DatosFamiliares";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionMadre() {
+    const partes = [
+      v('tipo_via_madre'), v('numero_principal_madre'), v('letra_principal_madre'),
+      ck('bis_madre') ? 'BIS' : '',
+      v('letra_bis_madre'), v('cuadrante_madre')
+    ];
+
+    if (v('numero_secundario_madre')) {
+      partes.push('#', v('numero_secundario_madre'),
+                        v('letra_secundaria_madre'),
+                        v('cuadrante_dos_madre'));
+    }
+
+    partes.push(v('nro_madre'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_madre')) dir += ', ' + v('complemento_madre');
+
+    const div = document.getElementById('direccion-preview_madre');
+    const hidden = document.getElementById(id('direccion_preview_madre'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_madre', 'numero_principal_madre', 'letra_principal_madre',
+      'bis_madre', 'letra_bis_madre', 'cuadrante_madre',
+      'numero_secundario_madre', 'letra_secundaria_madre',
+      'cuadrante_dos_madre', 'nro_madre', 'complemento_madre'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionMadre);
+      }
+    });
+    actualizarDireccionMadre();
+  });
+})();
+</script>
+
+<!-- AGREGAR HIJOS -->
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  /*  Elementos clave  */
+  const addBtn        = document.getElementById('add-hijo');
+  const totalFormsInp = document.querySelector('input[name="hijos-TOTAL_FORMS"]');
+  const formsetArea   = document.getElementById('formset-hijos');
+  const emptyTemplate = document.getElementById('empty-form-hijo').innerHTML;
+
+  /* ---------- AÑADIR UN HIJO ---------- */
+  addBtn.addEventListener('click', () => {
+    const index  = parseInt(totalFormsInp.value, 10);
+    let newHtml  = emptyTemplate
+                     .replace(/__NUM__/g,    index + 1)   // título de la tarjeta
+                     .replace(/__prefix__/g, index);      // placeholders crispy
+
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = newHtml;
+    formsetArea.appendChild(wrapper.firstElementChild);
+
+    totalFormsInp.value = index + 1;
+    attachDeleteButtons();
+  });
+
+  /* ---------- ELIMINAR UN HIJO ---------- */
+  function attachDeleteButtons() {
+    formsetArea.querySelectorAll('.hijo-form').forEach(card => {
+      if (card.querySelector('.btn-remove-hijo')) return;   // ya tiene botón
+
+      const delBtn = document.createElement('button');
+      delBtn.type  = 'button';
+      delBtn.className = 'btn btn-link text-danger btn-remove-hijo';
+      delBtn.textContent = 'Eliminar hijo';
+
+      delBtn.addEventListener('click', () => {
+        const delInput = card.querySelector('input[type="checkbox"][name$="-DELETE"]');
+        if (delInput) {            // formulario existente → marcar DELETE
+          delInput.checked = true;
+          card.style.display = 'none';
+        } else {                   // formulario nuevo → simplemente quitarlo
+          card.remove();
+          totalFormsInp.value = parseInt(totalFormsInp.value, 10) - 1;
+        }
+      });
+
+      card.querySelector('.card-body').appendChild(delBtn);
+    });
+  }
+
+  attachDeleteButtons();   // al cargar la página
+});
+</script>
+
+
+
+<!-- Dirección HERMANO 1 -->
+
+<script>
+(function () {
+  const prefix = "DatosFamiliares";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionHermano1() {
+    const partes = [
+      v('tipo_via_hermano_1'), v('numero_principal_hermano_1'), v('letra_principal_hermano_1'),
+      ck('bis_hermano_1') ? 'BIS' : '',
+      v('letra_bis_hermano_1'), v('cuadrante_hermano_1')
+    ];
+
+    if (v('numero_secundario_hermano_1')) {
+      partes.push('#', v('numero_secundario_hermano_1'),
+                        v('letra_secundaria_hermano_1'),
+                        v('cuadrante_dos_hermano_1'));
+    }
+
+    partes.push(v('nro_hermano_1'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_hermano_1')) dir += ', ' + v('complemento_hermano_1');
+
+    const div = document.getElementById('direccion-preview_hermano_1');
+    const hidden = document.getElementById(id('direccion_preview_hermano_1'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_hermano_1', 'numero_principal_hermano_1', 'letra_principal_hermano_1',
+      'bis_hermano_1', 'letra_bis_hermano_1', 'cuadrante_hermano_1',
+      'numero_secundario_hermano_1', 'letra_secundaria_hermano_1',
+      'cuadrante_dos_hermano_1', 'nro_hermano_1', 'complemento_hermano_1'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionHermano1);
+      }
+    });
+    actualizarDireccionHermano1();
+  });
+})();
+</script>
+
+<!-- Dirección HERMANO 2 -->
+
+<script>
+(function () {
+  const prefix = "DatosFamiliares";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionHermano2() {
+    const partes = [
+      v('tipo_via_hermano_2'), v('numero_principal_hermano_2'), v('letra_principal_hermano_2'),
+      ck('bis_hermano_2') ? 'BIS' : '',
+      v('letra_bis_hermano_2'), v('cuadrante_hermano_2')
+    ];
+
+    if (v('numero_secundario_hermano_2')) {
+      partes.push('#', v('numero_secundario_hermano_2'),
+                        v('letra_secundaria_hermano_2'),
+                        v('cuadrante_dos_hermano_2'));
+    }
+
+    partes.push(v('nro_hermano_2'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_hermano_2')) dir += ', ' + v('complemento_hermano_2');
+
+    const div = document.getElementById('direccion-preview_hermano_2');
+    const hidden = document.getElementById(id('direccion_preview_hermano_2'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_hermano_2', 'numero_principal_hermano_2', 'letra_principal_hermano_2',
+      'bis_hermano_2', 'letra_bis_hermano_2', 'cuadrante_hermano_2',
+      'numero_secundario_hermano_2', 'letra_secundaria_hermano_2',
+      'cuadrante_dos_hermano_2', 'nro_hermano_2', 'complemento_hermano_2'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionHermano2);
+      }
+    });
+    actualizarDireccionHermano2();
+  });
+})();
+</script>
+<!-- Dirección HERMANO 3 -->
+
+<script>
+(function () {
+  const prefix = "DatosFamiliares";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionHermano3() {
+    const partes = [
+      v('tipo_via_hermano_3'), v('numero_principal_hermano_3'), v('letra_principal_hermano_3'),
+      ck('bis_hermano_3') ? 'BIS' : '',
+      v('letra_bis_hermano_3'), v('cuadrante_hermano_3')
+    ];
+
+    if (v('numero_secundario_hermano_3')) {
+      partes.push('#', v('numero_secundario_hermano_3'),
+                        v('letra_secundaria_hermano_3'),
+                        v('cuadrante_dos_hermano_3'));
+    }
+
+    partes.push(v('nro_hermano_3'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_hermano_3')) dir += ', ' + v('complemento_hermano_3');
+
+    const div = document.getElementById('direccion-preview_hermano_3');
+    const hidden = document.getElementById(id('direccion_preview_hermano_3'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_hermano_3', 'numero_principal_hermano_3', 'letra_principal_hermano_3',
+      'bis_hermano_3', 'letra_bis_hermano_3', 'cuadrante_hermano_3',
+      'numero_secundario_hermano_3', 'letra_secundaria_hermano_3',
+      'cuadrante_dos_hermano_3', 'nro_hermano_3', 'complemento_hermano_3'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionHermano3);
+      }
+    });
+    actualizarDireccionHermano3();
+  });
+})();
+</script>
+<!-- Dirección HERMANO 4 -->
+
+<script>
+(function () {
+  const prefix = "DatosFamiliares";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionHermano4() {
+    const partes = [
+      v('tipo_via_hermano_4'), v('numero_principal_hermano_4'), v('letra_principal_hermano_4'),
+      ck('bis_hermano_4') ? 'BIS' : '',
+      v('letra_bis_hermano_4'), v('cuadrante_hermano_4')
+    ];
+
+    if (v('numero_secundario_hermano_4')) {
+      partes.push('#', v('numero_secundario_hermano_4'),
+                        v('letra_secundaria_hermano_4'),
+                        v('cuadrante_dos_hermano_4'));
+    }
+
+    partes.push(v('nro_hermano_4'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_hermano_4')) dir += ', ' + v('complemento_hermano_4');
+
+    const div = document.getElementById('direccion-preview_hermano_4');
+    const hidden = document.getElementById(id('direccion_preview_hermano_4'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_hermano_4', 'numero_principal_hermano_4', 'letra_principal_hermano_4',
+      'bis_hermano_4', 'letra_bis_hermano_4', 'cuadrante_hermano_4',
+      'numero_secundario_hermano_4', 'letra_secundaria_hermano_4',
+      'cuadrante_dos_hermano_4', 'nro_hermano_4', 'complemento_hermano_4'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionHermano4);
+      }
+    });
+    actualizarDireccionHermano4();
+  });
+})();
+</script>
+
+<!-- Dirección HERMANO 5 -->
+
+<script>
+(function () {
+  const prefix = "DatosFamiliares";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionHermano5() {
+    const partes = [
+      v('tipo_via_hermano_5'), v('numero_principal_hermano_5'), v('letra_principal_hermano_5'),
+      ck('bis_hermano_5') ? 'BIS' : '',
+      v('letra_bis_hermano_5'), v('cuadrante_hermano_5')
+    ];
+
+    if (v('numero_secundario_hermano_5')) {
+      partes.push('#', v('numero_secundario_hermano_5'),
+                        v('letra_secundaria_hermano_5'),
+                        v('cuadrante_dos_hermano_5'));
+    }
+
+    partes.push(v('nro_hermano_5'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_hermano_5')) dir += ', ' + v('complemento_hermano_5');
+
+    const div = document.getElementById('direccion-preview_hermano_5');
+    const hidden = document.getElementById(id('direccion_preview_hermano_5'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_hermano_5', 'numero_principal_hermano_5', 'letra_principal_hermano_5',
+      'bis_hermano_5', 'letra_bis_hermano_5', 'cuadrante_hermano_5',
+      'numero_secundario_hermano_5', 'letra_secundaria_hermano_5',
+      'cuadrante_dos_hermano_5', 'nro_hermano_5', 'complemento_hermano_5'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionHermano5);
+      }
+    });
+    actualizarDireccionHermano5();
+  });
+})();
+</script>
+
+<!-- Dirección REFERENCIA 1 -->
+
+<script>
+(function () {
+  const prefix = "ReferenciasPersonales";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionReferencia1() {
+    const partes = [
+      v('tipo_via_referencia_1'), v('numero_principal_referencia_1'), v('letra_principal_referencia_1'),
+      ck('bis_referencia_1') ? 'BIS' : '',
+      v('letra_bis_referencia_1'), v('cuadrante_referencia_1')
+    ];
+
+    if (v('numero_secundario_referencia_1')) {
+      partes.push('#', v('numero_secundario_referencia_1'),
+                        v('letra_secundaria_referencia_1'),
+                        v('cuadrante_dos_referencia_1'));
+    }
+
+    partes.push(v('nro_referencia_1'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_referencia_1')) dir += ', ' + v('complemento_referencia_1');
+
+    const div = document.getElementById('direccion-preview_referencia_1');
+    const hidden = document.getElementById(id('direccion_preview_referencia_1'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_referencia_1', 'numero_principal_referencia_1', 'letra_principal_referencia_1',
+      'bis_referencia_1', 'letra_bis_referencia_1', 'cuadrante_referencia_1',
+      'numero_secundario_referencia_1', 'letra_secundaria_referencia_1',
+      'cuadrante_dos_referencia_1', 'nro_referencia_1', 'complemento_referencia_1'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionReferencia1);
+      }
+    });
+    actualizarDireccionReferencia1();
+  });
+})();
+</script>
+
+<!-- Dirección REFERENCIA 2 -->
+
+<script>
+(function () {
+  const prefix = "ReferenciasPersonales";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionReferencia2() {
+    const partes = [
+      v('tipo_via_referencia_2'), v('numero_principal_referencia_2'), v('letra_principal_referencia_2'),
+      ck('bis_referencia_2') ? 'BIS' : '',
+      v('letra_bis_referencia_2'), v('cuadrante_referencia_2')
+    ];
+
+    if (v('numero_secundario_referencia_2')) {
+      partes.push('#', v('numero_secundario_referencia_2'),
+                        v('letra_secundaria_referencia_2'),
+                        v('cuadrante_dos_referencia_2'));
+    }
+
+    partes.push(v('nro_referencia_2'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_referencia_2')) dir += ', ' + v('complemento_referencia_2');
+
+    const div = document.getElementById('direccion-preview_referencia_2');
+    const hidden = document.getElementById(id('direccion_preview_referencia_2'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_referencia_2', 'numero_principal_referencia_2', 'letra_principal_referencia_2',
+      'bis_referencia_2', 'letra_bis_referencia_2', 'cuadrante_referencia_2',
+      'numero_secundario_referencia_2', 'letra_secundaria_referencia_2',
+      'cuadrante_dos_referencia_2', 'nro_referencia_2', 'complemento_referencia_2'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionReferencia2);
+      }
+    });
+    actualizarDireccionReferencia2();
+  });
+})();
+</script>
+
+<!-- Dirección REFERENCIA 3 -->
+
+<script>
+(function () {
+  const prefix = "ReferenciasPersonales";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionReferencia3() {
+    const partes = [
+      v('tipo_via_referencia_3'), v('numero_principal_referencia_3'), v('letra_principal_referencia_3'),
+      ck('bis_referencia_3') ? 'BIS' : '',
+      v('letra_bis_referencia_3'), v('cuadrante_referencia_3')
+    ];
+
+    if (v('numero_secundario_referencia_3')) {
+      partes.push('#', v('numero_secundario_referencia_3'),
+                        v('letra_secundaria_referencia_3'),
+                        v('cuadrante_dos_referencia_3'));
+    }
+
+    partes.push(v('nro_referencia_3'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_referencia_3')) dir += ', ' + v('complemento_referencia_3');
+
+    const div = document.getElementById('direccion-preview_referencia_3');
+    const hidden = document.getElementById(id('direccion_preview_referencia_3'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_referencia_3', 'numero_principal_referencia_3', 'letra_principal_referencia_3',
+      'bis_referencia_3', 'letra_bis_referencia_3', 'cuadrante_referencia_3',
+      'numero_secundario_referencia_3', 'letra_secundaria_referencia_3',
+      'cuadrante_dos_referencia_3', 'nro_referencia_3', 'complemento_referencia_3'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionReferencia3);
+      }
+    });
+    actualizarDireccionReferencia3();
+  });
+})();
+</script>
+
+<!-- Dirección REFERENCIA 1 Sector Defensa -->
+
+<script>
+(function () {
+  const prefix = "SectorDefensa";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionSD1() {
+    const partes = [
+      v('tipo_via_sd_1'), v('numero_principal_sd_1'), v('letra_principal_sd_1'),
+      ck('bis_sd_1') ? 'BIS' : '',
+      v('letra_bis_sd_1'), v('cuadrante_sd_1')
+    ];
+
+    if (v('numero_secundario_sd_1')) {
+      partes.push('#', v('numero_secundario_sd_1'),
+                        v('letra_secundaria_sd_1'),
+                        v('cuadrante_dos_sd_1'));
+    }
+
+    partes.push(v('nro_sd_1'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_sd_1')) dir += ', ' + v('complemento_sd_1');
+
+    const div = document.getElementById('direccion-preview_sd_1');
+    const hidden = document.getElementById(id('direccion_preview_sd_1'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_sd_1', 'numero_principal_sd_1', 'letra_principal_sd_1',
+      'bis_sd_1', 'letra_bis_sd_1', 'cuadrante_sd_1',
+      'numero_secundario_sd_1', 'letra_secundaria_sd_1',
+      'cuadrante_dos_sd_1', 'nro_sd_1', 'complemento_sd_1'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionSD1);
+      }
+    });
+    actualizarDireccionSD1();
+  });
+})();
+</script>
+
+
+<!-- Dirección REFERENCIA 2 Sector Defensa -->
+
+<script>
+(function () {
+  const prefix = "SectorDefensa";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionSD2() {
+    const partes = [
+      v('tipo_via_sd_2'), v('numero_principal_sd_2'), v('letra_principal_sd_2'),
+      ck('bis_sd_2') ? 'BIS' : '',
+      v('letra_bis_sd_2'), v('cuadrante_sd_2')
+    ];
+
+    if (v('numero_secundario_sd_2')) {
+      partes.push('#', v('numero_secundario_sd_2'),
+                        v('letra_secundaria_sd_2'),
+                        v('cuadrante_dos_sd_2'));
+    }
+
+    partes.push(v('nro_sd_2'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_sd_2')) dir += ', ' + v('complemento_sd_2');
+
+    const div = document.getElementById('direccion-preview_sd_2');
+    const hidden = document.getElementById(id('direccion_preview_sd_2'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_sd_2', 'numero_principal_sd_2', 'letra_principal_sd_2',
+      'bis_sd_2', 'letra_bis_sd_2', 'cuadrante_sd_2',
+      'numero_secundario_sd_2', 'letra_secundaria_sd_2',
+      'cuadrante_dos_sd_2', 'nro_sd_2', 'complemento_sd_2'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionSD2);
+      }
+    });
+    actualizarDireccionSD2();
+  });
+})();
+</script>
+
+<!--Formateo de Moneda en los campos-->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const inputIds = [
+        'id_BienesRentasAEP-salarios_y_demas_ingresos_laborales',
+        'id_BienesRentasAEP-cesantías_e_intereses_de_cesantías',
+        'id_BienesRentasAEP-arriendos',
+        'id_BienesRentasAEP-honorarios',
+        'id_BienesRentasAEP-otros_ingresos_y_rentas'
+    ];
+
+    function formatMoneyInput(input) {
+        const cursorPos = input.selectionStart;
+        const rawValue = input.value.replace(/\./g, '').replace(/\D/g, '');
+        const formatted = parseInt(rawValue || '0').toLocaleString('es-CO');
+        const oldLength = input.value.length;
+        input.value = formatted;
+        const newLength = input.value.length;
+        input.setSelectionRange(cursorPos + (newLength - oldLength), cursorPos + (newLength - oldLength));
+    }
+
+    function parseIntClean(id) {
+        const el = document.getElementById(id);
+        if (!el) return 0;
+        return parseInt(el.value.replace(/\./g, '').replace(/\D/g, '')) || 0;
+    }
+
+    function updateTotal() {
+        let total = 0;
+        inputIds.forEach(id => total += parseIntClean(id));
+        const totalField = document.getElementById('id_BienesRentasAEP-total_ingresos');
+        if (totalField) totalField.value = '$' + total.toLocaleString('es-CO');
+    }
+
+    inputIds.forEach(id => {
+        const input = document.getElementById(id);
+        if (!input) return;
+
+        input.setAttribute('inputmode', 'numeric'); // soporte móvil
+        input.addEventListener('input', (e) => {
+            formatMoneyInput(input);
+            updateTotal();
+        });
+
+        // Formatear inicialmente
+        formatMoneyInput(input);
+    });
+
+    updateTotal();
+});
+</script>
+
+
+<!--Sumatoria de Ingresos-->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function formatMoney(value) {
+        return '$' + value.toLocaleString('es-CO');
+    }
+
+    function actualizarTotalIngresos() {
+        const ids = [
+            'id_BienesRentasAEP-salarios_y_demas_ingresos_laborales',
+            'id_BienesRentasAEP-cesantías_e_intereses_de_cesantías',
+            'id_BienesRentasAEP-arriendos',
+            'id_BienesRentasAEP-honorarios',
+            'id_BienesRentasAEP-otros_ingresos_y_rentas'
+        ];
+        let total = 0;
+
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                const val = parseInt(el.value.replace(/\D/g, '')) || 0;
+                total += val;
+            }
+        });
+
+        const totalInput = document.getElementById('id_BienesRentasAEP-total_ingresos');
+        if (totalInput) totalInput.value = formatMoney(total);
+    }
+
+    const inputs = document.querySelectorAll('[id^="id_BienesRentasAEP-"]');
+    inputs.forEach(input => input.addEventListener('input', actualizarTotalIngresos));
+    actualizarTotalIngresos();  // Ejecutar al cargar
+});
+</script>
+
+<!--Limpieza del dato-->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+    if (!form) return;
+
+    form.addEventListener('submit', function () {
+        const ids = [
+            'id_BienesRentasAEP-salarios_y_demas_ingresos_laborales',
+            'id_BienesRentasAEP-cesantías_e_intereses_de_cesantías',
+            'id_BienesRentasAEP-arriendos',
+            'id_BienesRentasAEP-honorarios',
+            'id_BienesRentasAEP-otros_ingresos_y_rentas'
+        ];
+
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.value = el.value.replace(/\D/g, '');
+            }
+        });
+    });
+});
+</script>
+
+<!-- Dirección RECOMENDANTE Otros Datos de Interés -->
+<script>
+(function () {
+  const prefix = "OtrosDatos";
+  const id = f => `id_${prefix}-${f}`;
+  const v = f => document.getElementById(id(f))?.value || "";
+  const ck = f => document.getElementById(id(f))?.checked || false;
+
+  function actualizarDireccionOtrosDatos() {
+    const partes = [
+      v('tipo_via_recomendante'), v('numero_principal_recomendante'), v('letra_principal_recomendante'),
+      ck('bis_recomendante') ? 'BIS' : '',
+      v('letra_bis_recomendante'), v('cuadrante_recomendante')
+    ];
+
+    if (v('numero_secundario_recomendante')) {
+      partes.push('#', v('numero_secundario_recomendante'),
+                        v('letra_secundaria_recomendante'),
+                        v('cuadrante_dos_recomendante'));
+    }
+
+    partes.push(v('nro_recomendante'));
+
+    let dir = partes.filter(Boolean).join(' ');
+    if (v('complemento_recomendante')) dir += ', ' + v('complemento_recomendante');
+
+    const div = document.getElementById('direccion-preview_recomendante');
+    const hidden = document.getElementById(id('direccion_preview_recomendante'));
+    if (div) div.textContent = dir;
+    if (hidden) hidden.value = dir;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const campos = [
+      'tipo_via_recomendante', 'numero_principal_recomendante', 'letra_principal_recomendante',
+      'bis_recomendante', 'letra_bis_recomendante', 'cuadrante_recomendante',
+      'numero_secundario_recomendante', 'letra_secundaria_recomendante',
+      'cuadrante_dos_recomendante', 'nro_recomendante', 'complemento_recomendante'
+    ];
+    campos.forEach(f => {
+      const el = document.getElementById(id(f));
+      if (el) {
+        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionOtrosDatos);
+      }
+    });
+    actualizarDireccionOtrosDatos();
+  });
+})();
+</script>
+
+<!-- REDIRIGE AL ERROR -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Encuentra el primer campo con error visible
+    let errorInput = document.querySelector(".is-invalid");
+
+    // Si no hay, intenta con errores generales (por ejemplo captcha o errores sin campos)
+    if (!errorInput) {
+        const errorMessages = document.querySelectorAll(".invalid-feedback, .errorlist");
+        for (const error of errorMessages) {
+            // Busca hacia arriba hasta encontrar la tab-pane donde está el error
+            const parentTab = error.closest(".tab-pane");
+            if (parentTab) {
+                errorInput = parentTab.querySelector("input, textarea, select, div");
+                break;
+            }
+        }
+    }
+
+    // Si se encuentra un input con error, enfoca la tab correspondiente
+    if (errorInput) {
+        const tabPane = errorInput.closest(".tab-pane");
+        if (tabPane && tabPane.id) {
+            const trigger = document.querySelector(`[data-bs-target="#${tabPane.id}"]`);
+            if (trigger) {
+                trigger.click();
+            }
+        }
+    }
+});
+</script>
+
+
+{% endblock %}
+
+
+

@@ -1,0 +1,36 @@
+{% load crispy_forms_tags %}
+
+{{ fs_hijos.management_form }}
+
+{# ---------- CONTENEDOR VISIBLE ---------- #}
+<div id="formset-hijos">
+  {% for form in fs_hijos %}
+    <div class="card mb-3 hijo-form">
+      <div class="card-body">
+        <h6 class="card-title mb-3">Hijo {{ forloop.counter }}</h6>
+        {% crispy form %}
+        {% if form.can_delete %}
+          <div class="form-check mt-2">
+            {{ form.DELETE }} <label class="form-check-label">Eliminar</label>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">Sin hijos registrados.</p>
+  {% endfor %}
+</div>
+
+{# ---------- PLANTILLA OCULTA ---------- #}
+<div id="empty-form-hijo" class="d-none">
+  <div class="card mb-3 hijo-form">
+    <div class="card-body">
+      <h6 class="card-title mb-3">Hijo __NUM__</h6>
+      {% crispy fs_hijos.empty_form %}
+    </div>
+  </div>
+</div>
+
+<button type="button" class="btn btn-sm btn-secondary" id="add-hijo">
+  + Agregar hijo
+</button>
