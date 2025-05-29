@@ -5,7 +5,7 @@ from .models import (
     SectorDefensa, BienesRentasAEP, SituacionJuridica, OtrosDatos, Hijo,
 )
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Row, Column, HTML,Template
+from crispy_forms.layout import Layout, Fieldset, Row, Column, HTML,Field
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
 
@@ -587,8 +587,15 @@ class HijoForm(forms.ModelForm):
                 Column("nombre",         css_class="col-md-5"),
                 Column("edad",           css_class="col-md-2"),
                 Column("identificacion", css_class="col-md-3"),
-            )
+            ),
+                Field("id",     type="hidden"),
+                Field("DELETE", type="hidden"),
         )
+
+        self.helper.render_hidden_fields   = True
+        self.helper.render_unmentioned_fields = False
+
+
 HijoFormSet = inlineformset_factory(
     parent_model=DatosFamiliares,      # quién es el “padre”
     model=Hijo,                        # modelo hijo

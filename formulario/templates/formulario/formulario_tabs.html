@@ -357,57 +357,49 @@
 <!-- AGREGAR HIJOS -->
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", function () {
+  const formset = document.getElementById("formset-hijos");
+  const totalForms = document.querySelector("#id_hijos-TOTAL_FORMS");
+  const emptyFormTemplate = document.getElementById("empty-form-hijo").innerHTML;
+  const addButton = document.getElementById("add-hijo");
 
-  /*  Elementos clave  */
-  const addBtn        = document.getElementById('add-hijo');
-  const totalFormsInp = document.querySelector('input[name="hijos-TOTAL_FORMS"]');
-  const formsetArea   = document.getElementById('formset-hijos');
-  const emptyTemplate = document.getElementById('empty-form-hijo').innerHTML;
-
-  /* ---------- AÑADIR UN HIJO ---------- */
-  addBtn.addEventListener('click', () => {
-    const index  = parseInt(totalFormsInp.value, 10);
-    let newHtml  = emptyTemplate
-                     .replace(/__NUM__/g,    index + 1)   // título de la tarjeta
-                     .replace(/__prefix__/g, index);      // placeholders crispy
-
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = newHtml;
-    formsetArea.appendChild(wrapper.firstElementChild);
-
-    totalFormsInp.value = index + 1;
-    attachDeleteButtons();
-  });
-
-  /* ---------- ELIMINAR UN HIJO ---------- */
-  function attachDeleteButtons() {
-    formsetArea.querySelectorAll('.hijo-form').forEach(card => {
-      if (card.querySelector('.btn-remove-hijo')) return;   // ya tiene botón
-
-      const delBtn = document.createElement('button');
-      delBtn.type  = 'button';
-      delBtn.className = 'btn btn-link text-danger btn-remove-hijo';
-      delBtn.textContent = 'Eliminar hijo';
-
-      delBtn.addEventListener('click', () => {
-        const delInput = card.querySelector('input[type="checkbox"][name$="-DELETE"]');
-        if (delInput) {            // formulario existente → marcar DELETE
-          delInput.checked = true;
-          card.style.display = 'none';
-        } else {                   // formulario nuevo → simplemente quitarlo
-          card.remove();
-          totalFormsInp.value = parseInt(totalFormsInp.value, 10) - 1;
-        }
-      });
-
-      card.querySelector('.card-body').appendChild(delBtn);
+  function updateTitles() {
+    const forms = formset.querySelectorAll(".hijo-form:not(.d-none)");
+    forms.forEach((form, index) => {
+      const title = form.querySelector(".card-title");
+      if (title) title.textContent = `Hijo ${index + 1}`;
     });
   }
 
-  attachDeleteButtons();   // al cargar la página
+  addButton.addEventListener("click", function () {
+    const index = parseInt(totalForms.value);
+    const newForm = document.createElement("div");
+    newForm.innerHTML = emptyFormTemplate
+      .replace(/__prefix__/g, index)
+      .replace(/__NUM__/g, index + 1);
+
+    formset.appendChild(newForm.firstElementChild);
+    totalForms.value = index + 1;
+    updateTitles();
+  });
+
+  // Manejar "Eliminar"
+  formset.addEventListener("click", function (e) {
+    if (e.target.classList.contains("delete-hijo")) {
+      const card = e.target.closest(".hijo-form");
+      const deleteInput = card.querySelector("input[name$='-DELETE']");
+      if (deleteInput) {
+        deleteInput.value = "on";           // <- corregido
+        card.classList.add("d-none");
+        updateTitles();
+      }
+    }
+  });
+
+  updateTitles();
 });
 </script>
+
 
 
 
