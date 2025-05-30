@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Recluta(models.Model):
-
+#LA PERSONA QUE SE ESTÁ REGISTRANDO
     primer_nombre = models.CharField(max_length=30)
     segundo_nombre = models.CharField(max_length=30, blank=True)
     primer_apellido = models.CharField(max_length=80)
@@ -82,20 +82,20 @@ class Recluta(models.Model):
     otras_redes = models.CharField("Otras Cuentas", max_length=50, blank=True,null=True)
     direccion_formateada = models.CharField(max_length=500, blank=True, null=True)
 
-
+#NOMBRE QUE SALDRÁ EN EL ADMIN
     class Meta:
      
         verbose_name = "Recluta"
         verbose_name_plural = "Reclutas"
-
+#DEVUELVE EL NOMBRE CONCATENADO Y UN STRIP PARA QUITAR ESPACIOS INNECESARIOS
     @property
     def nombres(self):
         return f"{self.primer_nombre} {self.segundo_nombre}".strip()
-
+#DEVUELVE LOS APELLIDOS CONCATENADOS Y UN STRIP PARA QUITAR ESPACIOS INNECESARIOS
     @property
     def apellidos(self):
         return f"{self.primer_apellido} {self.segundo_apellido}".strip()
-
+#LÓGICA PARA ARMAR LA DIRECCIÓN CONCATENADA DEL RECLUTA
     @property
     def direccion_completa(self):
         partes = [
@@ -117,16 +117,18 @@ class Recluta(models.Model):
         if self.complemento:
             direccion += f", {self.complemento}"
         return direccion.strip()
-
+#GUARDA LA DIRECCIÓN FORMATEADA EN "dirección_completa"
     def save(self, *args, **kwargs):
         self.direccion_formateada = self.direccion_completa
         super().save(*args, **kwargs)
 
+#REPRESENTACIÓN DEL OBJETO EN EL ADMIN Y CONSOLA:NOMBRE COMPLETO
     def __str__(self):
         return f"{self.nombres} {self.apellidos}"
 
 class DireccionesAnteriores(models.Model):
 
+#Conecta cada conjunto de direcciones anteriores con un único objeto Recluta. La relación es de muchos a uno (muchas direcciones anteriores pueden pertenecer a un solo recluta).
     recluta = models.ForeignKey('Recluta', on_delete=models.CASCADE, related_name='direcciones_anteriores',null=True)
 
     direccion_completa_anterior_1 = models.CharField(max_length=255, blank=True, null=True)
@@ -185,16 +187,18 @@ class DireccionesAnteriores(models.Model):
     telefono_direccion_anterior_2_2 = models.IntegerField("Teléfono 2", blank=True,null=True,validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
     ciudad_direccion_anterior_2 = models.CharField("Ciudad", blank=True,null=True, max_length=25)
 
+#NOMBRES QUE SE EMPLEAN EN EL ADMIN
     class Meta:
         verbose_name = "Dirección Anterior"
         verbose_name_plural = "Direcciones Anteriores"
     
+#DEVUELVE UNA DIRECCIÓN CONCATENADA
     def __str__(self):
         return f"Direcciones Anteriores {self.id}"
 
 
 class DatosFamiliares(models.Model):
-
+#
     recluta = models.OneToOneField(Recluta, on_delete=models.CASCADE,null=True)
 
 #DATOS CONYUGUE

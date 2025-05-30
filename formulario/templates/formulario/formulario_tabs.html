@@ -1,10 +1,15 @@
 {% extends "formulario/base.html" %}
+{% load static %}
+
 {% load crispy_forms_tags %}
 
-{% block title %}ESTUDIO DE SEGURIDAD DE PERSONAL{% endblock %}
+{% block title %}FORMULARIO DE DATOS PERSONALES{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">ESTUDIO DE SEGURIDAD DE PERSONAL</h2>
+<div class="d-flex align-items-center mb-4">
+  <img src="{% static 'img/Logo_Indumil.png' %}" alt="Logo" style="height: 120px; margin-right: 45px;">
+  <h2 class="mb-0">FORMULARIO DE DATOS PERSONALES</h2>
+</div>
 
 <form method="post" enctype="multipart/form-data" id="wizardForm" novalidate>
   {% csrf_token %}
