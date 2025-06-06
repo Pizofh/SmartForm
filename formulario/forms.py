@@ -2,7 +2,7 @@ from django import forms
 from django.forms import inlineformset_factory 
 from .models import (
     Recluta, DatosFamiliares,DireccionesAnteriores, InformacionAcademica,ReferenciasPersonales,
-    SectorDefensa, BienesRentasAEP, SituacionJuridica, OtrosDatos, Hijo,
+    SectorDefensa, BienesRentasAEP, SituacionJuridica, OtrosDatos, Hijo,Hermano
 )
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, HTML,Field
@@ -253,26 +253,7 @@ class DatosFamiliaresForm(BaseHelperMixin, forms.ModelForm):
             "nombre_madre", "vive_madre",
             "identificación_madre","telefono_madre", "oficio_profesion_madre","tipo_via_madre", "numero_principal_madre", "letra_principal_madre",
             "bis_madre", "letra_bis_madre", "cuadrante_madre","numero_secundario_madre", "letra_secundaria_madre", "cuadrante_dos_madre","nro_madre", "complemento_madre",
-#Datos Hermano 1
-            "primer_apellido_hermano_1","segundo_apellido_hermano_1","primer_nombre_hermano_1", "segundo_nombre_hermano_1", "identificacion_hermano_1", "ocupacion_hermano_1",
-            "celular_hermano_1","tipo_via_hermano_1","numero_principal_hermano_1", "letra_principal_hermano_1", "bis_hermano_1", "letra_bis_hermano_1", "cuadrante_hermano_1",
-            "numero_secundario_hermano_1", "letra_secundaria_hermano_1", "cuadrante_dos_hermano_1", "nro_hermano_1", "complemento_hermano_1",
-#Datos Hermano 2
-            "primer_apellido_hermano_2","segundo_apellido_hermano_2","primer_nombre_hermano_2", "segundo_nombre_hermano_2", "identificacion_hermano_2", "ocupacion_hermano_2",
-            "celular_hermano_2","tipo_via_hermano_2","numero_principal_hermano_2", "letra_principal_hermano_2", "bis_hermano_2", "letra_bis_hermano_2", "cuadrante_hermano_2",
-            "numero_secundario_hermano_2", "letra_secundaria_hermano_2", "cuadrante_dos_hermano_2", "nro_hermano_2", "complemento_hermano_2",
-#Datos Hermano 3
-            "primer_apellido_hermano_3","segundo_apellido_hermano_3","primer_nombre_hermano_3", "segundo_nombre_hermano_3", "identificacion_hermano_3", "ocupacion_hermano_3",
-            "celular_hermano_3","tipo_via_hermano_3","numero_principal_hermano_3", "letra_principal_hermano_3", "bis_hermano_3", "letra_bis_hermano_3", "cuadrante_hermano_3",
-            "numero_secundario_hermano_3", "letra_secundaria_hermano_3", "cuadrante_dos_hermano_3", "nro_hermano_3", "complemento_hermano_3",
-#Datos Hermano 4
-            "primer_apellido_hermano_4","segundo_apellido_hermano_4","primer_nombre_hermano_4", "segundo_nombre_hermano_4", "identificacion_hermano_4", "ocupacion_hermano_4",
-            "celular_hermano_4","tipo_via_hermano_4","numero_principal_hermano_4", "letra_principal_hermano_4", "bis_hermano_4", "letra_bis_hermano_4", "cuadrante_hermano_4",
-            "numero_secundario_hermano_4", "letra_secundaria_hermano_4", "cuadrante_dos_hermano_4", "nro_hermano_4", "complemento_hermano_4",
-#Datos Hermano 5
-            "primer_apellido_hermano_5","segundo_apellido_hermano_5","primer_nombre_hermano_5", "segundo_nombre_hermano_5", "identificacion_hermano_5", "ocupacion_hermano_5",
-            "celular_hermano_5","tipo_via_hermano_5","numero_principal_hermano_5", "letra_principal_hermano_5", "bis_hermano_5", "letra_bis_hermano_5", "cuadrante_hermano_5",
-            "numero_secundario_hermano_5", "letra_secundaria_hermano_5", "cuadrante_dos_hermano_5", "nro_hermano_5", "complemento_hermano_5",
+
         ]
         
 
@@ -285,11 +266,8 @@ class DatosFamiliaresForm(BaseHelperMixin, forms.ModelForm):
             self.fields["direccion_preview_conyugue"].initial = self.instance.direccion_completa_conyugue
             self.fields["direccion_preview_padre"].initial = self.instance.direccion_completa_padre
             self.fields["direccion_preview_madre"].initial = self.instance.direccion_completa_madre
-            self.fields["direccion_preview_hermano_1"].initial = self.instance.direccion_completa_hermano_1
-            self.fields["direccion_preview_hermano_2"].initial = self.instance.direccion_completa_hermano_2
-            self.fields["direccion_preview_hermano_3"].initial = self.instance.direccion_completa_hermano_3
-            self.fields["direccion_preview_hermano_4"].initial = self.instance.direccion_completa_hermano_4
-            self.fields["direccion_preview_hermano_5"].initial = self.instance.direccion_completa_hermano_5
+            self.fields["direccion_preview_hermano"].initial = self.instance.direccion_completa_hermano
+
 
    
 
@@ -384,166 +362,17 @@ class DatosFamiliaresForm(BaseHelperMixin, forms.ModelForm):
                 "direccion_preview_madre",
             ),
 
-HTML("<hr class='my-4'>"),
-HTML("{% include 'formulario/partials/_hijos_formset.html' %}"),  
-HTML("<hr class='my-4'>"),
-#ESPACIOS HERMANO 1
+            HTML("<hr class='my-4'>"),
+            HTML("<h5>Hijos:</h5>"),
+            HTML("{% include 'formulario/partials/_hijos_formset.html' %}"),  
+    
 
-            HTML("""<hr class="my-4">"""),
-            HTML("<h5 class='mt-4'>Información del hermano 1</h5>"),
-            HTML("""<hr class="my-4">"""),
-            "primer_apellido_hermano_1","segundo_apellido_hermano_1","primer_nombre_hermano_1", "segundo_nombre_hermano_1",
-            "identificacion_hermano_1", "ocupacion_hermano_1","celular_hermano_1",
+            HTML("<hr class='my-4'>"),
+            HTML("<h5>Hermanos:</h5>"),
+            HTML("{% include 'formulario/partials/_hermanos_formset.html' %}"),  
+       
 
-            Fieldset(
-                "Dirección Residencia del hermano 1",
-                Row(
-                    Column("tipo_via_hermano_1", css_class="col-md-2"),
-                    Column("numero_principal_hermano_1", css_class="col-md-1"),
-                    Column("letra_principal_hermano_1", css_class="col-md-2"),
-                    Column("bis_hermano_1", css_class="col-md-1"),
-                    Column("letra_bis_hermano_1", css_class="col-md-2"),
-                    Column("cuadrante_hermano_1", css_class="col-md-2"),
-                    Column("numero_secundario_hermano_1", css_class="col-md-1"),
-                    Column("letra_secundaria_hermano_1", css_class="col-md-2"),
-                    Column("cuadrante_dos_hermano_1", css_class="col-md-2"),
-                    Column("nro_hermano_1", css_class="col-md-2"),
-                    Column("complemento_hermano_1", css_class="col-md-2"),
-                ),
-            HTML("""
-                <div class="mt-3">
-                    <h5>Dirección construida:</h5>
-                    <div id="direccion-preview_hermano_1" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
-                </div>
-                """),
-                "direccion_preview_hermano_1",
-            ),
-#ESPACIOS HERMANO 2
 
-            HTML("""<hr class="my-4">"""),
-            HTML("<h5 class='mt-4'>Información del hermano 2</h5>"),
-            HTML("""<hr class="my-4">"""),
-            "primer_apellido_hermano_2","segundo_apellido_hermano_2","primer_nombre_hermano_2", "segundo_nombre_hermano_2",
-            "identificacion_hermano_2", "ocupacion_hermano_2","celular_hermano_2",
-
-            Fieldset(
-                "Dirección Residencia del hermano 2",
-                Row(
-                    Column("tipo_via_hermano_2", css_class="col-md-2"),
-                    Column("numero_principal_hermano_2", css_class="col-md-1"),
-                    Column("letra_principal_hermano_2", css_class="col-md-2"),
-                    Column("bis_hermano_2", css_class="col-md-1"),
-                    Column("letra_bis_hermano_2", css_class="col-md-2"),
-                    Column("cuadrante_hermano_2", css_class="col-md-2"),
-                    Column("numero_secundario_hermano_2", css_class="col-md-1"),
-                    Column("letra_secundaria_hermano_2", css_class="col-md-2"),
-                    Column("cuadrante_dos_hermano_2", css_class="col-md-2"),
-                    Column("nro_hermano_2", css_class="col-md-2"),
-                    Column("complemento_hermano_2", css_class="col-md-2"),
-                ),
-            HTML("""
-                <div class="mt-3">
-                    <h5>Dirección construida:</h5>
-                    <div id="direccion-preview_hermano_2" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
-                </div>
-                """),
-                "direccion_preview_hermano_2",
-            ),
-#ESPACIOS HERMANO 3
-
-            HTML("""<hr class="my-4">"""),
-            HTML("<h5 class='mt-4'>Información del hermano 3</h5>"),
-            HTML("""<hr class="my-4">"""),
-            "primer_apellido_hermano_3","segundo_apellido_hermano_3","primer_nombre_hermano_3", "segundo_nombre_hermano_3",
-            "identificacion_hermano_3", "ocupacion_hermano_3","celular_hermano_3",
-
-            Fieldset(
-                "Dirección Residencia del hermano 3",
-                Row(
-                    Column("tipo_via_hermano_3", css_class="col-md-2"),
-                    Column("numero_principal_hermano_3", css_class="col-md-1"),
-                    Column("letra_principal_hermano_3", css_class="col-md-2"),
-                    Column("bis_hermano_3", css_class="col-md-1"),
-                    Column("letra_bis_hermano_3", css_class="col-md-2"),
-                    Column("cuadrante_hermano_3", css_class="col-md-2"),
-                    Column("numero_secundario_hermano_3", css_class="col-md-1"),
-                    Column("letra_secundaria_hermano_3", css_class="col-md-2"),
-                    Column("cuadrante_dos_hermano_3", css_class="col-md-2"),
-                    Column("nro_hermano_3", css_class="col-md-2"),
-                    Column("complemento_hermano_3", css_class="col-md-2"),
-                ),
-            HTML("""
-                <div class="mt-3">
-                    <h5>Dirección construida:</h5>
-                    <div id="direccion-preview_hermano_3" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
-                </div>
-                """),
-                "direccion_preview_hermano_3",
-            ),
-#ESPACIOS HERMANO 4
-
-            HTML("""<hr class="my-4">"""),
-            HTML("<h5 class='mt-4'>Información del hermano 4</h5>"),
-            HTML("""<hr class="my-4">"""),
-            "primer_apellido_hermano_4","segundo_apellido_hermano_4","primer_nombre_hermano_4", "segundo_nombre_hermano_4",
-            "identificacion_hermano_4", "ocupacion_hermano_4","celular_hermano_4",
-
-            Fieldset(
-                "Dirección Residencia del hermano 4",
-                Row(
-                    Column("tipo_via_hermano_4", css_class="col-md-2"),
-                    Column("numero_principal_hermano_4", css_class="col-md-1"),
-                    Column("letra_principal_hermano_4", css_class="col-md-2"),
-                    Column("bis_hermano_4", css_class="col-md-1"),
-                    Column("letra_bis_hermano_4", css_class="col-md-2"),
-                    Column("cuadrante_hermano_4", css_class="col-md-2"),
-                    Column("numero_secundario_hermano_4", css_class="col-md-1"),
-                    Column("letra_secundaria_hermano_4", css_class="col-md-2"),
-                    Column("cuadrante_dos_hermano_4", css_class="col-md-2"),
-                    Column("nro_hermano_4", css_class="col-md-2"),
-                    Column("complemento_hermano_4", css_class="col-md-2"),
-                ),
-            HTML("""
-                <div class="mt-3">
-                    <h5>Dirección construida:</h5>
-                    <div id="direccion-preview_hermano_4" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
-                </div>
-                """),
-                "direccion_preview_hermano_4",
-            ),
-
-#ESPACIOS HERMANO 5
-
-            HTML("""<hr class="my-4">"""),
-            HTML("<h5 class='mt-4'>Información del hermano 5</h5>"),
-            HTML("""<hr class="my-4">"""),
-            "primer_apellido_hermano_5","segundo_apellido_hermano_5","primer_nombre_hermano_5", "segundo_nombre_hermano_5",
-            "identificacion_hermano_5", "ocupacion_hermano_5","celular_hermano_5",
-
-            Fieldset(
-                "Dirección Residencia del hermano 5",
-                Row(
-                    Column("tipo_via_hermano_5", css_class="col-md-2"),
-                    Column("numero_principal_hermano_5", css_class="col-md-1"),
-                    Column("letra_principal_hermano_5", css_class="col-md-2"),
-                    Column("bis_hermano_5", css_class="col-md-1"),
-                    Column("letra_bis_hermano_5", css_class="col-md-2"),
-                    Column("cuadrante_hermano_5", css_class="col-md-2"),
-                    Column("numero_secundario_hermano_5", css_class="col-md-1"),
-                    Column("letra_secundaria_hermano_5", css_class="col-md-2"),
-                    Column("cuadrante_dos_hermano_5", css_class="col-md-2"),
-                    Column("nro_hermano_5", css_class="col-md-2"),
-                    Column("complemento_hermano_5", css_class="col-md-2"),
-                ),
-            HTML("""
-                <div class="mt-3">
-                    <h5>Dirección construida:</h5>
-                    <div id="direccion-preview_hermano_5" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
-                </div>
-                """),
-                "direccion_preview_hermano_5",
-                
-            ),
             
             ),
             
@@ -553,11 +382,8 @@ HTML("<hr class='my-4'>"),
         instance.direccion_formateada_conyugue = self.cleaned_data.get("direccion_preview_conyugue")
         instance.direccion_formateada_padre = self.cleaned_data.get("direccion_preview_padre")
         instance.direccion_formateada_madre = self.cleaned_data.get("direccion_preview_madre")
-        instance.direccion_formateada_hermano_1 = self.cleaned_data.get("direccion_preview_hermano_1")
-        instance.direccion_formateada_hermano_2 = self.cleaned_data.get("direccion_preview_hermano_2")
-        instance.direccion_formateada_hermano_3 = self.cleaned_data.get("direccion_preview_hermano_3")
-        instance.direccion_formateada_hermano_4 = self.cleaned_data.get("direccion_preview_hermano_4")
-        instance.direccion_formateada_hermano_5 = self.cleaned_data.get("direccion_preview_hermano_5")
+        instance.direccion_formateada_hermano = self.cleaned_data.get("direccion_preview_hermano")
+
         if commit:
             instance.save()
         return instance
@@ -604,7 +430,73 @@ HijoFormSet = inlineformset_factory(
     can_delete=True
 )
 
+class HermanoForm(forms.ModelForm):
     
+    class Meta:
+        model = Hermano
+        fields = ["primer_apellido_hermano","segundo_apellido_hermano","primer_nombre_hermano", "segundo_nombre_hermano", "identificacion_hermano", "ocupacion_hermano",
+            "celular_hermano","tipo_via_hermano","numero_principal_hermano", "letra_principal_hermano", "bis_hermano", "letra_bis_hermano", "cuadrante_hermano",
+            "numero_secundario_hermano", "letra_secundaria_hermano", "cuadrante_dos_hermano", "nro_hermano", "complemento_hermano",]
+
+    widgets = {
+
+        }
+        
+            # ➜ ESTO da a cada hijo el mismo “look” crispy
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper               = FormHelper()
+        self.helper.form_tag      = False          # dentro del formset no queremos <form>
+        self.helper.label_class   = "form-label"
+        self.helper.field_class   = "form-control"
+        self.helper.layout = Layout(
+            Row(
+                Column("primer_apellido_hermano",       css_class="col-md-4"),
+                Column("segundo_apellido_hermano",      css_class="col-md-4"),
+      
+            ),
+              Row(
+                Column("primer_nombre_hermano",         css_class="col-md-4"),
+                Column("segundo_nombre_hermano",       css_class="col-md-4"),
+          
+            ),
+              Row(
+                Column("identificacion_hermano",      css_class="col-md-3"),
+                Column("ocupacion_hermano",         css_class="col-md-3"),
+                Column("celular_hermano",       css_class="col-md-3"),
+            ),
+            HTML("<hr class='my-4'>"),
+            
+              Row(
+                    Column("tipo_via_hermano", css_class="col-md-2"),
+                    Column("numero_principal_hermano", css_class="col-md-2"),
+                    Column("letra_principal_hermano", css_class="col-md-2"),
+                    Column("bis_hermano", css_class="col-md-2"),
+                    Column("letra_bis_hermano", css_class="col-md-2"),
+                    Column("cuadrante_hermano", css_class="col-md-2"),
+                    Column("numero_secundario_hermano", css_class="col-md-2"),
+                    Column("letra_secundaria_hermano", css_class="col-md-2"),
+                    Column("cuadrante_dos_hermano", css_class="col-md-2"),
+                    Column("nro_hermano", css_class="col-md-2"),
+                    Column("complemento_hermano", css_class="col-md-2"),
+            ),
+            
+                Field("id",     type="hidden"),
+                Field("DELETE", type="hidden"),
+        )
+
+        self.helper.render_hidden_fields   = True
+        self.helper.render_unmentioned_fields = False
+
+
+HermanoFormSet = inlineformset_factory(
+    parent_model=DatosFamiliares,      # quién es el “padre”
+    model=Hermano,                        # modelo hijo
+    form=HermanoForm,                     # el form que ya tenías
+    extra=1,
+    can_delete=True
+)
+
 
 
 

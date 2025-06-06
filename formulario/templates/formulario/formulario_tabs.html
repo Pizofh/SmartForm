@@ -1,6 +1,5 @@
 {% extends "formulario/base.html" %}
 {% load static %}
-
 {% load crispy_forms_tags %}
 
 {% block title %}FORMULARIO DE DATOS PERSONALES{% endblock %}
@@ -40,7 +39,7 @@
 
   <div class="tab-pane fade" id="datos_familiares" role="tabpanel" aria-labelledby="tab-datos-familiares">
     {% crispy f_DatosFamiliares %}
-  </div>  {# ← este cierre era el que faltaba #}
+  </div> 
 
   <div class="tab-pane fade" id="informacion_academica" role="tabpanel">{% crispy f_informacion_academica %}</div>
   <div class="tab-pane fade" id="ReferenciasPersonales" role="tabpanel">{% crispy f_ReferenciasPersonales %}</div>
@@ -405,261 +404,128 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+<!-- AGREGAR HERMANOS -->
+ 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const formset = document.getElementById("formset-hermanos");
+  const totalForms = document.querySelector("#id_hermanos-TOTAL_FORMS");
+  const emptyFormTemplate = document.getElementById("empty-form-hermano").innerHTML;
+  const addButton = document.getElementById("add-hermano");
+
+  function updateTitles() {
+    const forms = formset.querySelectorAll(".hermano-form:not(.d-none)");
+    forms.forEach((form, index) => {
+      const title = form.querySelector(".card-title");
+      if (title) title.textContent = `Hermano ${index + 1}`;
+    });
+  }
+
+  addButton.addEventListener("click", function () {
+    const index = parseInt(totalForms.value);
+    const newForm = document.createElement("div");
+    newForm.innerHTML = emptyFormTemplate
+      .replace(/__prefix__/g, index)
+      .replace(/__NUM__/g, index + 1);
+
+    formset.appendChild(newForm.firstElementChild);
+    totalForms.value = index + 1;
+    updateTitles();
+  });
+
+  // Manejar "Eliminar"
+  formset.addEventListener("click", function (e) {
+    if (e.target.classList.contains("delete-hermano")) {
+      const card = e.target.closest(".hermano-form");
+      const deleteInput = card.querySelector("input[name$='-DELETE']");
+      if (deleteInput) {
+        deleteInput.value = "on";           // <- corregido
+        card.classList.add("d-none");
+        updateTitles();
+      }
+    }
+  });
+
+  updateTitles();
+});
+</script>
 
 
 
-<!-- Dirección HERMANO 1 -->
+<!-- Dirección HERMANO -->
 
 <script>
-(function () {
-  const prefix = "DatosFamiliares";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
+function bindDireccionHermanoEvents(card) {
+  const campos = [
+    'tipo_via_hermano', 'numero_principal_hermano', 'letra_principal_hermano',
+    'bis_hermano', 'letra_bis_hermano', 'cuadrante_hermano',
+    'numero_secundario_hermano', 'letra_secundaria_hermano',
+    'cuadrante_dos_hermano', 'nro_hermano', 'complemento_hermano'
+  ];
 
-  function actualizarDireccionHermano1() {
+  function construirDireccion() {
+    const getVal = name => card.querySelector(`[name$='-${name}']`)?.value || '';
+    const isChecked = name => card.querySelector(`[name$='-${name}']`)?.checked || false;
+
     const partes = [
-      v('tipo_via_hermano_1'), v('numero_principal_hermano_1'), v('letra_principal_hermano_1'),
-      ck('bis_hermano_1') ? 'BIS' : '',
-      v('letra_bis_hermano_1'), v('cuadrante_hermano_1')
+      getVal('tipo_via_hermano'),
+      getVal('numero_principal_hermano'),
+      getVal('letra_principal_hermano'),
+      isChecked('bis_hermano') ? 'BIS' : '',
+      getVal('letra_bis_hermano'),
+      getVal('cuadrante_hermano')
     ];
 
-    if (v('numero_secundario_hermano_1')) {
-      partes.push('#', v('numero_secundario_hermano_1'),
-                        v('letra_secundaria_hermano_1'),
-                        v('cuadrante_dos_hermano_1'));
+    if (getVal('numero_secundario_hermano')) {
+      partes.push('#',
+        getVal('numero_secundario_hermano'),
+        getVal('letra_secundaria_hermano'),
+        getVal('cuadrante_dos_hermano')
+      );
     }
 
-    partes.push(v('nro_hermano_1'));
+    partes.push(getVal('nro_hermano'));
 
     let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_hermano_1')) dir += ', ' + v('complemento_hermano_1');
+    if (getVal('complemento_hermano')) {
+      dir += ', ' + getVal('complemento_hermano');
+    }
 
-    const div = document.getElementById('direccion-preview_hermano_1');
-    const hidden = document.getElementById(id('direccion_preview_hermano_1'));
-    if (div) div.textContent = dir;
+    const output = card.querySelector('.direccion-preview_hermano');
+    const hidden = card.querySelector(`[name$='direccion_formateada_hermano']`);
+    if (output) output.textContent = dir;
     if (hidden) hidden.value = dir;
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_hermano_1', 'numero_principal_hermano_1', 'letra_principal_hermano_1',
-      'bis_hermano_1', 'letra_bis_hermano_1', 'cuadrante_hermano_1',
-      'numero_secundario_hermano_1', 'letra_secundaria_hermano_1',
-      'cuadrante_dos_hermano_1', 'nro_hermano_1', 'complemento_hermano_1'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionHermano1);
-      }
-    });
-    actualizarDireccionHermano1();
-  });
-})();
-</script>
-
-<!-- Dirección HERMANO 2 -->
-
-<script>
-(function () {
-  const prefix = "DatosFamiliares";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
-
-  function actualizarDireccionHermano2() {
-    const partes = [
-      v('tipo_via_hermano_2'), v('numero_principal_hermano_2'), v('letra_principal_hermano_2'),
-      ck('bis_hermano_2') ? 'BIS' : '',
-      v('letra_bis_hermano_2'), v('cuadrante_hermano_2')
-    ];
-
-    if (v('numero_secundario_hermano_2')) {
-      partes.push('#', v('numero_secundario_hermano_2'),
-                        v('letra_secundaria_hermano_2'),
-                        v('cuadrante_dos_hermano_2'));
+  campos.forEach(name => {
+    const input = card.querySelector(`[name$='-${name}']`);
+    if (input) {
+      input.addEventListener(input.type === 'checkbox' ? 'change' : 'input', construirDireccion);
     }
-
-    partes.push(v('nro_hermano_2'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_hermano_2')) dir += ', ' + v('complemento_hermano_2');
-
-    const div = document.getElementById('direccion-preview_hermano_2');
-    const hidden = document.getElementById(id('direccion_preview_hermano_2'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_hermano_2', 'numero_principal_hermano_2', 'letra_principal_hermano_2',
-      'bis_hermano_2', 'letra_bis_hermano_2', 'cuadrante_hermano_2',
-      'numero_secundario_hermano_2', 'letra_secundaria_hermano_2',
-      'cuadrante_dos_hermano_2', 'nro_hermano_2', 'complemento_hermano_2'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionHermano2);
-      }
-    });
-    actualizarDireccionHermano2();
   });
-})();
-</script>
-<!-- Dirección HERMANO 3 -->
 
-<script>
-(function () {
-  const prefix = "DatosFamiliares";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
+  construirDireccion(); // inicial
+}
 
-  function actualizarDireccionHermano3() {
-    const partes = [
-      v('tipo_via_hermano_3'), v('numero_principal_hermano_3'), v('letra_principal_hermano_3'),
-      ck('bis_hermano_3') ? 'BIS' : '',
-      v('letra_bis_hermano_3'), v('cuadrante_hermano_3')
-    ];
+document.addEventListener("DOMContentLoaded", function () {
+  // Inicial
+  document.querySelectorAll('.hermano-form').forEach(bindDireccionHermanoEvents);
 
-    if (v('numero_secundario_hermano_3')) {
-      partes.push('#', v('numero_secundario_hermano_3'),
-                        v('letra_secundaria_hermano_3'),
-                        v('cuadrante_dos_hermano_3'));
-    }
-
-    partes.push(v('nro_hermano_3'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_hermano_3')) dir += ', ' + v('complemento_hermano_3');
-
-    const div = document.getElementById('direccion-preview_hermano_3');
-    const hidden = document.getElementById(id('direccion_preview_hermano_3'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_hermano_3', 'numero_principal_hermano_3', 'letra_principal_hermano_3',
-      'bis_hermano_3', 'letra_bis_hermano_3', 'cuadrante_hermano_3',
-      'numero_secundario_hermano_3', 'letra_secundaria_hermano_3',
-      'cuadrante_dos_hermano_3', 'nro_hermano_3', 'complemento_hermano_3'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionHermano3);
-      }
+  // Nuevos formularios
+  const addBtn = document.getElementById("add-hermano");
+  if (addBtn) {
+    addBtn.addEventListener("click", () => {
+      setTimeout(() => {
+        const forms = document.querySelectorAll(".hermano-form");
+        bindDireccionHermanoEvents(forms[forms.length - 1]);
+      }, 50);
     });
-    actualizarDireccionHermano3();
-  });
-})();
-</script>
-<!-- Dirección HERMANO 4 -->
-
-<script>
-(function () {
-  const prefix = "DatosFamiliares";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
-
-  function actualizarDireccionHermano4() {
-    const partes = [
-      v('tipo_via_hermano_4'), v('numero_principal_hermano_4'), v('letra_principal_hermano_4'),
-      ck('bis_hermano_4') ? 'BIS' : '',
-      v('letra_bis_hermano_4'), v('cuadrante_hermano_4')
-    ];
-
-    if (v('numero_secundario_hermano_4')) {
-      partes.push('#', v('numero_secundario_hermano_4'),
-                        v('letra_secundaria_hermano_4'),
-                        v('cuadrante_dos_hermano_4'));
-    }
-
-    partes.push(v('nro_hermano_4'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_hermano_4')) dir += ', ' + v('complemento_hermano_4');
-
-    const div = document.getElementById('direccion-preview_hermano_4');
-    const hidden = document.getElementById(id('direccion_preview_hermano_4'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
   }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_hermano_4', 'numero_principal_hermano_4', 'letra_principal_hermano_4',
-      'bis_hermano_4', 'letra_bis_hermano_4', 'cuadrante_hermano_4',
-      'numero_secundario_hermano_4', 'letra_secundaria_hermano_4',
-      'cuadrante_dos_hermano_4', 'nro_hermano_4', 'complemento_hermano_4'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionHermano4);
-      }
-    });
-    actualizarDireccionHermano4();
-  });
-})();
+});
 </script>
 
-<!-- Dirección HERMANO 5 -->
 
-<script>
-(function () {
-  const prefix = "DatosFamiliares";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
 
-  function actualizarDireccionHermano5() {
-    const partes = [
-      v('tipo_via_hermano_5'), v('numero_principal_hermano_5'), v('letra_principal_hermano_5'),
-      ck('bis_hermano_5') ? 'BIS' : '',
-      v('letra_bis_hermano_5'), v('cuadrante_hermano_5')
-    ];
-
-    if (v('numero_secundario_hermano_5')) {
-      partes.push('#', v('numero_secundario_hermano_5'),
-                        v('letra_secundaria_hermano_5'),
-                        v('cuadrante_dos_hermano_5'));
-    }
-
-    partes.push(v('nro_hermano_5'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_hermano_5')) dir += ', ' + v('complemento_hermano_5');
-
-    const div = document.getElementById('direccion-preview_hermano_5');
-    const hidden = document.getElementById(id('direccion_preview_hermano_5'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_hermano_5', 'numero_principal_hermano_5', 'letra_principal_hermano_5',
-      'bis_hermano_5', 'letra_bis_hermano_5', 'cuadrante_hermano_5',
-      'numero_secundario_hermano_5', 'letra_secundaria_hermano_5',
-      'cuadrante_dos_hermano_5', 'nro_hermano_5', 'complemento_hermano_5'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionHermano5);
-      }
-    });
-    actualizarDireccionHermano5();
-  });
-})();
-</script>
 
 <!-- Dirección REFERENCIA 1 -->
 

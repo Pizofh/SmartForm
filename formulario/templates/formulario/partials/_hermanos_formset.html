@@ -1,0 +1,51 @@
+{% load crispy_forms_tags %}
+
+{{ fs_hermanos.management_form }}
+
+<div id="formset-hermanos">
+  {% for form in fs_hermanos %}
+    <div class="card mb-3 hermano-form">
+      <div class="card-body">
+        <h6 class="card-title mb-3">Hermano {{ forloop.counter }}</h6>
+   {% crispy form %}
+{{ form.direccion_formateada_hermano }}
+<div class="direccion-preview_hermano alert alert-info py-2 px-3 mb-0 fw-bold">
+  Dirección formateada aquí...
+</div>
+        {{ form.DELETE.as_hidden }}  {# ← ahora es oculto #}
+
+        <button type="button"
+                class="btn btn-sm btn-outline-danger ms-3 delete-hermano">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">Sin hermanos registrados.</p>
+  {% endfor %}
+</div>
+
+<div id="empty-form-hermano" class="d-none">
+  <div class="card mb-3 hermano-form">
+    <div class="card-body">
+      <h6 class="card-title mb-3">Hermano __NUM__</h6>
+
+      {% crispy fs_hermanos.empty_form %}
+      {{ fs_hermanos.empty_form.direccion_formateada_hermano }}
+      <div class="direccion-preview_hermano alert alert-info py-2 px-3 mb-0 fw-bold"></div>
+
+
+      {{ fs_hermanos.empty_form.DELETE.as_hidden }}
+
+      <button type="button"
+              class="btn btn-sm btn-outline-danger ms-3 delete-hermano">
+        Eliminar
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<button type="button" class="btn btn-sm btn-secondary" id="add-hermano">
+  + Agregar hermano
+</button>

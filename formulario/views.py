@@ -4,9 +4,10 @@ from django.db import transaction
 from .forms import (
     ReclutaForm, DatosFamiliaresForm, DireccionesAnterioresForm, InformacionAcademicaForm,
     ReferenciasPersonalesForm, SectorDefensaForm, BienesRentasAEPForm, SituacionJuridicaForm,
-    OtrosDatosForm, ConfirmacionForm, HijoFormSet
+    OtrosDatosForm, ConfirmacionForm, HijoFormSet,HermanoFormSet
 )
 from .models import Hijo
+from .models import Hermano
 from .utils import generar_documentos
 
 class ReclutaTabsView(TemplateView):
@@ -17,6 +18,7 @@ class ReclutaTabsView(TemplateView):
             "f_recluta": ReclutaForm(prefix="recluta"),
             "f_DatosFamiliares": DatosFamiliaresForm(prefix="DatosFamiliares"),
             "fs_hijos" : HijoFormSet(queryset=Hijo.objects.none(), prefix="hijos"),
+            "fs_hermanos" : HermanoFormSet(queryset=Hijo.objects.none(), prefix="hermanos"),
             "f_direcciones_anteriores": DireccionesAnterioresForm(prefix="DireccionesAnteriores"),
             "f_informacion_academica": InformacionAcademicaForm(prefix="InformacionAcademica"),
             "f_ReferenciasPersonales": ReferenciasPersonalesForm(prefix="ReferenciasPersonales"),
@@ -33,6 +35,7 @@ class ReclutaTabsView(TemplateView):
         f_recluta = ReclutaForm(request.POST, request.FILES, prefix="recluta")
         f_DatosFamiliares = DatosFamiliaresForm(request.POST, prefix="DatosFamiliares")
         fs_hijos = HijoFormSet(request.POST or None, prefix="hijos")
+        fs_hermanos = HermanoFormSet(request.POST or None, prefix="hermanos")
         f_informacion_academica = InformacionAcademicaForm(request.POST, prefix="InformacionAcademica")
         f_ReferenciasPersonales = ReferenciasPersonalesForm(request.POST, prefix="ReferenciasPersonales")
         f_direcciones_anteriores = DireccionesAnterioresForm(request.POST, prefix="DireccionesAnteriores")
@@ -46,6 +49,7 @@ class ReclutaTabsView(TemplateView):
             f_recluta.is_valid(),
             f_DatosFamiliares.is_valid(),
             fs_hijos.is_valid(),
+            fs_hermanos.is_valid(),
             f_direcciones_anteriores.is_valid(),
             f_informacion_academica.is_valid(),
             f_ReferenciasPersonales.is_valid(),
@@ -66,6 +70,13 @@ class ReclutaTabsView(TemplateView):
                     hijo = hijo_form.save(commit=False)
                     hijo.datos_familiares = datos_familiares
                     hijo.save()
+
+            
+            for hermano_form in fs_hermanos:
+                if hermano_form.cleaned_data and not hermano_form.cleaned_data.get("DELETE", False):
+                    Hermano = hermano_form.save(commit=False)
+                    Hermano.datos_familiares = datos_familiares
+                    Hermano.save()
 
             for form in [
                 f_direcciones_anteriores,
@@ -88,6 +99,7 @@ class ReclutaTabsView(TemplateView):
             "f_recluta": f_recluta,
             "f_DatosFamiliares": f_DatosFamiliares,
             "fs_hijos": fs_hijos,
+            "fs_hermanos": fs_hermanos,
             "f_direcciones_anteriores": f_direcciones_anteriores,
             "f_informacion_academica": f_informacion_academica,
             "f_ReferenciasPersonales": f_ReferenciasPersonales,

@@ -485,8 +485,41 @@ class Hijo(models.Model):
     def __str__(self):
         return f"{self.nombre} ({self.edad} años)"
     
-    
-    
+
+class Hermano(models.Model):    
+    datos_familiares = models.ForeignKey('DatosFamiliares', on_delete=models.CASCADE, related_name="hermanos")
+
+    primer_apellido_hermano = models.CharField("Primer Apellido", blank=True,null=True,max_length=30,)
+    segundo_apellido_hermano = models.CharField("Segundo Apellido", blank=True,null=True,max_length=30,)
+    primer_nombre_hermano = models.CharField("Primer Nombre", blank=True,null=True,max_length=30,)
+    segundo_nombre_hermano = models.CharField("Segundo Nombre", blank=True,null=True,max_length=30,)
+    identificacion_hermano = models.IntegerField("Identificación Hermano 1",blank=True, null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
+    ocupacion_hermano = models.CharField("Ocupación Hermano 1",blank=True, null=True,max_length=60,)
+    celular_hermano = models.IntegerField("Celular Hermano 1", blank=True, null=True,validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
+    tipo_via_hermano = models.CharField("Tipo de vía", max_length=20, null=True, blank=True, choices=[
+        ('Anillo Vial', 'Anillo Vial'), ('Autopista', 'Autopista'), ('Avenida', 'Avenida'),
+        ('Avenida Calle', 'Avenida Calle'), ('Avenida Carrera', 'Avenida Carrera'), ('Calle', 'Calle'),
+        ('Callejón', 'Callejón'), ('Carrera', 'Carrera'), ('Circular', 'Circular'),
+        ('Diagonal', 'Diagonal'), ('Transversal', 'Transversal'),
+    ])
+    numero_principal_hermano = models.CharField("Número", max_length=10, null=True, blank=True)
+    letra_principal_hermano = models.CharField("Letra", max_length=2, null=True, blank=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    bis_hermano = models.BooleanField("¿Bis?", default=False)
+    letra_bis_hermano = models.CharField("Letra Bis", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    cuadrante_hermano = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
+        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
+    ])
+    numero_secundario_hermano = models.CharField("Número", max_length=10, null=True, blank=True)
+    letra_secundaria_hermano = models.CharField("Letra", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    cuadrante_dos_hermano = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
+        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
+    ])
+    nro_hermano = models.CharField("Número Final", max_length=30, blank=True, null=True)
+    complemento_hermano = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True)
+    direccion_formateada_hermano = models.CharField(max_length=500, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.nombre} ({self.edad} años)"
 
 class InformacionAcademica(models.Model):
     recluta = models.ForeignKey('Recluta', on_delete=models.CASCADE, related_name='informaciones_academicas',null=True)
