@@ -30,6 +30,7 @@ Thumbs.db
 staticfiles/
 media/
 
-# Archivos compilados de Python
-__pycache__/
-*.py[cod]
+# Playwright
+playwright-report/
+test-results/
+trace.zip
