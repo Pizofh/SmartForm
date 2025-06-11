@@ -1,17 +1,21 @@
 from django.contrib import admin
 import nested_admin
 from .models import (Recluta, DatosFamiliares,DireccionesAnteriores, InformacionAcademica,
-                     ReferenciasPersonales,SectorDefensa, BienesRentasAEP, SituacionJuridica, OtrosDatos,Hijo)
+                     ReferenciasPersonales,SectorDefensa, BienesRentasAEP, SituacionJuridica, OtrosDatos,Hijo,Hermano)
 import nested_admin
 
 
 class HijoInline(nested_admin.NestedTabularInline):
     model = Hijo
     extra = 0
+    
+class HermanoInline(nested_admin.NestedTabularInline):
+    model = Hermano
+    extra = 0
 
 class DatosFamiliaresInline(nested_admin.NestedStackedInline):
     model = DatosFamiliares
-    inlines = [HijoInline]  # 👈 Aquí anidamos los hijos
+    inlines = [HijoInline,HermanoInline]  # 👈 Aquí anidamos los hijos
     extra = 0
 
 class DireccionesAnterioresInline(nested_admin.NestedStackedInline):
@@ -23,9 +27,6 @@ class InformacionAcademicaInline(nested_admin.NestedStackedInline):  #
     extra = 0
 
 
-class HijoInline(nested_admin.NestedTabularInline):
-    model = Hijo
-    extra = 0
 
 class ReferenciasPersonalesInline(nested_admin.NestedStackedInline):
     model = ReferenciasPersonales
@@ -209,7 +210,7 @@ class DireccionesAnterioresAdmin(admin.ModelAdmin):
 
 @admin.register(DatosFamiliares)
 class DatosFamiliaresAdmin(admin.ModelAdmin):
-    inlines = [HijoInline]
+    inlines = [HijoInline,HermanoInline]
     # ----------  QUÉ COLUMNAS MOSTRAR EN LA LISTA  ----------
     list_display = (
 
@@ -230,27 +231,7 @@ class DatosFamiliaresAdmin(admin.ModelAdmin):
             "identificación_madre","telefono_madre", "oficio_profesion_madre","tipo_via_madre", "numero_principal_madre", "letra_principal_madre",
             "bis_madre", "letra_bis_madre", "cuadrante_madre","numero_secundario_madre", "letra_secundaria_madre",
             "cuadrante_dos_madre","nro_madre", "complemento_madre","direccion_formateada_madre",
-            
-#Datos Hermano 1
-            "primer_apellido_hermano_1","segundo_apellido_hermano_1","primer_nombre_hermano_1", "segundo_nombre_hermano_1", "identificacion_hermano_1", "ocupacion_hermano_1",
-            "celular_hermano_1","tipo_via_hermano_1","numero_principal_hermano_1", "letra_principal_hermano_1", "bis_hermano_1", "letra_bis_hermano_1", "cuadrante_hermano_1",
-            "numero_secundario_hermano_1", "letra_secundaria_hermano_1", "cuadrante_dos_hermano_1", "nro_hermano_1", "complemento_hermano_1","direccion_formateada_hermano_1",
-#Datos Hermano 2
-            "primer_apellido_hermano_2","segundo_apellido_hermano_2","primer_nombre_hermano_2", "segundo_nombre_hermano_2", "identificacion_hermano_2", "ocupacion_hermano_2",
-            "celular_hermano_2","tipo_via_hermano_2","numero_principal_hermano_2", "letra_principal_hermano_2", "bis_hermano_2", "letra_bis_hermano_2", "cuadrante_hermano_2",
-            "numero_secundario_hermano_2", "letra_secundaria_hermano_2", "cuadrante_dos_hermano_2", "nro_hermano_2", "complemento_hermano_2","direccion_formateada_hermano_2",
-#Datos Hermano 3
-            "primer_apellido_hermano_3","segundo_apellido_hermano_3","primer_nombre_hermano_3", "segundo_nombre_hermano_3", "identificacion_hermano_3", "ocupacion_hermano_3",
-            "celular_hermano_3","tipo_via_hermano_3","numero_principal_hermano_3", "letra_principal_hermano_3", "bis_hermano_3", "letra_bis_hermano_3", "cuadrante_hermano_3",
-            "numero_secundario_hermano_3", "letra_secundaria_hermano_3", "cuadrante_dos_hermano_3", "nro_hermano_3", "complemento_hermano_3","direccion_formateada_hermano_3",
-#Datos Hermano 4
-            "primer_apellido_hermano_4","segundo_apellido_hermano_4","primer_nombre_hermano_4", "segundo_nombre_hermano_4", "identificacion_hermano_4", "ocupacion_hermano_4",
-            "celular_hermano_4","tipo_via_hermano_4","numero_principal_hermano_4", "letra_principal_hermano_4", "bis_hermano_4", "letra_bis_hermano_4", "cuadrante_hermano_4",
-            "numero_secundario_hermano_4", "letra_secundaria_hermano_4", "cuadrante_dos_hermano_4", "nro_hermano_4", "complemento_hermano_4","direccion_formateada_hermano_4",
-#Datos Hermano 5
-            "primer_apellido_hermano_5","segundo_apellido_hermano_5","primer_nombre_hermano_5", "segundo_nombre_hermano_5", "identificacion_hermano_5", "ocupacion_hermano_5",
-            "celular_hermano_5","tipo_via_hermano_5","numero_principal_hermano_5", "letra_principal_hermano_5", "bis_hermano_5", "letra_bis_hermano_5", "cuadrante_hermano_5",
-            "numero_secundario_hermano_5", "letra_secundaria_hermano_5", "cuadrante_dos_hermano_5", "nro_hermano_5", "complemento_hermano_5","direccion_formateada_hermano_5",
+
         
     )
 
@@ -274,26 +255,8 @@ class DatosFamiliaresAdmin(admin.ModelAdmin):
             "identificación_madre","telefono_madre", "oficio_profesion_madre","tipo_via_madre", "numero_principal_madre", "letra_principal_madre",
             "bis_madre", "letra_bis_madre", "cuadrante_madre","numero_secundario_madre",
             "letra_secundaria_madre", "cuadrante_dos_madre","nro_madre", "complemento_madre","direccion_formateada_madre",
-#Datos Hermano 1
-            "primer_apellido_hermano_1","segundo_apellido_hermano_1","primer_nombre_hermano_1", "segundo_nombre_hermano_1", "identificacion_hermano_1", "ocupacion_hermano_1",
-            "celular_hermano_1","tipo_via_hermano_1","numero_principal_hermano_1", "letra_principal_hermano_1", "bis_hermano_1", "letra_bis_hermano_1", "cuadrante_hermano_1",
-            "numero_secundario_hermano_1", "letra_secundaria_hermano_1", "cuadrante_dos_hermano_1", "nro_hermano_1", "complemento_hermano_1"," direccion_formateada_hermano_1",
-#Datos Hermano 2
-            "primer_apellido_hermano_2","segundo_apellido_hermano_2","primer_nombre_hermano_2", "segundo_nombre_hermano_2", "identificacion_hermano_2", "ocupacion_hermano_2",
-            "celular_hermano_2","tipo_via_hermano_2","numero_principal_hermano_2", "letra_principal_hermano_2", "bis_hermano_2", "letra_bis_hermano_2", "cuadrante_hermano_2",
-            "numero_secundario_hermano_2", "letra_secundaria_hermano_2", "cuadrante_dos_hermano_2", "nro_hermano_2", "complemento_hermano_2"," direccion_formateada_hermano_2",
-#Datos Hermano 3
-            "primer_apellido_hermano_3","segundo_apellido_hermano_3","primer_nombre_hermano_3", "segundo_nombre_hermano_3", "identificacion_hermano_3", "ocupacion_hermano_3",
-            "celular_hermano_3","tipo_via_hermano_3","numero_principal_hermano_3", "letra_principal_hermano_3", "bis_hermano_3", "letra_bis_hermano_3", "cuadrante_hermano_3",
-            "numero_secundario_hermano_3", "letra_secundaria_hermano_3", "cuadrante_dos_hermano_3", "nro_hermano_3", "complemento_hermano_3"," direccion_formateada_hermano_3",
-#Datos Hermano 4
-            "primer_apellido_hermano_4","segundo_apellido_hermano_4","primer_nombre_hermano_4", "segundo_nombre_hermano_4", "identificacion_hermano_4", "ocupacion_hermano_4",
-            "celular_hermano_4","tipo_via_hermano_4","numero_principal_hermano_4", "letra_principal_hermano_4", "bis_hermano_4", "letra_bis_hermano_4", "cuadrante_hermano_4",
-            "numero_secundario_hermano_4", "letra_secundaria_hermano_4", "cuadrante_dos_hermano_4", "nro_hermano_4", "complemento_hermano_4"," direccion_formateada_hermano_4",
-#Datos Hermano 5
-            "primer_apellido_hermano_5","segundo_apellido_hermano_5","primer_nombre_hermano_5", "segundo_nombre_hermano_5", "identificacion_hermano_5", "ocupacion_hermano_5",
-            "celular_hermano_5","tipo_via_hermano_5","numero_principal_hermano_5", "letra_principal_hermano_5", "bis_hermano_5", "letra_bis_hermano_5", "cuadrante_hermano_5",
-            "numero_secundario_hermano_5", "letra_secundaria_hermano_5", "cuadrante_dos_hermano_5", "nro_hermano_5", "complemento_hermano_5"," direccion_formateada_hermano_5",
+
+
     )
 
     # ----------  FILTROS LATERALES  ----------

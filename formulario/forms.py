@@ -227,12 +227,8 @@ class DatosFamiliaresForm(BaseHelperMixin, forms.ModelForm):
     direccion_preview_conyugue = forms.CharField(required=False, widget=forms.HiddenInput())
     direccion_preview_padre = forms.CharField(required=False, widget=forms.HiddenInput())
     direccion_preview_madre = forms.CharField(required=False, widget=forms.HiddenInput())
-    direccion_preview_hermano_1 = forms.CharField(required=False, widget=forms.HiddenInput())
-    direccion_preview_hermano_2 = forms.CharField(required=False, widget=forms.HiddenInput())
-    direccion_preview_hermano_3 = forms.CharField(required=False, widget=forms.HiddenInput())
-    direccion_preview_hermano_4 = forms.CharField(required=False, widget=forms.HiddenInput())
-    direccion_preview_hermano_5 = forms.CharField(required=False, widget=forms.HiddenInput())
-    
+    direccion_preview_hermano = forms.CharField(required=False, widget=forms.HiddenInput())
+
 
     class Meta:
         model = DatosFamiliares
