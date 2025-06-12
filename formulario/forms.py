@@ -495,7 +495,6 @@ HermanoFormSet = inlineformset_factory(
 
 
 
-
 class InformacionAcademicaForm(BaseHelperMixin, forms.ModelForm):
     class Meta:
         model = InformacionAcademica
@@ -520,7 +519,7 @@ class InformacionAcademicaForm(BaseHelperMixin, forms.ModelForm):
             
             Fieldset(
                 
-              
+              "Estudios Realizados",
                 HTML("""<hr class="my-4">"""),
                 Row(
                     Column("estudios_1", css_class="col-md-3"),
@@ -832,7 +831,7 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
         model = BienesRentasAEP
         fields = [
         
-            "salarios_y_demas_ingresos_laborales","cesantías_e_intereses_de_cesantías","arriendos","honorarios","otros_ingresos_y_rentas",
+            "salarios_y_demas_ingresos_laborales","cesantías_e_intereses_de_cesantías","gastos_de_representación","arriendos","honorarios","otros_ingresos_y_rentas",
             "entidad_financiera_1", "tipo_de_cuenta_1", "numero_de_cuenta_1","entidad_financiera_2", "tipo_de_cuenta_2", "numero_de_cuenta_2",
             "entidad_financiera_3", "tipo_de_cuenta_3", "numero_de_cuenta_3","entidad_financiera_4", "tipo_de_cuenta_4", "numero_de_cuenta_4",
             "entidad_financiera_5", "tipo_de_cuenta_5", "numero_de_cuenta_5","entidad_financiera_6", "tipo_de_cuenta_6", "numero_de_cuenta_6",
@@ -861,6 +860,7 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
         widgets = {
             "salarios_y_demas_ingresos_laborales": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
             "cesantías_e_intereses_de_cesantías": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
+            "gastos_de_representación" :forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
             "arriendos": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
             "honorarios": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
             "otros_ingresos_y_rentas": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
@@ -876,6 +876,7 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
                 HTML("""<hr class="my-4">"""),
                 "salarios_y_demas_ingresos_laborales",
                 "cesantías_e_intereses_de_cesantías",
+                "gastos_de_representación",
                 "arriendos",
                 "honorarios",
                 "otros_ingresos_y_rentas",

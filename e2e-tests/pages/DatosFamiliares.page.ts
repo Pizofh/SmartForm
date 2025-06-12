@@ -80,6 +80,19 @@ export class DatosFamilaresPage {
   readonly identificacion_hermano : Locator;
   readonly ocupacion_hermano :Locator;
   readonly celular_hermano: Locator;
+  readonly tipo_via_hermano: Locator;
+  readonly numero_principal_hermano: Locator;
+  readonly letra_principal_hermano: Locator;
+  readonly bis_hermano: Locator;
+  readonly letra_bis_hermano: Locator;
+  readonly cuadrante_hermano: Locator;
+  readonly numero_secundario_hermano: Locator;
+  readonly letra_secundaria_hermano: Locator;
+  readonly cuadrante_dos_hermano: Locator;
+  readonly nro_hermano: Locator;
+  readonly complemento_hermano: Locator;
+  readonly direccion_formateada_hermano: Locator;
+
   readonly agregar_hermano  :Locator;
   readonly primer_apellido_1: Locator;
   readonly segundo_apellido_1: Locator;
@@ -88,6 +101,19 @@ export class DatosFamilaresPage {
   readonly identificacion_hermano_1 : Locator;
   readonly ocupacion_hermano_1 :Locator;
   readonly celular_hermano_1: Locator;
+  readonly tipo_via_hermano_1: Locator;
+  readonly numero_principal_hermano_1: Locator;
+  readonly letra_principal_hermano_1: Locator;
+  readonly bis_hermano_1: Locator;
+  readonly letra_bis_hermano_1: Locator;
+  readonly cuadrante_hermano_1: Locator;
+  readonly numero_secundario_hermano_1: Locator;
+  readonly letra_secundaria_hermano_1: Locator;
+  readonly cuadrante_dos_hermano_1: Locator;
+  readonly nro_hermano_1: Locator;
+  readonly complemento_hermano_1: Locator;
+  readonly direccion_formateada_hermano_1: Locator;
+
   readonly primer_apellido_2: Locator;
   readonly segundo_apellido_2: Locator;
   readonly primer_nombre_2: Locator;
@@ -95,7 +121,18 @@ export class DatosFamilaresPage {
   readonly identificacion_hermano_2 : Locator;
   readonly ocupacion_hermano_2 :Locator;
   readonly celular_hermano_2: Locator;
-
+  readonly tipo_via_hermano_2: Locator;
+  readonly numero_principal_hermano_2: Locator;
+  readonly letra_principal_hermano_2: Locator;
+  readonly bis_hermano_2: Locator;
+  readonly letra_bis_hermano_2: Locator;
+  readonly cuadrante_hermano_2: Locator;
+  readonly numero_secundario_hermano_2: Locator;
+  readonly letra_secundaria_hermano_2: Locator;
+  readonly cuadrante_dos_hermano_2: Locator;
+  readonly nro_hermano_2: Locator;
+  readonly complemento_hermano_2: Locator;
+  readonly direccion_formateada_hermano_2: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -176,6 +213,20 @@ export class DatosFamilaresPage {
   this.ocupacion_hermano =page.locator('#id_hermanos-0-ocupacion_hermano');
   this.celular_hermano =page.locator('#id_hermanos-0-celular_hermano');
   this.agregar_hermano = page.locator('#add-hermano');
+  this.tipo_via_hermano = page.locator('#id_hermanos-0-tipo_via_hermano')
+  this.numero_principal_hermano = page.locator('#id_hermanos-0-numero_principal_hermano')
+  this.letra_principal_hermano = page.locator('#id_hermanos-0-letra_principal_hermano')
+  this.bis_hermano = page.locator('#id_hermanos-0-bis_hermano')
+  this.letra_bis_hermano = page.locator('#id_hermanos-0-letra_bis_hermano')
+  this.cuadrante_hermano = page.locator('#id_hermanos-0-cuadrante_hermano')
+  this.numero_secundario_hermano = page.locator('#id_hermanos-0-numero_secundario_hermano')
+  this.letra_secundaria_hermano = page.locator('#id_hermanos-0-letra_secundaria_hermano')
+  this.cuadrante_dos_hermano = page.locator('#id_hermanos-0-cuadrante_dos_hermano')
+  this.nro_hermano = page.locator('#id_hermanos-0-nro_hermano')
+  this.complemento_hermano = page.locator('#id_hermanos-0-complemento_hermano')
+  this.direccion_formateada_hermano = page.locator('//*[@id="formset-hermanos"]/div[1]/div/div[5]')
+
+
   this.primer_apellido_1 =page.locator('#id_hermanos-1-primer_apellido_hermano');
   this.segundo_apellido_1=page.locator('#id_hermanos-1-segundo_apellido_hermano');
   this.primer_nombre_1 =page.locator('#id_hermanos-1-primer_nombre_hermano');
@@ -183,6 +234,19 @@ export class DatosFamilaresPage {
   this.identificacion_hermano_1 =page.locator('#id_hermanos-1-identificacion_hermano');
   this.ocupacion_hermano_1 =page.locator('#id_hermanos-1-ocupacion_hermano');
   this.celular_hermano_1 =page.locator('#id_hermanos-1-celular_hermano');
+  this.tipo_via_hermano_1 = page.locator('#id_hermanos-1-tipo_via_hermano')
+  this.numero_principal_hermano_1 = page.locator('#id_hermanos-1-numero_principal_hermano')
+  this.letra_principal_hermano_1 = page.locator('#id_hermanos-1-letra_principal_hermano')
+  this.bis_hermano_1 = page.locator('#id_hermanos-1-bis_hermano')
+  this.letra_bis_hermano_1 = page.locator('#id_hermanos-1-letra_bis_hermano')
+  this.cuadrante_hermano_1 = page.locator('#id_hermanos-1-cuadrante_hermano')
+  this.numero_secundario_hermano_1 = page.locator('#id_hermanos-1-numero_secundario_hermano')
+  this.letra_secundaria_hermano_1 = page.locator('#id_hermanos-1-letra_secundaria_hermano')
+  this.cuadrante_dos_hermano_1 = page.locator('#id_hermanos-1-cuadrante_dos_hermano')
+  this.nro_hermano_1 = page.locator('#id_hermanos-1-nro_hermano')
+  this.complemento_hermano_1 = page.locator('#id_hermanos-1-complemento_hermano')
+  this.direccion_formateada_hermano_1 = page.locator('//*[@id="formset-hermanos"]/div[2]/div/div[5]')
+
   this.primer_apellido_2 =page.locator('#id_hermanos-2-primer_apellido_hermano');
   this.segundo_apellido_2=page.locator('#id_hermanos-2-segundo_apellido_hermano');
   this.primer_nombre_2 =page.locator('#id_hermanos-2-primer_nombre_hermano');
@@ -190,6 +254,19 @@ export class DatosFamilaresPage {
   this.identificacion_hermano_2 =page.locator('#id_hermanos-2-identificacion_hermano');
   this.ocupacion_hermano_2 =page.locator('#id_hermanos-2-ocupacion_hermano');
   this.celular_hermano_2 =page.locator('#id_hermanos-2-celular_hermano');
+  this.tipo_via_hermano_2 = page.locator('#id_hermanos-2-tipo_via_hermano')
+  this.numero_principal_hermano_2 = page.locator('#id_hermanos-2-numero_principal_hermano')
+  this.letra_principal_hermano_2 = page.locator('#id_hermanos-2-letra_principal_hermano')
+  this.bis_hermano_2 = page.locator('#id_hermanos-2-bis_hermano')
+  this.letra_bis_hermano_2 = page.locator('#id_hermanos-2-letra_bis_hermano')
+  this.cuadrante_hermano_2 = page.locator('#id_hermanos-2-cuadrante_hermano')
+  this.numero_secundario_hermano_2 = page.locator('#id_hermanos-2-numero_secundario_hermano')
+  this.letra_secundaria_hermano_2 = page.locator('#id_hermanos-2-letra_secundaria_hermano')
+  this.cuadrante_dos_hermano_2 = page.locator('#id_hermanos-2-cuadrante_dos_hermano')
+  this.nro_hermano_2 = page.locator('#id_hermanos-2-nro_hermano')
+  this.complemento_hermano_2 = page.locator('#id_hermanos-2-complemento_hermano')
+  this.direccion_formateada_hermano_2 = page.locator('//*[@id="formset-hermanos"]/div[3]/div/div[5]')
+
   }
 
 
@@ -271,9 +348,22 @@ export class DatosFamilaresPage {
   await this.identificacion_hermano.fill('53513525');
   await this.ocupacion_hermano.fill('Estudiante');
   await this.celular_hermano.fill('3136546548');
+  await this.tipo_via_hermano.selectOption('Calle');
+  await this.numero_principal_hermano.fill('50');
+  await this.letra_principal_hermano.selectOption('H');
+  await this.bis_hermano.check();
+  await this.letra_bis_hermano.selectOption('F');
+  await this.cuadrante_hermano.selectOption('SUR');
+  await this.numero_secundario_hermano.fill('89');
+  await this.letra_secundaria_hermano.selectOption('J');
+  await this.cuadrante_dos_hermano.selectOption('OESTE');
+  await this.nro_hermano.fill('789');
+  await this.complemento_hermano.fill('Bosa');
+
   await this.agregar_hermano.click();
   await this.agregar_hermano.click();
   await this.agregar_hermano.click();
+
   await this.primer_apellido_1.fill('Garnicaasdasd');
   await this.segundo_apellido_1.fill('Sandovaldsadas');
   await this.primer_nombre_1.fill('Melanyasdasda');
@@ -281,6 +371,18 @@ export class DatosFamilaresPage {
   await this.identificacion_hermano_1.fill('535131561');
   await this.ocupacion_hermano_1.fill('Estudianteeee');
   await this.celular_hermano_1.fill('3136546515');
+  await this.tipo_via_hermano_1.selectOption('Calle');
+  await this.numero_principal_hermano_1.fill('50');
+  await this.letra_principal_hermano_1.selectOption('H');
+  await this.bis_hermano_1.check();
+  await this.letra_bis_hermano_1.selectOption('F');
+  await this.cuadrante_hermano_1.selectOption('SUR');
+  await this.numero_secundario_hermano_1.fill('89');
+  await this.letra_secundaria_hermano_1.selectOption('J');
+  await this.cuadrante_dos_hermano_1.selectOption('OESTE');
+  await this.nro_hermano_1.fill('789');
+  await this.complemento_hermano_1.fill('Bosa');
+
   await this.primer_apellido_2.fill('abecede');
   await this.segundo_apellido_2.fill('efege');
   await this.primer_nombre_2.fill('hachei');
@@ -288,6 +390,17 @@ export class DatosFamilaresPage {
   await this.identificacion_hermano_2.fill('77766655');
   await this.ocupacion_hermano_2.fill('Trabajador');
   await this.celular_hermano_2.fill('3136546525');
+  await this.tipo_via_hermano_2.selectOption('Calle');
+  await this.numero_principal_hermano_2.fill('50');
+  await this.letra_principal_hermano_2.selectOption('H');
+  await this.bis_hermano_2.check();
+  await this.letra_bis_hermano_2.selectOption('F');
+  await this.cuadrante_hermano_2.selectOption('SUR');
+  await this.numero_secundario_hermano_2.fill('89');
+  await this.letra_secundaria_hermano_2.selectOption('J');
+  await this.cuadrante_dos_hermano_2.selectOption('OESTE');
+  await this.nro_hermano_2.fill('789');
+  await this.complemento_hermano_2.fill('Bosa');
   } 
 
   async logDireccionesFormateadasFamilia() {
@@ -298,6 +411,12 @@ export class DatosFamilaresPage {
   console.log('📍 Dirección Padre generada:', DireccionFormateadaPadre);
   const DireccionFormateadaMadre = await this.direccion_formateada_madre.textContent();
   console.log('📍 Dirección Madre generada:', DireccionFormateadaMadre);
+  const DireccionFormateadaHermano = await this.direccion_formateada_hermano.textContent();
+  console.log('📍 Dirección Hermano generada:', DireccionFormateadaHermano);
+  const DireccionFormateadaHermano1 = await this.direccion_formateada_hermano_1.textContent();
+  console.log('📍 Dirección Hermano 1 generada:', DireccionFormateadaHermano1);
+  const DireccionFormateadaHermano2 = await this.direccion_formateada_hermano_2.textContent();
+  console.log('📍 Dirección Hermano 2 generada:', DireccionFormateadaHermano2);
   }
 
 }

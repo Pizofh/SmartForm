@@ -155,7 +155,8 @@ export class DatosPersonalesPage {
 
   async logDireccionFormateadaRecluta() {
   const DireccionFormateadaRecluta = await this.direccion_formateada.textContent();
-  console.log('📍 Dirección generada:', DireccionFormateadaRecluta);
+  console.log('📍 Dirección generada recluta:', DireccionFormateadaRecluta);
+
 }
 
 }

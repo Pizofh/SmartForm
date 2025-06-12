@@ -456,6 +456,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script>
 function bindDireccionHermanoEvents(card) {
+  if (card.dataset.binded === "true") return; // evitar doble binding
+  card.dataset.binded = "true";
+
   const campos = [
     'tipo_via_hermano', 'numero_principal_hermano', 'letra_principal_hermano',
     'bis_hermano', 'letra_bis_hermano', 'cuadrante_hermano',
@@ -463,10 +466,15 @@ function bindDireccionHermanoEvents(card) {
     'cuadrante_dos_hermano', 'nro_hermano', 'complemento_hermano'
   ];
 
-  function construirDireccion() {
-    const getVal = name => card.querySelector(`[name$='-${name}']`)?.value || '';
-    const isChecked = name => card.querySelector(`[name$='-${name}']`)?.checked || false;
+  function getVal(name) {
+    return card.querySelector(`[name*='-${name}']`)?.value || '';
+  }
 
+  function isChecked(name) {
+    return card.querySelector(`[name*='-${name}']`)?.checked || false;
+  }
+
+  function construirDireccion() {
     const partes = [
       getVal('tipo_via_hermano'),
       getVal('numero_principal_hermano'),
@@ -492,13 +500,13 @@ function bindDireccionHermanoEvents(card) {
     }
 
     const output = card.querySelector('.direccion-preview_hermano');
-    const hidden = card.querySelector(`[name$='direccion_formateada_hermano']`);
+    const hidden = card.querySelector(`[name*='direccion_formateada_hermano']`);
     if (output) output.textContent = dir;
     if (hidden) hidden.value = dir;
   }
 
   campos.forEach(name => {
-    const input = card.querySelector(`[name$='-${name}']`);
+    const input = card.querySelector(`[name*='-${name}']`);
     if (input) {
       input.addEventListener(input.type === 'checkbox' ? 'change' : 'input', construirDireccion);
     }
@@ -507,20 +515,19 @@ function bindDireccionHermanoEvents(card) {
   construirDireccion(); // inicial
 }
 
+// Bind inicial
 document.addEventListener("DOMContentLoaded", function () {
-  // Inicial
   document.querySelectorAll('.hermano-form').forEach(bindDireccionHermanoEvents);
 
-  // Nuevos formularios
-  const addBtn = document.getElementById("add-hermano");
-  if (addBtn) {
-    addBtn.addEventListener("click", () => {
-      setTimeout(() => {
-        const forms = document.querySelectorAll(".hermano-form");
-        bindDireccionHermanoEvents(forms[forms.length - 1]);
-      }, 50);
-    });
-  }
+  // Observer para nuevos formularios
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('.hermano-form').forEach(bindDireccionHermanoEvents);
+  });
+
+  observer.observe(document.getElementById('formset-hermanos'), {
+    childList: true,
+    subtree: true
+  });
 });
 </script>
 
@@ -790,6 +797,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputIds = [
         'id_BienesRentasAEP-salarios_y_demas_ingresos_laborales',
         'id_BienesRentasAEP-cesantías_e_intereses_de_cesantías',
+        'id_BienesRentasAEP-gastos_de_representación',
         'id_BienesRentasAEP-arriendos',
         'id_BienesRentasAEP-honorarios',
         'id_BienesRentasAEP-otros_ingresos_y_rentas'
@@ -848,6 +856,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const ids = [
             'id_BienesRentasAEP-salarios_y_demas_ingresos_laborales',
             'id_BienesRentasAEP-cesantías_e_intereses_de_cesantías',
+            'id_BienesRentasAEP-gastos_de_representación',
             'id_BienesRentasAEP-arriendos',
             'id_BienesRentasAEP-honorarios',
             'id_BienesRentasAEP-otros_ingresos_y_rentas'
