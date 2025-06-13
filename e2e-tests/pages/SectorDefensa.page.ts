@@ -125,11 +125,16 @@ export class SectorDefensaPage {
 
   } 
 
-  async logDireccionFormateadaSectorDefensa() {
+
+  async obtenerDireccionFormateadaSectorDefensa1(): Promise<string> {
   const DireccionFormateadaSD1 = await this.direccion_formateada_sd_1.textContent();
-  console.log('📍 Dirección generada Sector Defensa 1:', DireccionFormateadaSD1);
-  const DireccionFormateadaSD2 = await this.direccion_formateada_sd_2.textContent();
-  console.log('📍 Dirección generada Sector Defensa 2:', DireccionFormateadaSD2);
+  return DireccionFormateadaSD1?.trim() ?? '';
+
 }
 
+  async obtenerDireccionFormateadaSectorDefensa2(): Promise<string> {
+  const DireccionFormateadaSD2 = await this.direccion_formateada_sd_2.textContent();
+  return DireccionFormateadaSD2?.trim() ?? '';
+
+}
 }

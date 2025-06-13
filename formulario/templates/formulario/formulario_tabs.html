@@ -308,7 +308,7 @@
 })();
 </script>
 
-
+<!-- Dirección MADRE -->
 <script>
 (function () {
   const prefix = "DatosFamiliares";
@@ -738,7 +738,6 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 </script>
 
-
 <!-- Dirección REFERENCIA 2 Sector Defensa -->
 
 <script>
@@ -788,122 +787,6 @@ document.addEventListener("DOMContentLoaded", function () {
     actualizarDireccionSD2();
   });
 })();
-</script>
-
-<!--Formateo de Moneda en los campos-->
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const inputIds = [
-        'id_BienesRentasAEP-salarios_y_demas_ingresos_laborales',
-        'id_BienesRentasAEP-cesantías_e_intereses_de_cesantías',
-        'id_BienesRentasAEP-gastos_de_representación',
-        'id_BienesRentasAEP-arriendos',
-        'id_BienesRentasAEP-honorarios',
-        'id_BienesRentasAEP-otros_ingresos_y_rentas'
-    ];
-
-    function formatMoneyInput(input) {
-        const cursorPos = input.selectionStart;
-        const rawValue = input.value.replace(/\./g, '').replace(/\D/g, '');
-        const formatted = parseInt(rawValue || '0').toLocaleString('es-CO');
-        const oldLength = input.value.length;
-        input.value = formatted;
-        const newLength = input.value.length;
-        input.setSelectionRange(cursorPos + (newLength - oldLength), cursorPos + (newLength - oldLength));
-    }
-
-    function parseIntClean(id) {
-        const el = document.getElementById(id);
-        if (!el) return 0;
-        return parseInt(el.value.replace(/\./g, '').replace(/\D/g, '')) || 0;
-    }
-
-    function updateTotal() {
-        let total = 0;
-        inputIds.forEach(id => total += parseIntClean(id));
-        const totalField = document.getElementById('id_BienesRentasAEP-total_ingresos');
-        if (totalField) totalField.value = '$' + total.toLocaleString('es-CO');
-    }
-
-    inputIds.forEach(id => {
-        const input = document.getElementById(id);
-        if (!input) return;
-
-        input.setAttribute('inputmode', 'numeric'); // soporte móvil
-        input.addEventListener('input', (e) => {
-            formatMoneyInput(input);
-            updateTotal();
-        });
-
-        // Formatear inicialmente
-        formatMoneyInput(input);
-    });
-
-    updateTotal();
-});
-</script>
-
-
-<!--Sumatoria de Ingresos-->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    function formatMoney(value) {
-        return '$' + value.toLocaleString('es-CO');
-    }
-
-    function actualizarTotalIngresos() {
-        const ids = [
-            'id_BienesRentasAEP-salarios_y_demas_ingresos_laborales',
-            'id_BienesRentasAEP-cesantías_e_intereses_de_cesantías',
-            'id_BienesRentasAEP-gastos_de_representación',
-            'id_BienesRentasAEP-arriendos',
-            'id_BienesRentasAEP-honorarios',
-            'id_BienesRentasAEP-otros_ingresos_y_rentas'
-        ];
-        let total = 0;
-
-        ids.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                const val = parseInt(el.value.replace(/\D/g, '')) || 0;
-                total += val;
-            }
-        });
-
-        const totalInput = document.getElementById('id_BienesRentasAEP-total_ingresos');
-        if (totalInput) totalInput.value = formatMoney(total);
-    }
-
-    const inputs = document.querySelectorAll('[id^="id_BienesRentasAEP-"]');
-    inputs.forEach(input => input.addEventListener('input', actualizarTotalIngresos));
-    actualizarTotalIngresos();  // Ejecutar al cargar
-});
-</script>
-
-<!--Limpieza del dato-->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('form');
-    if (!form) return;
-
-    form.addEventListener('submit', function () {
-        const ids = [
-            'id_BienesRentasAEP-salarios_y_demas_ingresos_laborales',
-            'id_BienesRentasAEP-cesantías_e_intereses_de_cesantías',
-            'id_BienesRentasAEP-arriendos',
-            'id_BienesRentasAEP-honorarios',
-            'id_BienesRentasAEP-otros_ingresos_y_rentas'
-        ];
-
-        ids.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.value = el.value.replace(/\D/g, '');
-            }
-        });
-    });
-});
 </script>
 
 <!-- Dirección RECOMENDANTE Otros Datos de Interés -->
@@ -956,6 +839,121 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 </script>
 
+<!--Formateo de Moneda en los campos-->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const inputIds = [
+        'id_BienesRentasAEP-salarios_y_demas_ingresos_laborales',
+        'id_BienesRentasAEP-cesantías_e_intereses_de_cesantías',
+        'id_BienesRentasAEP-gastos_de_representación',
+        'id_BienesRentasAEP-arriendos',
+        'id_BienesRentasAEP-honorarios',
+        'id_BienesRentasAEP-otros_ingresos_y_rentas'
+    ];
+
+    function formatMoneyInput(input) {
+        const cursorPos = input.selectionStart;
+        const rawValue = input.value.replace(/\./g, '').replace(/\D/g, '');
+        const formatted = parseInt(rawValue || '0').toLocaleString('es-CO');
+        const oldLength = input.value.length;
+        input.value = formatted;
+        const newLength = input.value.length;
+        input.setSelectionRange(cursorPos + (newLength - oldLength), cursorPos + (newLength - oldLength));
+    }
+
+    function parseIntClean(id) {
+        const el = document.getElementById(id);
+        if (!el) return 0;
+        return parseInt(el.value.replace(/\./g, '').replace(/\D/g, '')) || 0;
+    }
+
+    function updateTotal() {
+        let total = 0;
+        inputIds.forEach(id => total += parseIntClean(id));
+        const totalField = document.getElementById('id_BienesRentasAEP-total_ingresos');
+        if (totalField) totalField.value = '$' + total.toLocaleString('es-CO');
+    }
+
+    inputIds.forEach(id => {
+        const input = document.getElementById(id);
+        if (!input) return;
+
+        input.setAttribute('inputmode', 'numeric'); // soporte móvil
+        input.addEventListener('input', (e) => {
+            formatMoneyInput(input);
+            updateTotal();
+        });
+
+        // Formatear inicialmente
+        formatMoneyInput(input);
+    });
+
+    updateTotal();
+});
+</script>
+
+<!--Sumatoria de Ingresos-->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function formatMoney(value) {
+        return '$' + value.toLocaleString('es-CO');
+    }
+
+    function actualizarTotalIngresos() {
+        const ids = [
+            'id_BienesRentasAEP-salarios_y_demas_ingresos_laborales',
+            'id_BienesRentasAEP-cesantías_e_intereses_de_cesantías',
+            'id_BienesRentasAEP-gastos_de_representación',
+            'id_BienesRentasAEP-arriendos',
+            'id_BienesRentasAEP-honorarios',
+            'id_BienesRentasAEP-otros_ingresos_y_rentas'
+        ];
+        let total = 0;
+
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                const val = parseInt(el.value.replace(/\D/g, '')) || 0;
+                total += val;
+            }
+        });
+
+        const totalInput = document.getElementById('id_BienesRentasAEP-total_ingresos');
+        if (totalInput) totalInput.value = formatMoney(total);
+    }
+
+    const inputs = document.querySelectorAll('[id^="id_BienesRentasAEP-"]');
+    inputs.forEach(input => input.addEventListener('input', actualizarTotalIngresos));
+    actualizarTotalIngresos();  // Ejecutar al cargar
+});
+</script>
+
+<!--Limpieza del dato-->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+    if (!form) return;
+
+    form.addEventListener('submit', function () {
+        const ids = [
+            'id_BienesRentasAEP-salarios_y_demas_ingresos_laborales',
+            'id_BienesRentasAEP-cesantías_e_intereses_de_cesantías',
+            'id_BienesRentasAEP-gastos_de_representación',
+            'id_BienesRentasAEP-arriendos',
+            'id_BienesRentasAEP-honorarios',
+            'id_BienesRentasAEP-otros_ingresos_y_rentas'
+        ];
+
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.value = el.value.replace(/\D/g, '');
+            }
+        });
+    });
+});
+</script>
+
 <!-- REDIRIGE AL ERROR -->
 
 <script>
@@ -989,8 +987,4 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-
 {% endblock %}
-
-
-

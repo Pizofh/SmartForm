@@ -192,16 +192,17 @@ constructor(page: Page) {
     await this.complemento_referencia_3.fill('APARTAMENTO OOOO OOOO');
   } 
 
-  async logDireccionFormateadaReferencias() {
+  async obtenerDireccionFormateadaReferencia1(): Promise<string> {
   const DireccionFormateadaReferencia1 = await this.direccion_formateada_referencia_1.textContent();
-  console.log('📍 Dirección generada referencia 1:', DireccionFormateadaReferencia1);
-
-  const DireccionFormateadaReferencia2 = await this.direccion_formateada_referencia_2.textContent();
-  console.log('📍 Dirección generada referencia 2:', DireccionFormateadaReferencia2);
-
+  return DireccionFormateadaReferencia1?.trim() ?? '';
+}
+  async obtenerDireccionFormateadaReferencia2(): Promise<string> {
+  const DireccionFormateadaReferencia2= await this.direccion_formateada_referencia_2.textContent();
+  return DireccionFormateadaReferencia2?.trim() ?? '';
+}
+  async obtenerDireccionFormateadaReferencia3(): Promise<string> {
   const DireccionFormateadaReferencia3 = await this.direccion_formateada_referencia_3.textContent();
-  console.log('📍 Dirección generada referencia 3:', DireccionFormateadaReferencia3);
-
+  return DireccionFormateadaReferencia3?.trim() ?? '';
 }
 
 }

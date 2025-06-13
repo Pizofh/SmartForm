@@ -48,6 +48,8 @@ export class OtrosDatosPage {
     readonly razon_de_vinculo : Locator;
     readonly direccion_formateada_recomendante : Locator;
 
+    readonly enviar: Locator;
+
 ///CONSTRUCTOR///
 
   constructor(page: Page) {
@@ -94,6 +96,7 @@ export class OtrosDatosPage {
     this.unidad_negocio_recomendante_2  = page.locator('#id_OtrosDatos-unidad_negocio_recomendante_2');
     this.razon_de_vinculo = page.locator('#id_OtrosDatos-razon_de_vinculo');
     
+    this.enviar = page.locator('#wizardForm > button');
 
   }
 
@@ -140,13 +143,17 @@ export class OtrosDatosPage {
     await this.cargo_recomendante_2.fill('Profesional');
     await this.unidad_negocio_recomendante_1.fill('OC'); 
     await this.unidad_negocio_recomendante_2.fill('FASAB');
-
     await this.razon_de_vinculo.fill('porque blablablabal y también porque babalblablablablablablablaba porque de hecho balbalbalbalba entones blablablablbala y pues por lo tanto blablablaba');
 
+    
+
+    
   } 
-    async logDireccionFormateadaOtrosDatos() {
-  const DireccionFormateadaOtrosDatos = await this.direccion_formateada_recomendante.textContent();
-  console.log('📍 Dirección generada recomendante:', DireccionFormateadaOtrosDatos);
-    }
+
+      async obtenerDireccionFormateadaRecomendante(): Promise<string> {
+  const DireccionFormateadaRecomendante = await this.direccion_formateada_recomendante.textContent();
+  return DireccionFormateadaRecomendante?.trim() ?? '';
+
+}
 
 }

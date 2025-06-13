@@ -8,6 +8,8 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, HTML,Field
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
+from django.conf import settings
+
 
 
 
@@ -1193,4 +1195,11 @@ class OtrosDatosForm(BaseHelperMixin, forms.ModelForm):
 
 
 class ConfirmacionForm(BaseHelperMixin, forms.Form):
-    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not getattr(settings, 'IS_E2E_TEST', False):
+            print("✅ CAPTCHA INCLUIDO")
+            self.fields['captcha'] = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+        else:
+            print("❌ CAPTCHA EXCLUIDO")

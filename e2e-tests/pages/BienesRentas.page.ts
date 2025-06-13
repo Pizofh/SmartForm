@@ -216,7 +216,7 @@ constructor(page: Page) {
 
 
   async llenarFormulario() {
- 
+
     await this.bienes_rentas_tab.click();
 
   //Total de Ingresos Último Año Gravable
@@ -232,7 +232,7 @@ constructor(page: Page) {
 
   await this.entidad_financiera_1.fill('Entidad bancaria 1');
   await this.tipo_de_cuenta_1.fill('Ahorros');
-  await this.numero_de_cuenta_1.fill('1234567891234567');
+  await this.numero_de_cuenta_1.fill('123456789123457');
 
   await this.entidad_financiera_2.fill('Entidad bancaria 2');
   await this.tipo_de_cuenta_2.fill('Ahorros');
@@ -322,7 +322,10 @@ constructor(page: Page) {
 
   await this.empresa_3.fill('Empresa 3');
   await this.calidad_de_miembro_AEP_3.fill('Aguatero');
-
-
   } 
+
+  async obtenerTotalIngresos(): Promise<string> {
+  const totalsuma = await this.total_ingresos.inputValue();
+  return totalsuma.trim();
+}
 }

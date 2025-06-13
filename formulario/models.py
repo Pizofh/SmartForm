@@ -366,8 +366,9 @@ class Hermano(models.Model):
     complemento_hermano = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True)
     direccion_formateada_hermano = models.CharField(max_length=500, blank=True, null=True)
 
-    def __str__(self):
-        return f"{self.nombre} ({self.edad} años)"
+def __str__(self):
+    return f"{self.primer_nombre_hermano or ''} {self.primer_apellido_hermano or ''} - {self.identificacion_hermano or ''}".strip()
+
 
 class InformacionAcademica(models.Model):
     recluta = models.ForeignKey('Recluta', on_delete=models.CASCADE, related_name='informaciones_academicas',null=True)

@@ -125,11 +125,13 @@ export class DireccionesAnterioresPage {
 
   } 
 
-  async logDireccionesFormateadasAnteriores() {
+  async obtenerDireccionFormateadaAnterior1(): Promise<string> {
   const DireccionFormateadaAnterior1 = await this.direccion_completa_anterior_1.textContent();
-  console.log('📍 Dirección Anterior generada 1:', DireccionFormateadaAnterior1);
+  return DireccionFormateadaAnterior1?.trim() ?? '';
+}
+  async obtenerDireccionFormateadaAnterior2(): Promise<string> {
   const DireccionFormateadaAnterior2 = await this.direccion_completa_anterior_2.textContent();
-  console.log('📍 Dirección Anterior generada 2:', DireccionFormateadaAnterior2);
+  return DireccionFormateadaAnterior2?.trim() ?? '';
 }
 
 }

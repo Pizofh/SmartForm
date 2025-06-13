@@ -12,9 +12,13 @@ export default defineConfig({
         trace: 'on-first-retry',
         // 👇 slowMo va aquí dentro de "use" cuando usas projects
         launchOptions: {
-          slowMo: 100,
+          //slowMo: 100,
+        env: {
+         IS_E2E_TEST: 'true',
+        },
         },
       },
     },
   ],
-});
+}
+);

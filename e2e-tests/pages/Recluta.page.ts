@@ -106,12 +106,21 @@ export class DatosPersonalesPage {
 
 
   async llenarFormulario() {
+
+        function generarNumeroAleatorio(digitos: number): string {
+    const min = Math.pow(10, digitos - 1);
+    const max = Math.pow(10, digitos) - 1;
+    return Math.floor(Math.random() * (max - min + 1)) + min + '';
+  }
+
+    const documentoUnico = generarNumeroAleatorio(10);
+    const celularUnico = '3' + generarNumeroAleatorio(9);
     await this.primer_nombre.fill('Brian');
     await this.segundo_nombre.fill('Steve');
     await this.primer_apellido.fill('Garnica');
     await this.segundo_apellido.fill('Sandoval');
     await this.tipo_documento.selectOption('CC');
-    await this.numero_documento.fill('1010100094');
+    await this.numero_documento.fill(documentoUnico);
     await this.fecha_expedición.fill('2018-08-14');
     await this.lugar_expedición.fill('Bogotá');
     await this.pasaporte_numero.fill('Num123456');
@@ -141,7 +150,7 @@ export class DatosPersonalesPage {
     await this.nro.fill('22');
     await this.complemento.fill('Segundo Piso');
     await this.barrio.fill('La estrada');
-    await this.numero_celular.fill('3214544719');
+    await this.numero_celular.fill(celularUnico);
     await this.telefono_fijo.fill('7523491');
     await this.ciudad.fill('Tunja');
     await this.departamento.fill('Boyacá');
@@ -153,10 +162,10 @@ export class DatosPersonalesPage {
     await this.otras_redes.fill('Reddit.steve');
   } 
 
-  async logDireccionFormateadaRecluta() {
-  const DireccionFormateadaRecluta = await this.direccion_formateada.textContent();
-  console.log('📍 Dirección generada recluta:', DireccionFormateadaRecluta);
 
+  async obtenerDireccionFormateadaRecluta(): Promise<string> {
+  const DireccionFormateadaRecluta = await this.direccion_formateada.textContent();
+  return DireccionFormateadaRecluta?.trim() ?? '';
 }
 
 }

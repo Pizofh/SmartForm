@@ -403,20 +403,36 @@ export class DatosFamilaresPage {
   await this.complemento_hermano_2.fill('Bosa');
   } 
 
-  async logDireccionesFormateadasFamilia() {
 
+
+
+  async obtenerDireccionFormateadaConyugue(): Promise<string> {
   const DireccionFormateadaConyugue = await this.direccion_formateada_conyugue.textContent();
-  console.log('📍 Dirección Conyugue generada:', DireccionFormateadaConyugue);
+  return DireccionFormateadaConyugue?.trim() ?? '';
+}
+  async obtenerDireccionFormateadaPadre(): Promise<string> {
   const DireccionFormateadaPadre = await this.direccion_formateada_padre.textContent();
-  console.log('📍 Dirección Padre generada:', DireccionFormateadaPadre);
+  return DireccionFormateadaPadre?.trim() ?? '';
+}
+  async obtenerDireccionFormateadaMadre(): Promise<string> {
   const DireccionFormateadaMadre = await this.direccion_formateada_madre.textContent();
-  console.log('📍 Dirección Madre generada:', DireccionFormateadaMadre);
+  return DireccionFormateadaMadre?.trim() ?? '';
+}
+
+  async obtenerDireccionFormateadaHermano(): Promise<string> {
   const DireccionFormateadaHermano = await this.direccion_formateada_hermano.textContent();
-  console.log('📍 Dirección Hermano generada:', DireccionFormateadaHermano);
+  return DireccionFormateadaHermano?.trim() ?? '';
+}
+
+  async obtenerDireccionFormateadaHermano1(): Promise<string> {
   const DireccionFormateadaHermano1 = await this.direccion_formateada_hermano_1.textContent();
-  console.log('📍 Dirección Hermano 1 generada:', DireccionFormateadaHermano1);
+  return DireccionFormateadaHermano1?.trim() ?? '';
+}
+
+  async obtenerDireccionFormateadaHermano2(): Promise<string> {
   const DireccionFormateadaHermano2 = await this.direccion_formateada_hermano_2.textContent();
-  console.log('📍 Dirección Hermano 2 generada:', DireccionFormateadaHermano2);
-  }
+  return DireccionFormateadaHermano2?.trim() ?? '';
+}
+
 
 }
