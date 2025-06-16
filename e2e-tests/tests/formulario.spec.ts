@@ -34,15 +34,21 @@ test('Formulario: datos personales válidos', async ({ page }) => {
   const direccionConyugue = await datosfamiliares.obtenerDireccionFormateadaConyugue();
   const direccionPadre = await datosfamiliares.obtenerDireccionFormateadaPadre();
   const direccionMadre = await datosfamiliares.obtenerDireccionFormateadaMadre();
-  const direccionHermano = await datosfamiliares.obtenerDireccionFormateadaHermano();
-  const direccionHermano1 = await datosfamiliares.obtenerDireccionFormateadaHermano1();
-  const direccionHermano2 = await datosfamiliares.obtenerDireccionFormateadaHermano2();
+
+
+const direccionHermano = await datosfamiliares.getDireccionHermano(0);
+const direccionHermano1 = await datosfamiliares.getDireccionHermano(1);
+const direccionHermano2 = await datosfamiliares.getDireccionHermano(2);
+
+
+
   expect(direccionConyugue).toBe('Calle 167 A NORTE # 56 B OESTE 73, Torre 4 apto 4');
   expect(direccionPadre).toBe('Calle 50 H BIS F SUR # 89 J OESTE 789, Bosa');
   expect(direccionMadre).toBe('Anillo Vial 230 O Z NORTE # 566 P ESTE 200, Casa tercer piso');
-  expect(direccionHermano).toBe('Calle 50 H BIS F SUR # 89 J OESTE 789, Bosa');
+  expect(direccionHermano).toBe('Calle 50 H BIS F NORTE # 89 P ESTE 79, Bosa');
   expect(direccionHermano1).toBe('Calle 50 H BIS F SUR # 89 J OESTE 789, Bosa');
-  expect(direccionHermano2).toBe('Calle 50 H BIS F SUR # 89 J OESTE 789, Bosa');
+  expect(direccionHermano2).toBe('Carrera 123 H BIS F SUR # 89 J OESTE 789, BosaYork');
+
   
 //INFORMACIÓN ACADÉMICA
   const InformacionAcademica = new InformacionAcademicaPage(page);
@@ -84,7 +90,9 @@ test('Formulario: datos personales válidos', async ({ page }) => {
   const DireccionRecomendante = await OtrosDatos.obtenerDireccionFormateadaRecomendante();
   expect(DireccionRecomendante).toBe('Calle 23 B BIS C ESTE # 14 F NORTE 122, Tercer Piso Apartamento 232');
 
+
 await page.click('button[type="submit"]');
 await page.waitForURL('http://127.0.0.1:8000/exito/');
 expect(page.url()).toBe('http://127.0.0.1:8000/exito/');
+
 });

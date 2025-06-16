@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "django_htmx", 
     "formtools",
     "nested_admin",
+    'rest_framework',
     ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"

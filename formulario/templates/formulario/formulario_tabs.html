@@ -36,6 +36,16 @@
   <div class="tab-pane fade show active" id="datos_personales" role="tabpanel" aria-labelledby="tab-datos-personales">{% crispy f_recluta %}</div>
 
   <div class="tab-pane fade" id="direcciones_anteriores" role="tabpanel">{% crispy f_direcciones_anteriores %}</div>
+  <input type="hidden"
+       name="DireccionesAnteriores-direccion_preview_anterior_1"
+       id="id_DireccionesAnteriores-direccion_preview_anterior_1"
+       value="">
+
+<!-- Campo oculto para direccion completa 2 -->
+<input type="hidden"
+       name="DireccionesAnteriores-direccion_preview_anterior_2"
+       id="id_DireccionesAnteriores-direccion_preview_anterior_2"
+       value="">
 
   <div class="tab-pane fade" id="datos_familiares" role="tabpanel" aria-labelledby="tab-datos-familiares">
     {% crispy f_DatosFamiliares %}
@@ -405,7 +415,6 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <!-- AGREGAR HERMANOS -->
- 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const formset = document.getElementById("formset-hermanos");
@@ -431,15 +440,16 @@ document.addEventListener("DOMContentLoaded", function () {
     formset.appendChild(newForm.firstElementChild);
     totalForms.value = index + 1;
     updateTitles();
+    const newCard = formset.lastElementChild;
+    bindDireccionHermanoEvents(newCard);
   });
 
-  // Manejar "Eliminar"
   formset.addEventListener("click", function (e) {
     if (e.target.classList.contains("delete-hermano")) {
       const card = e.target.closest(".hermano-form");
       const deleteInput = card.querySelector("input[name$='-DELETE']");
       if (deleteInput) {
-        deleteInput.value = "on";           // <- corregido
+        deleteInput.value = "on";
         card.classList.add("d-none");
         updateTitles();
       }
@@ -450,13 +460,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-
-
 <!-- Dirección HERMANO -->
-
 <script>
 function bindDireccionHermanoEvents(card) {
-  if (card.dataset.binded === "true") return; // evitar doble binding
+  if (card.dataset.binded === "true") return;
   card.dataset.binded = "true";
 
   const campos = [
@@ -500,7 +507,10 @@ function bindDireccionHermanoEvents(card) {
     }
 
     const output = card.querySelector('.direccion-preview_hermano');
-    const hidden = card.querySelector(`[name*='direccion_formateada_hermano']`);
+    const hidden = [...card.querySelectorAll("input[type='hidden']")].find(
+      input => input.name.includes("-direccion_formateada_hermano")
+    );
+
     if (output) output.textContent = dir;
     if (hidden) hidden.value = dir;
   }
@@ -512,14 +522,12 @@ function bindDireccionHermanoEvents(card) {
     }
   });
 
-  construirDireccion(); // inicial
+  construirDireccion();
 }
 
-// Bind inicial
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll('.hermano-form').forEach(bindDireccionHermanoEvents);
 
-  // Observer para nuevos formularios
   const observer = new MutationObserver(() => {
     document.querySelectorAll('.hermano-form').forEach(bindDireccionHermanoEvents);
   });
@@ -530,6 +538,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+
 
 
 

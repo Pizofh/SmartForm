@@ -9,6 +9,7 @@ from crispy_forms.layout import Layout, Fieldset, Row, Column, HTML,Field
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
 from django.conf import settings
+from django.forms import HiddenInput
 
 
 
@@ -432,17 +433,21 @@ class HermanoForm(forms.ModelForm):
     
     class Meta:
         model = Hermano
-        fields = ["primer_apellido_hermano","segundo_apellido_hermano","primer_nombre_hermano", "segundo_nombre_hermano", "identificacion_hermano", "ocupacion_hermano",
-            "celular_hermano","tipo_via_hermano","numero_principal_hermano", "letra_principal_hermano", "bis_hermano", "letra_bis_hermano", "cuadrante_hermano",
-            "numero_secundario_hermano", "letra_secundaria_hermano", "cuadrante_dos_hermano", "nro_hermano", "complemento_hermano",]
-
-    widgets = {
-
+        fields = [
+            "primer_apellido_hermano", "segundo_apellido_hermano", "primer_nombre_hermano", "segundo_nombre_hermano",
+            "identificacion_hermano", "ocupacion_hermano", "celular_hermano",
+            "tipo_via_hermano", "numero_principal_hermano", "letra_principal_hermano",
+            "bis_hermano", "letra_bis_hermano", "cuadrante_hermano",
+            "numero_secundario_hermano", "letra_secundaria_hermano", "cuadrante_dos_hermano",
+            "nro_hermano", "complemento_hermano", "direccion_formateada_hermano"
+        ]
+        widgets = {
+            "direccion_formateada_hermano": HiddenInput()
         }
-        
-            # ➜ ESTO da a cada hijo el mismo “look” crispy
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['direccion_formateada_hermano'].required = False
         self.helper               = FormHelper()
         self.helper.form_tag      = False          # dentro del formset no queremos <form>
         self.helper.label_class   = "form-label"
@@ -479,12 +484,20 @@ class HermanoForm(forms.ModelForm):
                     Column("complemento_hermano", css_class="col-md-2"),
             ),
             
-                Field("id",     type="hidden"),
-                Field("DELETE", type="hidden"),
+            Field("id", type="hidden"),
+            Field("DELETE", type="hidden"),
+            Field("direccion_formateada_hermano", type="hidden"),
         )
 
         self.helper.render_hidden_fields   = True
         self.helper.render_unmentioned_fields = False
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.direccion_formateada_hermano = self.cleaned_data.get("direccion_formateada_hermano")
+        if commit:
+            instance.save()
+        return instance
 
 
 HermanoFormSet = inlineformset_factory(

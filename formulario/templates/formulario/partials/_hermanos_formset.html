@@ -1,18 +1,22 @@
 {% load crispy_forms_tags %}
-
+<!-- Gestión del formset -->
 {{ fs_hermanos.management_form }}
 
+<!-- Contenedor principal de formularios -->
 <div id="formset-hermanos">
   {% for form in fs_hermanos %}
     <div class="card mb-3 hermano-form">
       <div class="card-body">
         <h6 class="card-title mb-3">Hermano {{ forloop.counter }}</h6>
-   {% crispy form %}
-{{ form.direccion_formateada_hermano }}
-<div class="direccion-preview_hermano alert alert-info py-2 px-3 mb-0 fw-bold">
-  Dirección formateada aquí...
-</div>
-        {{ form.DELETE.as_hidden }}  {# ← ahora es oculto #}
+
+        {% crispy form %}
+       
+
+        <div class="direccion-preview_hermano alert alert-info py-2 px-3 mb-0 fw-bold">
+          Dirección formateada aquí...
+        </div>
+
+        {{ form.DELETE.as_hidden }}
 
         <button type="button"
                 class="btn btn-sm btn-outline-danger ms-3 delete-hermano">
@@ -20,20 +24,21 @@
         </button>
       </div>
     </div>
-  {% empty %}
-    <p class="text-muted">Sin hermanos registrados.</p>
   {% endfor %}
 </div>
 
+<!-- Plantilla vacía que será clonada -->
 <div id="empty-form-hermano" class="d-none">
   <div class="card mb-3 hermano-form">
     <div class="card-body">
       <h6 class="card-title mb-3">Hermano __NUM__</h6>
 
       {% crispy fs_hermanos.empty_form %}
-      {{ fs_hermanos.empty_form.direccion_formateada_hermano }}
-      <div class="direccion-preview_hermano alert alert-info py-2 px-3 mb-0 fw-bold"></div>
+     
 
+      <div class="direccion-preview_hermano alert alert-info py-2 px-3 mb-0 fw-bold">
+        Dirección formateada aquí...
+      </div>
 
       {{ fs_hermanos.empty_form.DELETE.as_hidden }}
 
@@ -45,7 +50,7 @@
   </div>
 </div>
 
-
+<!-- Botón único para agregar -->
 <button type="button" class="btn btn-sm btn-secondary" id="add-hermano">
   + Agregar hermano
 </button>

@@ -4,10 +4,9 @@ from django.db import transaction
 from .forms import (
     ReclutaForm, DatosFamiliaresForm, DireccionesAnterioresForm, InformacionAcademicaForm,
     ReferenciasPersonalesForm, SectorDefensaForm, BienesRentasAEPForm, SituacionJuridicaForm,
-    OtrosDatosForm, ConfirmacionForm, HijoFormSet,HermanoFormSet
+    OtrosDatosForm, ConfirmacionForm, HijoFormSet, HermanoFormSet
 )
-from .models import Hijo
-from .models import Hermano
+from .models import Hijo, Hermano
 from .utils import generar_documentos
 
 class ReclutaTabsView(TemplateView):
@@ -17,8 +16,8 @@ class ReclutaTabsView(TemplateView):
         context = {
             "f_recluta": ReclutaForm(prefix="recluta"),
             "f_DatosFamiliares": DatosFamiliaresForm(prefix="DatosFamiliares"),
-            "fs_hijos" : HijoFormSet(queryset=Hijo.objects.none(), prefix="hijos"),
-            "fs_hermanos" : HermanoFormSet(queryset=Hijo.objects.none(), prefix="hermanos"),
+            "fs_hijos": HijoFormSet(queryset=Hijo.objects.none(), prefix="hijos"),
+            "fs_hermanos": HermanoFormSet(queryset=Hijo.objects.none(), prefix="hermanos"),
             "f_direcciones_anteriores": DireccionesAnterioresForm(prefix="DireccionesAnteriores"),
             "f_informacion_academica": InformacionAcademicaForm(prefix="InformacionAcademica"),
             "f_ReferenciasPersonales": ReferenciasPersonalesForm(prefix="ReferenciasPersonales"),
@@ -71,12 +70,13 @@ class ReclutaTabsView(TemplateView):
                     hijo.datos_familiares = datos_familiares
                     hijo.save()
 
-            
             for hermano_form in fs_hermanos:
                 if hermano_form.cleaned_data and not hermano_form.cleaned_data.get("DELETE", False):
-                    Hermano = hermano_form.save(commit=False)
-                    Hermano.datos_familiares = datos_familiares
-                    Hermano.save()
+                    direccion = hermano_form.cleaned_data.get("direccion_formateada_hermano")
+                    hermano = hermano_form.save(commit=False)
+                    hermano.direccion_formateada_hermano = direccion
+                    hermano.datos_familiares = datos_familiares
+                    hermano.save()
 
             for form in [
                 f_direcciones_anteriores,
@@ -89,12 +89,12 @@ class ReclutaTabsView(TemplateView):
             ]:
                 obj = form.save(commit=False)
                 obj.recluta = recluta
+                form.instance = obj
                 obj.save()
 
             generar_documentos(recluta)
             return redirect("formulario_exito")
 
-        # Si hay errores:
         context = {
             "f_recluta": f_recluta,
             "f_DatosFamiliares": f_DatosFamiliares,
@@ -109,4 +109,5 @@ class ReclutaTabsView(TemplateView):
             "f_OtrosDatos": f_OtrosDatos,
             "f_confirm": f_confirm,
         }
+
         return render(request, self.template_name, context)

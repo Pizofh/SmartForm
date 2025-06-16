@@ -353,11 +353,11 @@ export class DatosFamilaresPage {
   await this.letra_principal_hermano.selectOption('H');
   await this.bis_hermano.check();
   await this.letra_bis_hermano.selectOption('F');
-  await this.cuadrante_hermano.selectOption('SUR');
+  await this.cuadrante_hermano.selectOption('NORTE');
   await this.numero_secundario_hermano.fill('89');
-  await this.letra_secundaria_hermano.selectOption('J');
-  await this.cuadrante_dos_hermano.selectOption('OESTE');
-  await this.nro_hermano.fill('789');
+  await this.letra_secundaria_hermano.selectOption('P');
+  await this.cuadrante_dos_hermano.selectOption('ESTE');
+  await this.nro_hermano.fill('79');
   await this.complemento_hermano.fill('Bosa');
 
   await this.agregar_hermano.click();
@@ -390,8 +390,8 @@ export class DatosFamilaresPage {
   await this.identificacion_hermano_2.fill('77766655');
   await this.ocupacion_hermano_2.fill('Trabajador');
   await this.celular_hermano_2.fill('3136546525');
-  await this.tipo_via_hermano_2.selectOption('Calle');
-  await this.numero_principal_hermano_2.fill('50');
+  await this.tipo_via_hermano_2.selectOption('Carrera');
+  await this.numero_principal_hermano_2.fill('123');
   await this.letra_principal_hermano_2.selectOption('H');
   await this.bis_hermano_2.check();
   await this.letra_bis_hermano_2.selectOption('F');
@@ -400,7 +400,7 @@ export class DatosFamilaresPage {
   await this.letra_secundaria_hermano_2.selectOption('J');
   await this.cuadrante_dos_hermano_2.selectOption('OESTE');
   await this.nro_hermano_2.fill('789');
-  await this.complemento_hermano_2.fill('Bosa');
+  await this.complemento_hermano_2.fill('BosaYork');
   } 
 
 
@@ -418,6 +418,15 @@ export class DatosFamilaresPage {
   const DireccionFormateadaMadre = await this.direccion_formateada_madre.textContent();
   return DireccionFormateadaMadre?.trim() ?? '';
 }
+
+
+async getDireccionHermano(index: number): Promise<string> {
+  return await this.page
+    .locator('input[type="hidden"][name$="direccion_formateada_hermano"]') // busca todos los inputs ocultos con ese nombre al final
+    .nth(index) // selecciona el índice deseado
+    .inputValue(); // obtiene el value del input
+}
+
 
   async obtenerDireccionFormateadaHermano(): Promise<string> {
   const DireccionFormateadaHermano = await this.direccion_formateada_hermano.textContent();

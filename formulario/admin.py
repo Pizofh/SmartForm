@@ -27,7 +27,6 @@ class InformacionAcademicaInline(nested_admin.NestedStackedInline):  #
     extra = 0
 
 
-
 class ReferenciasPersonalesInline(nested_admin.NestedStackedInline):
     model = ReferenciasPersonales
     extra = 0
@@ -47,6 +46,8 @@ class SituacionJuridicaInline(nested_admin.NestedStackedInline):
 class OtrosDatosInline(nested_admin.NestedStackedInline):
     model = OtrosDatos
     extra = 0
+
+
 @admin.register(Recluta)
 class ReclutaAdmin(nested_admin.NestedModelAdmin):
     inlines = [
@@ -131,83 +132,6 @@ class DireccionesAnterioresAdmin(admin.ModelAdmin):
     list_filter = (
     )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # ----------  MÉTODOS PARA MOSTRAR ENLACES A LOS ARCHIVOS  ----------
-   # @admin.display(description="Hoja de vida")
-    #def link_hv(self, obj):
-     #   if obj.hv_pdf:
-      #      return format_html(
-       #         '<a href="{}" target="_blank">📄 Ver</a>', obj.hv_pdf.url
-        #    )
-        #return "—"
-
-    #@admin.display(description="Cert. EPS")
-    #def link_eps(self, obj):
-     #   if obj.certificado_eps:
-      #      return format_html(
-       #         '<a href="{}" target="_blank">📄 Ver</a>', obj.certificado_eps.url
-        #    )
-        #return "—"
-
-    #@admin.display(description="Cert. ARL")
-    #def link_arl(self, obj):
-     #   if obj.certificado_arl:
-       #     return format_html(
-      #          '<a href="{}" target="_blank">📄 Ver</a>', obj.certificado_arl.url
-        #    )
-        #return "—"
-
-    #@admin.display(description="Cert. Pensión")
-    #def link_pension(self, obj):
-     #   if obj.certificado_pension:
-      #      return format_html(
-       #         '<a href="{}" target="_blank">📄 Ver</a>', obj.certificado_pension.url
-        #    )
-       # return "—"
-
 @admin.register(DatosFamiliares)
 class DatosFamiliaresAdmin(admin.ModelAdmin):
     inlines = [HijoInline,HermanoInline]
@@ -261,6 +185,27 @@ class DatosFamiliaresAdmin(admin.ModelAdmin):
 
     # ----------  FILTROS LATERALES  ----------
     list_filter = (
+    )
+
+@admin.register(Hermano)
+class HermanoAdmin(admin.ModelAdmin):
+    
+    list_display = (
+        "primer_nombre_hermano",
+        "segundo_nombre_hermano",
+        "primer_apellido_hermano",
+        "segundo_apellido_hermano",
+        "identificacion_hermano",
+        "direccion_formateada_hermano",
+    )
+
+    search_fields = (
+        "primer_nombre_hermano",
+        "segundo_nombre_hermano",
+        "primer_apellido_hermano",
+        "segundo_apellido_hermano",
+        "identificacion_hermano",
+        "direccion_formateada_hermano",
     )
 
 @admin.register(InformacionAcademica)

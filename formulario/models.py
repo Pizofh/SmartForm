@@ -186,6 +186,8 @@ class DireccionesAnteriores(models.Model):
     telefono_direccion_anterior_2_1 = models.IntegerField("Teléfono 1", blank=True,null=True,validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
     telefono_direccion_anterior_2_2 = models.IntegerField("Teléfono 2", blank=True,null=True,validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
     ciudad_direccion_anterior_2 = models.CharField("Ciudad", blank=True,null=True, max_length=25)
+    direccion_completa_anterior_1 = models.CharField(max_length=500, blank=True, null=True)
+    direccion_completa_anterior_2 = models.CharField(max_length=500, blank=True, null=True)
 
 #NOMBRES QUE SE EMPLEAN EN EL ADMIN
     class Meta:
