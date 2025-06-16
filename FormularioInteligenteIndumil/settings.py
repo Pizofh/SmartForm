@@ -86,6 +86,18 @@ TEMPLATES = [
     },
 ]
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # Solo usuarios logueados
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',  # Para el admin y navegador
+        'rest_framework.authentication.BasicAuthentication',    # Opcional, para Postman
+    ],
+}
+
+
 WSGI_APPLICATION = "FormularioInteligenteIndumil.wsgi.application"
 
 
