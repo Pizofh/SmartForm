@@ -47,7 +47,7 @@ const direccionHermano2 = await datosfamiliares.getDireccionHermano(2);
   expect(direccionMadre).toBe('Anillo Vial 230 O Z NORTE # 566 P ESTE 200, Casa tercer piso');
   expect(direccionHermano).toBe('Calle 50 H BIS F NORTE # 89 P ESTE 79, Bosa');
   expect(direccionHermano1).toBe('Calle 50 H BIS F SUR # 89 J OESTE 789, Bosa');
-  expect(direccionHermano2).toBe('Carrera 123 H BIS F SUR # 89 J OESTE 789, BosaYork');
+  expect(direccionHermano2).toBe('Carrera 123 H BIS F SUR # 89 J OESTE 789, Suba');
 
   
 //INFORMACIÓN ACADÉMICA

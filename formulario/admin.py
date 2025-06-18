@@ -4,50 +4,62 @@ from .models import (Recluta, DatosFamiliares,DireccionesAnteriores, Informacion
                      ReferenciasPersonales,SectorDefensa, BienesRentasAEP, SituacionJuridica, OtrosDatos,Hijo,Hermano)
 import nested_admin
 
+# -------------------- INLINES ANIDADOS --------------------
+
+# Inline para el modelo Hijo dentro de DatosFamiliares
 
 class HijoInline(nested_admin.NestedTabularInline):
     model = Hijo
     extra = 0
     
+# Inline para el modelo Hermano dentro de DatosFamiliares
 class HermanoInline(nested_admin.NestedTabularInline):
     model = Hermano
     extra = 0
 
+# Inline para el modelo DatosFamiliares que incluye hijos y hermanos
 class DatosFamiliaresInline(nested_admin.NestedStackedInline):
     model = DatosFamiliares
-    inlines = [HijoInline,HermanoInline]  # 👈 Aquí anidamos los hijos
+    inlines = [HijoInline,HermanoInline]  # Se anidan hijos y hermanos
     extra = 0
 
+# Inline para direcciones anteriores
 class DireccionesAnterioresInline(nested_admin.NestedStackedInline):
     model = DireccionesAnteriores
     extra = 0
 
+# Inline para información académica
 class InformacionAcademicaInline(nested_admin.NestedStackedInline):  #
     model = InformacionAcademica
     extra = 0
 
-
+# Inline para referencias personales
 class ReferenciasPersonalesInline(nested_admin.NestedStackedInline):
     model = ReferenciasPersonales
     extra = 0
 
+# Inline para sector defensa
 class SectorDefensaInline(nested_admin.NestedStackedInline):
     model = SectorDefensa
     extra = 0
 
+# Inline para bienes y rentas (AEP)
 class BienesRentasAEPInline(nested_admin.NestedStackedInline):
     model = BienesRentasAEP
     extra = 0
 
+# Inline para situación jurídica
 class SituacionJuridicaInline(nested_admin.NestedStackedInline):
     model = SituacionJuridica
     extra = 0
 
+# Inline para otros datos
 class OtrosDatosInline(nested_admin.NestedStackedInline):
     model = OtrosDatos
     extra = 0
 
 
+# Admin del modelo Recluta con todos los inlines anidados
 @admin.register(Recluta)
 class ReclutaAdmin(nested_admin.NestedModelAdmin):
     inlines = [
@@ -60,7 +72,7 @@ class ReclutaAdmin(nested_admin.NestedModelAdmin):
         SituacionJuridicaInline,
         OtrosDatosInline,
     ]
-    # ----------  QUÉ COLUMNAS MOSTRAR EN LA LISTA  ----------
+# Columnas visibles en la lista de reclutas
     list_display = (
 
 #CLASE RECLUTA
@@ -77,7 +89,7 @@ class ReclutaAdmin(nested_admin.NestedModelAdmin):
         
     )
 
-    # ----------  CAMPOS PARA BUSCAR  ----------
+# Campos habilitados para búsqueda
     search_fields = (
 
 #CLASE RECLUTA
@@ -93,9 +105,10 @@ class ReclutaAdmin(nested_admin.NestedModelAdmin):
             "correo_electronico_institucional","facebook","instagram","twitter","otras_redes","direccion_formateada",
     )
 
-    # ----------  FILTROS LATERALES  ----------
+ # Filtros disponibles en la barra lateral
     list_filter = (
     )
+
 
 @admin.register(DireccionesAnteriores)
 class DireccionesAnterioresAdmin(admin.ModelAdmin):
@@ -207,6 +220,14 @@ class HermanoAdmin(admin.ModelAdmin):
         "identificacion_hermano",
         "direccion_formateada_hermano",
     )
+# El resto de los modelos siguen el patrón similar:
+# 1. Se registran con el decorador @admin.register
+# 2. Se definen sus columnas a mostrar en list_display
+# 3. Se agregan campos relevantes en search_fields
+# 4. Se dejan list_filter vacíos por ahora para evitar sobrecargar la interfaz
+
+# Nota: Este archivo permite una visualización y gestión avanzada de los modelos
+# en el panel de administración de Django, usando `nested_admin` para relaciones complejas.
 
 @admin.register(InformacionAcademica)
 class InformacionAcademicaAdmin(admin.ModelAdmin):

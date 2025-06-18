@@ -16,12 +16,20 @@ from django.forms import HiddenInput
 
 
 class BaseHelperMixin:
+    """
+    Mixin reutilizable que configura un helper de django-crispy-forms para los formularios.
+    
+    Este helper:
+    - Desactiva el <form> tag automático (`form_tag = False`).
+    - Aplica clases Bootstrap ('form-label' y 'form-control').
+    - Establece dinámicamente un ID en el formulario basado en su prefijo.
+    """
     def __init__(self, *args, **kwargs):
-        self.prefix = kwargs.get("prefix", "")  # capturamos el prefix
+        self.prefix = kwargs.get("prefix", "")
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
-        self.helper.form_id = f"{self.prefix}_form"  # opcional, ayuda a depurar
+        self.helper.form_id = f"{self.prefix}_form"
         self.helper.label_class = 'form-label'
         self.helper.field_class = 'form-control'
         self.helper.form_show_labels = True
@@ -29,6 +37,18 @@ class BaseHelperMixin:
 
 class ReclutaForm(BaseHelperMixin, forms.ModelForm):
 
+    """
+    Formulario ModelForm para la clase `Recluta`.
+
+    Utiliza django-crispy-forms para definir un layout personalizado con fieldsets y columnas.
+    Se incluye un campo adicional llamado `direccion_preview` que muestra la dirección formateada
+    construida automáticamente con base en los campos de dirección.
+
+    - Los campos de fecha usan widgets tipo 'date'.
+    - El layout agrupa los campos de dirección en un Fieldset con vista previa.
+    - El método `save` sobrescrito asegura que se almacene la dirección formateada.
+    """
+   
     direccion_preview = forms.CharField(
         label="Vista previa de dirección",
         required=False,
@@ -106,6 +126,10 @@ class ReclutaForm(BaseHelperMixin, forms.ModelForm):
         )
 
     def save(self, commit=True):
+        """
+        Sobrescribe el método save para almacenar la dirección formateada
+        basada en la lógica del modelo `Recluta`.
+        """
         instance = super().save(commit=False)
         instance.direccion_formateada = instance.direccion_completa
         if commit:
@@ -114,6 +138,21 @@ class ReclutaForm(BaseHelperMixin, forms.ModelForm):
 
 
 class DireccionesAnterioresForm(BaseHelperMixin, forms.ModelForm):
+
+    """
+    Formulario para el modelo DireccionesAnteriores.
+
+    Permite capturar hasta dos direcciones anteriores de un recluta, incluyendo:
+    - Períodos de residencia (desde/hasta)
+    - Componentes estructurados de dirección (tipo de vía, número, letra, bis, cuadrante)
+    - Ciudad y teléfonos asociados a cada dirección
+
+    Este formulario:
+    - Usa campos ocultos para mostrar una vista previa de las direcciones formateadas (`direccion_preview_anterior_1`, `direccion_preview_anterior_2`)
+    - Utiliza `crispy-forms` para organizar visualmente las secciones en fieldsets
+    - Sobrescribe el método `save()` para almacenar correctamente las vistas previas en los campos de modelo `direccion_completa_anterior_1` y `direccion_completa_anterior_2`
+    """
+
 
     direccion_preview_anterior_1 = forms.CharField(widget=forms.HiddenInput(), required=False)
     direccion_preview_anterior_2 = forms.CharField(widget=forms.HiddenInput(), required=False)
@@ -206,17 +245,16 @@ class DireccionesAnterioresForm(BaseHelperMixin, forms.ModelForm):
                     Column("telefono_direccion_anterior_2_2", css_class='col-md-2'),
                     Column("ciudad_direccion_anterior_2", css_class='col-md-2'),
                 )
-                 
-
-            
-            
-            #'barrio','numero_celular','telefono_fijo','ciudad','departamento','correo_electronico_personal','correo_electronico_institucional','facebook','instagram','twitter','otras_redes','genero',  'fecha_ingreso',
-            #'dependencia_destino', 'unidad_negocio', 'cargo', 'tipo_contrato',
-            #'hv_pdf', 'certificado_eps', 'certificado_arl', 'certificado_pension'
+        
         )
         )
 
     def save(self, commit=True):
+        """
+        Guarda el formulario incluyendo los campos de dirección formateada que fueron generados
+        dinámicamente y asignados desde los campos ocultos de vista previa.
+        """
+
         instance = super().save(commit=False)
         instance.direccion_completa_anterior_1 = self.cleaned_data.get("direccion_preview_anterior_1")
         instance.direccion_completa_anterior_2 = self.cleaned_data.get("direccion_preview_anterior_2")
@@ -227,6 +265,23 @@ class DireccionesAnterioresForm(BaseHelperMixin, forms.ModelForm):
 
 
 class DatosFamiliaresForm(BaseHelperMixin, forms.ModelForm):
+    """
+    Formulario asociado al modelo DatosFamiliares.
+
+    Este formulario captura información detallada del entorno familiar del recluta, incluyendo:
+    - Datos del cónyuge (identificación, profesión, celular, dirección)
+    - Datos del padre y la madre (estado vital, contacto, profesión, dirección)
+    - Dirección estructurada para cada persona, con vista previa en campo oculto
+
+    Además:
+    - Integra `crispy-forms` para una visualización más ordenada con `Fieldset` y `Row`.
+    - Utiliza campos ocultos (`direccion_preview_*`) para mostrar dinámicamente las direcciones generadas.
+    - Incluye vistas parciales para agregar hijos y hermanos mediante `include` en plantillas HTML.
+    - Sobrescribe el método `save()` para almacenar las versiones formateadas de las direcciones en el modelo.
+
+    Los datos capturados en este formulario permiten una caracterización completa del núcleo familiar del aspirante.
+    """
+
     direccion_preview_conyugue = forms.CharField(required=False, widget=forms.HiddenInput())
     direccion_preview_padre = forms.CharField(required=False, widget=forms.HiddenInput())
     direccion_preview_madre = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -257,6 +312,17 @@ class DatosFamiliaresForm(BaseHelperMixin, forms.ModelForm):
         
 
     def __init__(self, *args, **kwargs):
+
+        """
+        Inicializa el formulario `DatosFamiliaresForm`, configurando el helper de crispy-forms
+        para personalizar el renderizado del formulario.
+
+        - Desactiva el tag <form> (form_tag=False) para permitir inclusión en formularios compuestos.
+        - Si se trata de una instancia existente (`self.instance.pk`), inicializa los campos ocultos 
+          que contienen vistas previas de direcciones para el cónyuge, el padre, la madre y un hermano,
+          a partir de los valores calculados y almacenados en el modelo.
+        """
+
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False 
@@ -377,6 +443,16 @@ class DatosFamiliaresForm(BaseHelperMixin, forms.ModelForm):
             
         )
     def save(self, commit=True):
+
+        """
+        Guarda la instancia del formulario `DatosFamiliaresForm`, actualizando los campos de
+        dirección formateada del cónyuge, padre, madre y hermanos con la información ingresada 
+        desde los campos ocultos (`direccion_preview_*`).
+
+        Si `commit=True`, persiste inmediatamente los cambios en la base de datos. 
+        De lo contrario, retorna la instancia sin guardar para posterior manipulación.
+        """
+              
         instance = super().save(commit=False)
         instance.direccion_formateada_conyugue = self.cleaned_data.get("direccion_preview_conyugue")
         instance.direccion_formateada_padre = self.cleaned_data.get("direccion_preview_padre")
@@ -389,7 +465,18 @@ class DatosFamiliaresForm(BaseHelperMixin, forms.ModelForm):
 
 
 class HijoForm(forms.ModelForm):
-    
+
+    """
+    Formulario para la gestión de datos de un hijo (nombre, edad, identificación) 
+    asociado al modelo `Hijo`.
+
+    Este formulario personaliza la presentación con `crispy-forms`, utilizando un 
+    diseño basado en filas (`Row`) y columnas (`Column`) para mejorar la usabilidad.
+
+    También incluye campos ocultos necesarios para la integración con un `formset`
+    (el campo `id` y el campo `DELETE`).
+    """
+
     class Meta:
         model = Hijo
         fields = ['nombre', 'edad', 'identificacion']
@@ -422,14 +509,28 @@ class HijoForm(forms.ModelForm):
 
 
 HijoFormSet = inlineformset_factory(
+
     parent_model=DatosFamiliares,      # quién es el “padre”
     model=Hijo,                        # modelo hijo
     form=HijoForm,                     # el form que ya tenías
     extra=1,
     can_delete=True
+    
 )
 
+
 class HermanoForm(forms.ModelForm):
+    
+    """
+    Formulario asociado al modelo `Hermano`, utilizado para capturar la información
+    de hermanos del recluta, incluyendo datos personales, ocupación y dirección estructurada.
+
+    El formulario está personalizado con `crispy-forms` para organizar los campos en filas
+    y columnas, con soporte para edición y eliminación dentro de un `formset`. También
+    incluye un campo oculto para almacenar la dirección formateada.
+    """
+
+
     
     class Meta:
         model = Hermano
@@ -446,6 +547,10 @@ class HermanoForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        """
+        Inicializa el formulario, configurando los estilos visuales y el layout
+        de los campos. Marca el campo de dirección formateada como no requerido.
+        """
         super().__init__(*args, **kwargs)
         self.fields['direccion_formateada_hermano'].required = False
         self.helper               = FormHelper()
@@ -493,6 +598,12 @@ class HermanoForm(forms.ModelForm):
         self.helper.render_unmentioned_fields = False
 
     def save(self, commit=True):
+
+        """
+        Guarda la instancia del modelo `Hermano`, asegurándose de que la dirección formateada
+        capturada desde el campo oculto se asigne correctamente al campo correspondiente del modelo.
+        """
+        
         instance = super().save(commit=False)
         instance.direccion_formateada_hermano = self.cleaned_data.get("direccion_formateada_hermano")
         if commit:
@@ -511,6 +622,17 @@ HermanoFormSet = inlineformset_factory(
 
 
 class InformacionAcademicaForm(BaseHelperMixin, forms.ModelForm):
+    """
+    Formulario asociado al modelo `InformacionAcademica`. Permite registrar los estudios
+    realizados por el recluta, hasta un máximo de cuatro registros académicos, el manejo de 
+    idiomas extranjeros (lectura, escritura y habla), y conocimientos en herramientas ofimáticas 
+    como Word, Excel, PowerPoint, Access e Internet.
+
+    El formulario utiliza `crispy-forms` para estructurar el layout en secciones organizadas 
+    mediante `Fieldset` y `Row`, con etiquetas visuales claras y sin `form_tag`, 
+    ya que se usa dentro de un formulario principal más amplio.
+    """
+
     class Meta:
         model = InformacionAcademica
         fields = [
@@ -602,6 +724,20 @@ class InformacionAcademicaForm(BaseHelperMixin, forms.ModelForm):
 
 
 class ReferenciasPersonalesForm(forms.ModelForm):
+
+    """
+    Formulario para capturar hasta tres referencias personales del recluta, incluyendo su nombre,
+    ocupación, empresa, ciudad, teléfono y una dirección completa construida a partir de múltiples 
+    campos (tipo de vía, número, letras, complementos, etc.).
+
+    Utiliza `crispy-forms` para organizar el formulario en tres secciones claramente separadas mediante
+    `Fieldset`, y añade un campo oculto para previsualizar la dirección construida de cada referencia.
+    El método `save()` guarda esta dirección en campos formateados del modelo `ReferenciasPersonales`.
+
+    Este formulario no incluye la etiqueta `<form>` (`form_tag = False`) porque se renderiza dentro de
+    un formulario principal.
+    """
+
     direccion_preview_referencia_1 = forms.CharField(required=False, widget=forms.HiddenInput())
     direccion_preview_referencia_2 = forms.CharField(required=False, widget=forms.HiddenInput())
     direccion_preview_referencia_3 = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -733,6 +869,23 @@ class ReferenciasPersonalesForm(forms.ModelForm):
 
 
 class SectorDefensaForm(BaseHelperMixin, forms.ModelForm):
+
+    """
+    Formulario para registrar información de hasta dos personas relacionadas con el recluta
+    que trabajan en el sector defensa. Se capturan sus datos personales, cargos, entidad de
+    pertenencia, unidad militar y dirección detallada.
+
+    Cada dirección se construye a partir de múltiples campos individuales y se presenta como
+    una previsualización en el formulario. Los campos `direccion_preview_sd_1` y
+    `direccion_preview_sd_2` son ocultos y almacenan la dirección formateada generada.
+
+    Se utiliza `crispy-forms` para estructurar el formulario visualmente mediante `Fieldset`
+    y `Row`, permitiendo una disposición clara de los campos. El método `save()` guarda las
+    direcciones formateadas en el modelo `SectorDefensa`.
+
+    La clase hereda de `BaseHelperMixin` para mantener la consistencia en el diseño con otros formularios.
+    """
+
     direccion_preview_sd_1 = forms.CharField(required=False, widget=forms.HiddenInput())
     direccion_preview_sd_2 = forms.CharField(required=False, widget=forms.HiddenInput())
     class Meta:
@@ -744,7 +897,7 @@ class SectorDefensaForm(BaseHelperMixin, forms.ModelForm):
     "numero_principal_sd_1","letra_principal_sd_1","bis_sd_1","letra_bis_sd_1", "cuadrante_sd_1", "numero_secundario_sd_1", 
     "letra_secundaria_sd_1","cuadrante_dos_sd_1","nro_sd_1", "complemento_sd_1",
 
-# Referencia 1
+# Referencia 2
     "nombresyapellidos_sd_2", "cargo_sd_2","entidad_sd_2","unidad_militar_sd_2", "celular_sd_2", "tipo_via_sd_2",
     "numero_principal_sd_2","letra_principal_sd_2","bis_sd_2","letra_bis_sd_2", "cuadrante_sd_2", "numero_secundario_sd_2", 
     "letra_secundaria_sd_2","cuadrante_dos_sd_2","nro_sd_2", "complemento_sd_2",
@@ -756,8 +909,8 @@ class SectorDefensaForm(BaseHelperMixin, forms.ModelForm):
         self.helper.form_tag = False
 
         if self.instance.pk:
-            self.fields["direccion_preview_referencia_1"].initial = self.instance.direccion_completa_anterior_1
-            self.fields["direccion_preview_referencia_2"].initial = self.instance.direccion_completa_anterior_2
+            self.fields["direccion_preview_sd_1"].initial = self.instance.direccion_preview_sd_1
+            self.fields["direccion_preview_sd_2"].initial = self.instance.direccion_preview_sd_2
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -833,6 +986,29 @@ class SectorDefensaForm(BaseHelperMixin, forms.ModelForm):
 
 
 class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
+
+    """
+    Formulario que permite al aspirante registrar su situación económica, patrimonial y financiera
+    correspondiente al formato AEP. Este formulario recopila:
+
+    - Ingresos percibidos durante el último año gravable (salarios, honorarios, arriendos, entre otros).
+    - Información de hasta seis cuentas bancarias nacionales o extranjeras.
+    - Detalles de hasta cinco bienes patrimoniales, con su tipo, ubicación, identificación y avalúo.
+    - Obligaciones económicas vigentes, detallando acreedor, concepto y valor.
+    - Participación en organizaciones o entidades (hasta cuatro).
+    - Actividades económicas privadas del aspirante (hasta tres).
+
+    Además, incluye un campo `total_ingresos` que se muestra como solo lectura para reflejar
+    la suma total de ingresos y se calcula dinámicamente desde el cliente.
+
+    Se utiliza la librería `crispy-forms` para maquetar visualmente el formulario con `Fieldset`,
+    `Row` y `Column`, agrupando los campos en secciones temáticas claras con encabezados y separadores
+    visuales (`<hr>` y títulos en HTML).
+
+    Este formulario hereda de `BaseHelperMixin` para aplicar un diseño coherente con otros formularios del sistema.
+    """
+     
+
     total_ingresos = forms.CharField(
         label="Total de Ingresos",
         required=False,
@@ -1037,6 +1213,30 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
 
 
 class SituacionJuridicaForm(BaseHelperMixin, forms.ModelForm):
+
+    """
+        Formulario para registrar información sobre la situación jurídica del aspirante,
+        incluyendo hasta dos procesos judiciales, penales, administrativos, disciplinarios
+        o de cualquier otra índole en los que haya estado vinculado.
+
+        Campos recopilados por cada proceso:
+        - Fecha del proceso
+        - Tipo de investigación
+        - Causa o motivo
+        - Autoridad competente
+        - Estado actual del proceso
+        - Responsable del proceso
+
+        Características:
+        - Se excluye el campo `recluta` ya que se asigna automáticamente.
+        - Se utilizan widgets personalizados para los campos de fecha.
+        - Maquetación con `crispy-forms`, agrupando la información en dos bloques claros mediante `Fieldset`
+        y separadores visuales (`<hr>` y títulos en HTML).
+    
+        Este formulario forma parte del conjunto de datos requeridos para la evaluación de antecedentes
+        del aspirante, permitiendo un análisis más completo de su historial jurídico.
+    """
+
     class Meta:
         model   = SituacionJuridica
         exclude = ("recluta",)
@@ -1090,6 +1290,28 @@ class SituacionJuridicaForm(BaseHelperMixin, forms.ModelForm):
 
 
 class OtrosDatosForm(BaseHelperMixin, forms.ModelForm):
+
+    """
+    Formulario para capturar información adicional del aspirante, incluyendo viajes internacionales
+    y datos de recomendantes relacionados con la postulación.
+
+    Secciones:
+    - **Viajes al exterior**: Permite registrar hasta tres viajes internacionales, con fecha, país,
+      motivo y tiempo de permanencia.
+    - **Datos del recomendante**: Recoge información personal del recomendante, su relación con el
+      aspirante, su lugar de trabajo (si aplica en Indumil), su dirección completa (dividida en campos),
+      y dos contactos adicionales dentro de la organización.
+
+    Características destacadas:
+    - Campo oculto `direccion_preview_recomendante` que almacena una dirección construida a partir
+      de los fragmentos ingresados manualmente, mostrado en una vista previa interactiva.
+    - La dirección formateada se guarda en el campo `direccion_formateada_recomendante` del modelo.
+    - Usa `crispy-forms` para una disposición clara, con secciones diferenciadas visualmente mediante HTML.
+
+    Este formulario complementa el perfil del aspirante con información útil para el proceso
+    de evaluación de idoneidad y referencias laborales.
+    """
+
     direccion_preview_recomendante = forms.CharField(required=False, widget=forms.HiddenInput())
     class Meta:
         model   = OtrosDatos
@@ -1208,6 +1430,22 @@ class OtrosDatosForm(BaseHelperMixin, forms.ModelForm):
 
 
 class ConfirmacionForm(BaseHelperMixin, forms.Form):
+
+    """
+    Formulario de confirmación que incluye validación CAPTCHA condicional.
+
+    Características:
+    - Este formulario se utiliza típicamente al final de un proceso de recolección de datos
+      para confirmar la veracidad o aceptación de la información ingresada.
+    - Si no se está ejecutando en un entorno de pruebas automatizadas (E2E),
+      incluye un campo CAPTCHA (`ReCaptchaV2Checkbox`) para prevenir envíos automáticos.
+    - Si la configuración `settings.IS_E2E_TEST` está activada, el campo CAPTCHA se excluye,
+      permitiendo que las pruebas se realicen sin requerir validación humana.
+
+    Este comportamiento permite pruebas automatizadas sin fricciones, sin comprometer
+    la seguridad en producción.
+    """
+        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

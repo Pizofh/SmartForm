@@ -273,10 +273,10 @@ export class DatosFamilaresPage {
   async llenarFormulario() {
 
   await this.DatosFamiliaresTab.click();
-  await this.nombre_conyugue.fill('María José Rodriguez Tribiño');
+  await this.nombre_conyugue.fill('María Rodriguez Tribiño');
   await this.cedula_conyugue.fill('1001346476');
   await this.profesion_oficio_conyugue.fill('Veterinaria');
-  await this.celular_conyugue.fill('3153135284');
+  await this.celular_conyugue.fill('3153111284');
   await this.tipo_via_conyugue.selectOption('Calle');
   await this.numero_principal_conyugue.fill('167');
   await this.letra_principal_conyugue.selectOption('A');
@@ -291,10 +291,10 @@ export class DatosFamilaresPage {
   await this.direccion_formateada_conyugue
 
 //DATOS PADRE
-  await this.nombre_padre.fill('Johny Alexander Garnica Jimenez');
+  await this.nombre_padre.fill('Johny Garnica Jimenez');
   await this.vive_padre.selectOption('Sí');
-  await this.identificación_padre.fill('7173397');
-  await this.telefono_padre.fill('3017337009');
+  await this.identificación_padre.fill('7111397');
+  await this.telefono_padre.fill('3017355009');
   await this.oficio_profesion_padre.fill('Independiente');
   await this.tipo_via_padre.selectOption('Calle');
   await this.numero_principal_padre.fill('50');
@@ -310,10 +310,10 @@ export class DatosFamilaresPage {
   await this.direccion_formateada_padre
 
 //DATOS MADRE
-  await this.nombre_madre.fill('Milena Astrid Sandoval Villamil');
+  await this.nombre_madre.fill('Milena Sandoval Villamil');
   await this.vive_madre.selectOption('Sí');
   await this.identificación_madre.fill('40046564');
-  await this.telefono_madre.fill('3134690645');
+  await this.telefono_madre.fill('3111190645');
   await this.oficio_profesion_madre.fill('Abogada');
   await this.tipo_via_madre.selectOption('Anillo Vial');
   await this.numero_principal_madre.fill('230');
@@ -329,7 +329,7 @@ export class DatosFamilaresPage {
   await this.direccion_formateada_madre
 
 //DATOS HIJOS
-  await this.nombre.fill('Rocko Garnica');
+  await this.nombre.fill('Rocko');
   await this.edad.fill('9');
   await this.identificacion.fill('1351386');
   await this.agregar_hijo.click();
@@ -347,7 +347,7 @@ export class DatosFamilaresPage {
   await this.segundo_nombre
   await this.identificacion_hermano.fill('53513525');
   await this.ocupacion_hermano.fill('Estudiante');
-  await this.celular_hermano.fill('3136546548');
+  await this.celular_hermano.fill('3139946548');
   await this.tipo_via_hermano.selectOption('Calle');
   await this.numero_principal_hermano.fill('50');
   await this.letra_principal_hermano.selectOption('H');
@@ -370,7 +370,7 @@ export class DatosFamilaresPage {
   await this.segundo_nombre_1
   await this.identificacion_hermano_1.fill('535131561');
   await this.ocupacion_hermano_1.fill('Estudianteeee');
-  await this.celular_hermano_1.fill('3136546515');
+  await this.celular_hermano_1.fill('3136566515');
   await this.tipo_via_hermano_1.selectOption('Calle');
   await this.numero_principal_hermano_1.fill('50');
   await this.letra_principal_hermano_1.selectOption('H');
@@ -400,7 +400,7 @@ export class DatosFamilaresPage {
   await this.letra_secundaria_hermano_2.selectOption('J');
   await this.cuadrante_dos_hermano_2.selectOption('OESTE');
   await this.nro_hermano_2.fill('789');
-  await this.complemento_hermano_2.fill('BosaYork');
+  await this.complemento_hermano_2.fill('Suba');
   } 
 
 

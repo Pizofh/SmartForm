@@ -154,12 +154,12 @@ export class DatosPersonalesPage {
     await this.telefono_fijo.fill('7523491');
     await this.ciudad.fill('Tunja');
     await this.departamento.fill('Boyacá');
-    await this.correo_electronico_personal.fill('stevegarnicas@hotmail.com');
-    await this.correo_electronico_institucional.fill('brian.garnica@indumil.gov.co');
-    await this.facebook.fill('SteveG');
-    await this.instagram.fill('Steveg');
-    await this.twitter.fill('Steve');
-    await this.otras_redes.fill('Reddit.steve');
+    await this.correo_electronico_personal.fill('stevegarasdnicas@hotmail.com');
+    await this.correo_electronico_institucional.fill('brian.garniasdca@indumil.gov.co');
+    await this.facebook.fill('StasdeveG');
+    await this.instagram.fill('Stasdeveg');
+    await this.twitter.fill('Stevasde');
+    await this.otras_redes.fill('Reddit.stasdeve');
   } 
 
 

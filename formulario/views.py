@@ -9,6 +9,43 @@ from .forms import (
 from .models import Hijo, Hermano
 from .utils import generar_documentos
 
+"""
+views.py
+
+Este módulo define la vista principal `ReclutaTabsView` para el formulario inteligente de reclutamiento.
+
+La vista está basada en `TemplateView` y se encarga de:
+
+1. **GET request**:
+   - Renderiza el formulario tabulado, agrupando múltiples secciones del proceso de reclutamiento.
+   - Inicializa instancias de los formularios que capturan los datos del aspirante, incluyendo:
+     - Información personal (`ReclutaForm`)
+     - Datos familiares (`DatosFamiliaresForm`)
+     - Hijos y hermanos (`HijoFormSet`, `HermanoFormSet`)
+     - Direcciones anteriores (`DireccionesAnterioresForm`)
+     - Educación, referencias y sector defensa
+     - Bienes y rentas (`BienesRentasAEPForm`)
+     - Situación jurídica y otros datos (`OtrosDatosForm`)
+     - Confirmación (reCAPTCHA)
+
+2. **POST request**:
+   - Valida todos los formularios simultáneamente.
+   - Si todos los formularios son válidos:
+     - Guarda el objeto `Recluta`.
+     - Asocia y guarda las entidades relacionadas (familiares, bienes, etc.).
+     - Usa `@transaction.atomic` para asegurar consistencia y evitar registros parciales.
+     - Genera automáticamente los documentos usando `generar_documentos(recluta)`.
+     - Redirige a la página de éxito.
+   - Si hay errores, vuelve a renderizar el formulario con los errores mostrados.
+
+Notas:
+- El campo `prefix` se utiliza en cada formulario para mantener un namespace y evitar colisiones de nombres en el HTML.
+- Los formsets de hijos y hermanos permiten el manejo dinámico de múltiples instancias relacionadas.
+- `Recluta` es la entidad principal y todas las demás dependen de esta.
+
+Esta vista representa el punto de entrada principal del sistema de recolección de datos y es crucial para asegurar una experiencia de usuario fluida, validación de datos integral y persistencia robusta.
+"""
+
 class ReclutaTabsView(TemplateView):
     template_name = "formulario/formulario_tabs.html"
 
@@ -17,7 +54,7 @@ class ReclutaTabsView(TemplateView):
             "f_recluta": ReclutaForm(prefix="recluta"),
             "f_DatosFamiliares": DatosFamiliaresForm(prefix="DatosFamiliares"),
             "fs_hijos": HijoFormSet(queryset=Hijo.objects.none(), prefix="hijos"),
-            "fs_hermanos": HermanoFormSet(queryset=Hijo.objects.none(), prefix="hermanos"),
+            "fs_hermanos": HermanoFormSet(queryset=Hermano.objects.none(), prefix="hermanos"),
             "f_direcciones_anteriores": DireccionesAnterioresForm(prefix="DireccionesAnteriores"),
             "f_informacion_academica": InformacionAcademicaForm(prefix="InformacionAcademica"),
             "f_ReferenciasPersonales": ReferenciasPersonalesForm(prefix="ReferenciasPersonales"),

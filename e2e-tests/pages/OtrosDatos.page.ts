@@ -143,7 +143,7 @@ export class OtrosDatosPage {
     await this.cargo_recomendante_2.fill('Profesional');
     await this.unidad_negocio_recomendante_1.fill('OC'); 
     await this.unidad_negocio_recomendante_2.fill('FASAB');
-    await this.razon_de_vinculo.fill('porque blablablabal y también porque babalblablablablablablablaba porque de hecho balbalbalbalba entones blablablablbala y pues por lo tanto blablablaba');
+    await this.razon_de_vinculo.fill('porque blablablabal y también porque babalblablabl  ablablablablaba porque de hecho balbalbalbalba entones blablablablbala y pues por lo tanto blablablaba');
 
     
 

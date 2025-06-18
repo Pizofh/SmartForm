@@ -12,3 +12,26 @@
     <button class="btn btn-primary mt-3">Enviar</button>
 </form>
 {% endblock %}
+
+
+
+{#
+  Plantilla HTML para la prueba de CAPTCHA con django-crispy-forms.
+
+  Funcionalidad:
+  - Renderiza un formulario con protección CSRF.
+  - Incluye el campo de CAPTCHA si se ha configurado correctamente en el formulario asociado.
+  - Utiliza el motor de plantillas de Django y hereda de `formulario/base.html`.
+
+  Componentes:
+  - {% load crispy_forms_tags %}:
+      Importa las etiquetas necesarias para renderizar formularios con django-crispy-forms.
+  - {% block title %}:
+      Define el título de la página como "Prueba de CAPTCHA".
+  - {% block content %}:
+      Muestra un encabezado y el formulario renderizado con estilo Bootstrap gracias al filtro `|crispy`.
+
+  Uso:
+  - Esta plantilla es útil para verificar si el formulario `ConfirmacionForm` (u otro con ReCaptchaField)
+    se está mostrando y validando correctamente.
+#}

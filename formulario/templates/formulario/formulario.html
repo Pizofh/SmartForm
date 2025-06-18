@@ -8,3 +8,22 @@
     <button class="btn btn-primary mt-3">Enviar</button>
   </form>
 {% endblock %}
+
+
+{#
+  Plantilla de prueba para el formulario con CAPTCHA.
+
+  Hereda de: formulario/base.html
+
+  Bloques sobreescritos:
+  - `title`: Cambia el título del documento a "Formulario con CAPTCHA".
+  - `content`: Renderiza un formulario básico que incluye:
+      - Un encabezado <h1>.
+      - El formulario `form` renderizado con el filtro `|crispy`, lo que implica que usa django-crispy-forms.
+      - Protección CSRF con `{% csrf_token %}`.
+      - Un botón de envío con estilos Bootstrap.
+
+  Uso previsto:
+  - Pruebas manuales de integración de Google reCAPTCHA v2.
+  - Verificación de comportamiento en entorno de desarrollo y testeo.
+#}

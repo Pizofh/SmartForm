@@ -5,6 +5,47 @@ from .models import (
     BienesRentasAEP, SituacionJuridica, OtrosDatos, DocumentoGenerado
 )
 
+"""
+serializers.py
+
+Este módulo define los serializadores para todos los modelos relacionados con el formulario
+de reclutamiento. Los serializadores permiten transformar instancias de modelos en formatos
+como JSON, y viceversa, facilitando la comunicación con APIs REST.
+
+Cada clase de serializador utiliza `ModelSerializer` de Django REST Framework, lo cual
+automatiza el mapeo entre los campos del modelo y su representación serializada.
+
+Serializadores definidos:
+
+- HijoSerializer / HermanoSerializer:
+    Serializan las relaciones familiares del recluta.
+
+- DatosFamiliaresSerializer:
+    Incluye hijos y hermanos como relaciones anidadas de solo lectura.
+
+- DireccionesAnterioresSerializer, InformacionAcademicaSerializer, ReferenciasPersonalesSerializer:
+    Serializan datos relacionados con la residencia, educación y referencias del recluta.
+
+- SectorDefensaSerializer:
+    Serializa los contactos del recluta dentro del sector defensa.
+
+- BienesRentasAEPSerializer:
+    Serializa la información patrimonial y económica del recluta.
+
+- SituacionJuridicaSerializer:
+    Serializa información jurídica del aspirante.
+
+- OtrosDatosSerializer:
+    Serializa otros datos relevantes como viajes o recomendantes.
+
+- DocumentoGeneradoSerializer:
+    Serializa los documentos generados automáticamente por el sistema.
+
+- ReclutaSerializer:
+    Serializador principal que incluye relaciones anidadas de solo lectura con todos
+    los modelos relacionados. Útil para obtener un perfil completo del recluta en una sola petición.
+"""
+
 class HijoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hijo
