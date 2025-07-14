@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory 
 from .models import (
-    Recluta, DatosFamiliares,DireccionesAnteriores, InformacionAcademica,ReferenciasPersonales,
+    Recluta, DatosFamiliares, InformacionAcademica,ReferenciasPersonales,
     SectorDefensa, BienesRentasAEP, SituacionJuridica, OtrosDatos, Hijo,Hermano
 )
 from crispy_forms.helper import FormHelper
@@ -64,14 +64,13 @@ class ReclutaForm(BaseHelperMixin, forms.ModelForm):
         fields = [
             "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido",
             "tipo_documento", "numero_documento", "fecha_expedición", "lugar_expedición",
-            "pasaporte_numero", "fecha_pasaporte", "numero_libretamilitar", "clase_libretamilitar",
-            "distrito_militar", "sobrenombres",  "dia_nacimiento",
+            "pasaporte_numero", "fecha_pasaporte",
+              "dia_nacimiento",
             "mes_nacimiento", "año_nacimiento", "estado_civil", "profesion_oficio",
             "tarjeta_profesional", "señales_corporales", "estatura", "peso", "tipo_via",
             "numero_principal", "letra_principal", "bis", "letra_bis", "cuadrante",
             "numero_secundario", "letra_secundaria", "cuadrante_dos", "nro", "complemento",
             "barrio","numero_celular","telefono_fijo","ciudad","departamento","correo_electronico_personal",
-            "correo_electronico_institucional","facebook","instagram","twitter","otras_redes",
              ]
 
         widgets = {
@@ -90,9 +89,8 @@ class ReclutaForm(BaseHelperMixin, forms.ModelForm):
         self.helper.layout = Layout(
             'primer_nombre', 'segundo_nombre', 'primer_apellido', 'segundo_apellido',
             'tipo_documento', 'numero_documento', 'fecha_expedición', 'lugar_expedición',
-            'pasaporte_numero', 'fecha_pasaporte', 'numero_libretamilitar', 'clase_libretamilitar',
-            'distrito_militar', 'sobrenombres',  'dia_nacimiento',
-            'mes_nacimiento', 'año_nacimiento', 'estado_civil', 'profesion_oficio',
+            'pasaporte_numero', 'fecha_pasaporte'
+            ,'dia_nacimiento','mes_nacimiento', 'año_nacimiento', 'estado_civil', 'profesion_oficio',
             'tarjeta_profesional', 'señales_corporales', 'estatura', 'peso',
             Fieldset(
                 'Dirección',
@@ -121,8 +119,7 @@ class ReclutaForm(BaseHelperMixin, forms.ModelForm):
             ),
             
             
-            'barrio','numero_celular','telefono_fijo','ciudad','departamento','correo_electronico_personal','correo_electronico_institucional',
-            'facebook','instagram','twitter','otras_redes',
+            'barrio','numero_celular','telefono_fijo','ciudad','departamento','correo_electronico_personal',
         )
 
     def save(self, commit=True):
@@ -136,132 +133,6 @@ class ReclutaForm(BaseHelperMixin, forms.ModelForm):
             instance.save()
         return instance
 
-
-class DireccionesAnterioresForm(BaseHelperMixin, forms.ModelForm):
-
-    """
-    Formulario para el modelo DireccionesAnteriores.
-
-    Permite capturar hasta dos direcciones anteriores de un recluta, incluyendo:
-    - Períodos de residencia (desde/hasta)
-    - Componentes estructurados de dirección (tipo de vía, número, letra, bis, cuadrante)
-    - Ciudad y teléfonos asociados a cada dirección
-
-    Este formulario:
-    - Usa campos ocultos para mostrar una vista previa de las direcciones formateadas (`direccion_preview_anterior_1`, `direccion_preview_anterior_2`)
-    - Utiliza `crispy-forms` para organizar visualmente las secciones en fieldsets
-    - Sobrescribe el método `save()` para almacenar correctamente las vistas previas en los campos de modelo `direccion_completa_anterior_1` y `direccion_completa_anterior_2`
-    """
-
-
-    direccion_preview_anterior_1 = forms.CharField(widget=forms.HiddenInput(), required=False)
-    direccion_preview_anterior_2 = forms.CharField(widget=forms.HiddenInput(), required=False)
-
-    class Meta:
-        model   = DireccionesAnteriores
-        fields = [ "desde_1","hasta_1", "tipo_via_anterior_1",
-            "numero_principal_anterior_1", "letra_principal_anterior_1", "bis_anterior_1", "letra_bis_anterior_1", "cuadrante_anterior_1",
-            "numero_secundario_anterior_1", "letra_secundaria_anterior_1", "cuadrante_dos_anterior_1", "nro_anterior_1", "complemento_anterior_1", 
-            "telefono_direccion_anterior_1_1","telefono_direccion_anterior_1_2", "ciudad_direccion_anterior_1",
-            "desde_2" ,"hasta_2", "tipo_via_anterior_2", "numero_principal_anterior_2", "letra_principal_anterior_2", "bis_anterior_2",
-            "letra_bis_anterior_2", "cuadrante_anterior_2","numero_secundario_anterior_2", "letra_secundaria_anterior_2",
-            "cuadrante_dos_anterior_2", "nro_anterior_2", "complemento_anterior_2", "telefono_direccion_anterior_2_1",
-            "telefono_direccion_anterior_2_2","ciudad_direccion_anterior_2","direccion_completa_anterior_1","direccion_completa_anterior_2"
-             ]
-
-        widgets = {
-            'desde_1': forms.DateInput(attrs={'type': 'date'}),
-            'hasta_1': forms.DateInput(attrs={'type': 'date'}),
-            'desde_2': forms.DateInput(attrs={'type': 'date'}),
-            'hasta_2': forms.DateInput(attrs={'type': 'date'}),
-        }
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_tag = False 
-
-        if self.instance.pk:
-            self.fields["direccion_preview_anterior_1"].initial = self.instance.direccion_completa_anterior_1
-        if self.instance.pk:
-            self.fields["direccion_preview_anterior_2"].initial = self.instance.direccion_completa_anterior_2
-
-        self.helper.layout = Layout(
-            Fieldset(
-                'Dirección Anterior 1', "desde_1", "hasta_1",
-                Row(
-                    Column('tipo_via_anterior_1', css_class='col-md-2'),
-                    Column('numero_principal_anterior_1', css_class='col-md-1'),
-                    Column('letra_principal_anterior_1', css_class='col-md-2'),
-                    Column('bis_anterior_1', css_class='col-md-1'),
-                    Column('letra_bis_anterior_1', css_class='col-md-2'),
-                    Column('cuadrante_anterior_1', css_class='col-md-2'),
-                    Column('numero_secundario_anterior_1', css_class='col-md-1'),
-                    Column('letra_secundaria_anterior_1', css_class='col-md-2'),
-                    Column('cuadrante_dos_anterior_1', css_class='col-md-2'),
-                    Column('nro_anterior_1', css_class='col-md-2'),
-                    Column('complemento_anterior_1', css_class='col-md-2'),
-                ),
-        HTML("""
-        <div class="mt-3">
-        <h5>Dirección construida:</h5>
-        <div id="direccion-preview_anterior_1" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
-        </div>
-            """),
-                Row(
-                    Column("telefono_direccion_anterior_1_1", css_class='col-md-2'),
-                    Column("telefono_direccion_anterior_1_2", css_class='col-md-2'),
-                    Column("ciudad_direccion_anterior_1", css_class='col-md-2'),
-                )
-         
-
-        
-            ),
-
-            HTML("""<hr class="my-4">"""),
-
-        Fieldset(
-             'Dirección Anterior 2', "desde_2","hasta_2",
-               Row(
-                    Column('tipo_via_anterior_2', css_class='col-md-2'),
-                    Column('numero_principal_anterior_2', css_class='col-md-1'),
-                    Column('letra_principal_anterior_2', css_class='col-md-2'),
-                    Column('bis_anterior_2', css_class='col-md-1'),
-                    Column('letra_bis_anterior_2', css_class='col-md-2'),
-                    Column('cuadrante_anterior_2', css_class='col-md-2'),
-                    Column('numero_secundario_anterior_2', css_class='col-md-1'),
-                    Column('letra_secundaria_anterior_2', css_class='col-md-2'),
-                    Column('cuadrante_dos_anterior_2', css_class='col-md-2'),
-                    Column('nro_anterior_2', css_class='col-md-2'),
-                    Column('complemento_anterior_2', css_class='col-md-2'),
-                    ),
-        HTML("""
-        <div class="mt-3">
-        <h5>Dirección construida:</h5>
-        <div id="direccion-preview_anterior_2" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
-        </div>
-            """),
-                Row(
-                    Column("telefono_direccion_anterior_2_1", css_class='col-md-2'),
-                    Column("telefono_direccion_anterior_2_2", css_class='col-md-2'),
-                    Column("ciudad_direccion_anterior_2", css_class='col-md-2'),
-                )
-        
-        )
-        )
-
-    def save(self, commit=True):
-        """
-        Guarda el formulario incluyendo los campos de dirección formateada que fueron generados
-        dinámicamente y asignados desde los campos ocultos de vista previa.
-        """
-
-        instance = super().save(commit=False)
-        instance.direccion_completa_anterior_1 = self.cleaned_data.get("direccion_preview_anterior_1")
-        instance.direccion_completa_anterior_2 = self.cleaned_data.get("direccion_preview_anterior_2")
-
-        if commit:
-            instance.save()
-        return instance
 
 
 class DatosFamiliaresForm(BaseHelperMixin, forms.ModelForm):
@@ -639,8 +510,7 @@ class InformacionAcademicaForm(BaseHelperMixin, forms.ModelForm):
 #Estudios
             "estudios_1", "año_estudios_1", "titulo_estudios_1", "nombre_institucion_estudios_1", "ciudad_estudios_1",
             "estudios_2", "año_estudios_2", "titulo_estudios_2", "nombre_institucion_estudios_2", "ciudad_estudios_2",
-            "estudios_3", "año_estudios_3", "titulo_estudios_3", "nombre_institucion_estudios_3", "ciudad_estudios_3",
-            "estudios_4", "año_estudios_4", "titulo_estudios_4", "nombre_institucion_estudios_4", "ciudad_estudios_4",
+
 #Idioma Extranjero
            "idioma_extranjero_1", "lee_idioma_extranjero_1","habla_idioma_extranjero_1","escribe_idioma_extranjero_1",
            "idioma_extranjero_2", "lee_idioma_extranjero_2","habla_idioma_extranjero_2","escribe_idioma_extranjero_2",
@@ -674,21 +544,6 @@ class InformacionAcademicaForm(BaseHelperMixin, forms.ModelForm):
                     Column("ciudad_estudios_2", css_class="col-md-2"),
                 ),
                 
-                Row(
-                    Column("estudios_3", css_class="col-md-3"),
-                    Column("año_estudios_3", css_class="col-md-1"),
-                    Column("titulo_estudios_3", css_class="col-md-3"),
-                    Column("nombre_institucion_estudios_3", css_class="col-md-3"),
-                    Column("ciudad_estudios_3", css_class="col-md-2"),
-                ),
-               
-                Row(
-                    Column("estudios_4", css_class="col-md-3"),
-                    Column("año_estudios_4", css_class="col-md-1"),
-                    Column("titulo_estudios_4", css_class="col-md-3"),
-                    Column("nombre_institucion_estudios_4", css_class="col-md-3"),
-                    Column("ciudad_estudios_4", css_class="col-md-2"),
-                ),
             ),
             Fieldset(
                 
@@ -768,9 +623,9 @@ class ReferenciasPersonalesForm(forms.ModelForm):
         self.helper.form_tag = False
 
         if self.instance.pk:
-            self.fields["direccion_preview_referencia_1"].initial = self.instance.direccion_completa_anterior_1
-            self.fields["direccion_preview_referencia_2"].initial = self.instance.direccion_completa_anterior_2
-            self.fields["direccion_preview_referencia_3"].initial = self.instance.direccion_completa_anterior_3
+            self.fields["direccion_preview_referencia_1"].initial = self.instance.direccion_preview_referencia_1
+            self.fields["direccion_preview_referencia_2"].initial = self.instance.direccion_preview_referencia_2
+            self.fields["direccion_preview_referencia_3"].initial = self.instance.direccion_preview_referencia_3
         self.helper = FormHelper()
         self.helper.form_tag = False
         self.helper.layout = Layout(
@@ -1024,28 +879,23 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
         
             "salarios_y_demas_ingresos_laborales","cesantías_e_intereses_de_cesantías","gastos_de_representación","arriendos","honorarios","otros_ingresos_y_rentas",
             "entidad_financiera_1", "tipo_de_cuenta_1", "numero_de_cuenta_1","entidad_financiera_2", "tipo_de_cuenta_2", "numero_de_cuenta_2",
-            "entidad_financiera_3", "tipo_de_cuenta_3", "numero_de_cuenta_3","entidad_financiera_4", "tipo_de_cuenta_4", "numero_de_cuenta_4",
-            "entidad_financiera_5", "tipo_de_cuenta_5", "numero_de_cuenta_5","entidad_financiera_6", "tipo_de_cuenta_6", "numero_de_cuenta_6",
+         
 
             "tipo_bien_1","ubicacion_bien_1","identificacion_bien_1","avaluo_comercial_bien_1",
             "tipo_bien_2","ubicacion_bien_2","identificacion_bien_2","avaluo_comercial_bien_2",
-            "tipo_bien_3","ubicacion_bien_3","identificacion_bien_3","avaluo_comercial_bien_3",
-            "tipo_bien_4","ubicacion_bien_4","identificacion_bien_4","avaluo_comercial_bien_4",
-            "tipo_bien_5","ubicacion_bien_5","identificacion_bien_5","avaluo_comercial_bien_5",
+         
 
             "entidad_o_persona_obligacion_1", "concepto_obligacion_1", "valor_1",
             "entidad_o_persona_obligacion_2", "concepto_obligacion_2", "valor_2",
-            "entidad_o_persona_obligacion_3", "concepto_obligacion_3", "valor_3",
-            "entidad_o_persona_obligacion_4", "concepto_obligacion_4", "valor_4",
+
 
             "entidad_o_institucion_1","calidad_de_miembro_1",
             "entidad_o_institucion_2","calidad_de_miembro_2",
-            "entidad_o_institucion_3","calidad_de_miembro_3",
-            "entidad_o_institucion_4","calidad_de_miembro_4",
+    
 
             "empresa_1","calidad_de_miembro_AEP_1",
             "empresa_2","calidad_de_miembro_AEP_2",
-            "empresa_3","calidad_de_miembro_AEP_3",
+       
         ]
 
         widgets = {
@@ -1092,26 +942,7 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
                     Column("tipo_de_cuenta_2", css_class="col-md-3"),
                     Column("numero_de_cuenta_2", css_class="col-md-3"),
                 ),
-            Row(
-                    Column("entidad_financiera_3", css_class="col-md-3"),
-                    Column("tipo_de_cuenta_3", css_class="col-md-3"),
-                    Column("numero_de_cuenta_3", css_class="col-md-3"),
-                ),
-            Row(
-                    Column("entidad_financiera_4", css_class="col-md-3"),
-                    Column("tipo_de_cuenta_4", css_class="col-md-3"),
-                    Column("numero_de_cuenta_4", css_class="col-md-3"),
-                ),
-            Row(
-                    Column("entidad_financiera_5", css_class="col-md-3"),
-                    Column("tipo_de_cuenta_5", css_class="col-md-3"),
-                    Column("numero_de_cuenta_5", css_class="col-md-3"),
-                ),
-            Row(
-                    Column("entidad_financiera_6", css_class="col-md-3"),
-                    Column("tipo_de_cuenta_6", css_class="col-md-3"),
-                    Column("numero_de_cuenta_6", css_class="col-md-3"),
-                ),
+      
                 HTML("""<hr class="my-4">"""),
                 HTML("<h5>Mis bienes patrimoniales son los siguientes:</h5>"),
                 HTML("""<hr class="my-4">"""),
@@ -1127,24 +958,7 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
                     Column("identificacion_bien_2", css_class="col-md-3"),
                     Column("avaluo_comercial_bien_2", css_class="col-md-3"),
                 ),
-            Row(
-                    Column("tipo_bien_3", css_class="col-md-3"),
-                    Column("ubicacion_bien_3", css_class="col-md-3"),
-                    Column("identificacion_bien_3", css_class="col-md-3"),
-                    Column("avaluo_comercial_bien_3", css_class="col-md-3"),
-                ),
-            Row(
-                    Column("tipo_bien_4", css_class="col-md-3"),
-                    Column("ubicacion_bien_4", css_class="col-md-3"),
-                    Column("identificacion_bien_4", css_class="col-md-3"),
-                    Column("avaluo_comercial_bien_4", css_class="col-md-3"),
-                ),
-            Row(
-                    Column("tipo_bien_5", css_class="col-md-3"),
-                    Column("ubicacion_bien_5", css_class="col-md-3"),
-                    Column("identificacion_bien_5", css_class="col-md-3"),
-                    Column("avaluo_comercial_bien_5", css_class="col-md-3"),
-                ),
+         
                 HTML("""<hr class="my-4">"""),
                 HTML("<h5>Mis Obligaciones vigentes a la fecha:</h5>"),
                 HTML("""<hr class="my-4">"""),
@@ -1160,17 +974,7 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
                     Column("valor_2", css_class="col-md-3"),
                 ),
     
-            Row(
-                    Column("entidad_o_persona_obligacion_3", css_class="col-md-3"),
-                    Column("concepto_obligacion_3", css_class="col-md-3"),
-                    Column("valor_3", css_class="col-md-3"),
-                ),
-    
-            Row(
-                    Column("entidad_o_persona_obligacion_4", css_class="col-md-3"),
-                    Column("concepto_obligacion_4", css_class="col-md-3"),
-                    Column("valor_4", css_class="col-md-3"),
-                ),
+
                 HTML("""<hr class="my-4">"""),
                 HTML("<h5>PARTICIPACION EN ORGANIZACIONES, CORPORACIONES, SOCIEDADES, ASOCIACIONES, ONG's u OTROS.</h5>"),
                 HTML("<h5>En la actualidad participo como miembro de las siguientes organizaciones:</h5>"),
@@ -1184,14 +988,7 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
                     Column("entidad_o_institucion_2", css_class="col-md-4"),
                     Column("calidad_de_miembro_2", css_class="col-md-3"),
                 ),
-            Row(
-                    Column("entidad_o_institucion_3", css_class="col-md-4"),
-                    Column("calidad_de_miembro_3", css_class="col-md-3"),
-                ),
-            Row(
-                    Column("entidad_o_institucion_4", css_class="col-md-4"),
-                    Column("calidad_de_miembro_4", css_class="col-md-3"),
-                ),   
+
 
                 HTML("""<hr class="my-4">"""),
                 HTML("<h5>ACTIVIDAD ECONÓMICA PRIVADA DEL ASPIRANTE</h5>"),
@@ -1204,10 +1001,7 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
                     Column("empresa_2", css_class="col-md-4"),
                     Column("calidad_de_miembro_AEP_2", css_class="col-md-3"),
                 ),   
-            Row(
-                    Column("empresa_3", css_class="col-md-4"),
-                    Column("calidad_de_miembro_AEP_3", css_class="col-md-3"),
-                ),   
+   
             ),
         )
 
@@ -1446,10 +1240,11 @@ class ConfirmacionForm(BaseHelperMixin, forms.Form):
     la seguridad en producción.
     """
         
+class TuFormulario(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if not getattr(settings, 'IS_E2E_TEST', False):
+        if not getattr(settings, 'DISABLE_CAPTCHA', False):
             print("✅ CAPTCHA INCLUIDO")
             self.fields['captcha'] = ReCaptchaField(widget=ReCaptchaV2Checkbox)
         else:

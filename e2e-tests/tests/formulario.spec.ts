@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import { DatosPersonalesPage } from '../pages/Recluta.page';
-import { DireccionesAnterioresPage } from '../pages/DireccionesAnteriores.page';
 import { DatosFamilaresPage } from '../pages/DatosFamiliares.page';
 import { InformacionAcademicaPage } from '../pages/InformacionAcademica.page';
 import { ReferenciasPersonalesPage } from '../pages/ReferenciasPersonales.page';
@@ -20,13 +19,7 @@ test('Formulario: datos personales válidos', async ({ page }) => {
   const direccionrecluta = await datosPersonales.obtenerDireccionFormateadaRecluta();
   expect(direccionrecluta).toBe('Carrera 69 C BIS A ESTE # 69 H ESTE 22, Segundo Piso');
  
-//DIRECCIONES ANTERIORES
-  const direccionesanteriores = new DireccionesAnterioresPage(page);
-  await direccionesanteriores.llenarFormulario();
-  const direccionanterior1 = await direccionesanteriores.obtenerDireccionFormateadaAnterior1();
-  const direccionanterior2 = await direccionesanteriores.obtenerDireccionFormateadaAnterior2();
-  expect(direccionanterior1).toBe('Carrera 71 B BIS A ESTE # 5 A ESTE 18, Primer Piso');
-  expect(direccionanterior2).toBe('Carrera 70 B BIS B OESTE # 8 B NORTE 71, Primer Piso');
+
 
 //DATOS FAMILIARES
   const datosfamiliares = new DatosFamilaresPage(page);

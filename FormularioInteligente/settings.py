@@ -1,5 +1,5 @@
 """
-Configuración del proyecto Django "FormularioInteligenteIndumil".
+Configuración del proyecto Django "FormularioInteligente".
 
 Este archivo contiene los parámetros principales del entorno Django, incluyendo
 configuración de bases de datos, aplicaciones instaladas, autenticación, internacionalización
@@ -29,7 +29,7 @@ TIME_ZONE = "America/Bogota"
 USE_I18N = True
 USE_L10N = True      
 USE_TZ = True
-
+DISABLE_CAPTCHA = config('DISABLE_CAPTCHA', default=False, cast=bool)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
@@ -70,7 +70,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "FormularioInteligenteIndumil.urls"
+ROOT_URLCONF = "FormularioInteligente.urls"
 
 TEMPLATES = [
     {
@@ -99,7 +99,7 @@ REST_FRAMEWORK = {
 }
 
 
-WSGI_APPLICATION = "FormularioInteligenteIndumil.wsgi.application"
+WSGI_APPLICATION = "FormularioInteligente.wsgi.application"
 
 
 # Database
@@ -153,3 +153,4 @@ SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 RECAPTCHA_PUBLIC_KEY = config('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = config('RECAPTCHA_PRIVATE_KEY')
 IS_E2E_TEST = os.getenv('IS_E2E_TEST') == 'true'
+

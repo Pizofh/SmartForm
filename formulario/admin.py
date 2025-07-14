@@ -1,6 +1,6 @@
 from django.contrib import admin
 import nested_admin
-from .models import (Recluta, DatosFamiliares,DireccionesAnteriores, InformacionAcademica,
+from .models import (Recluta, DatosFamiliares, InformacionAcademica,
                      ReferenciasPersonales,SectorDefensa, BienesRentasAEP, SituacionJuridica, OtrosDatos,Hijo,Hermano)
 import nested_admin
 
@@ -23,10 +23,6 @@ class DatosFamiliaresInline(nested_admin.NestedStackedInline):
     inlines = [HijoInline,HermanoInline]  # Se anidan hijos y hermanos
     extra = 0
 
-# Inline para direcciones anteriores
-class DireccionesAnterioresInline(nested_admin.NestedStackedInline):
-    model = DireccionesAnteriores
-    extra = 0
 
 # Inline para información académica
 class InformacionAcademicaInline(nested_admin.NestedStackedInline):  #
@@ -64,7 +60,6 @@ class OtrosDatosInline(nested_admin.NestedStackedInline):
 class ReclutaAdmin(nested_admin.NestedModelAdmin):
     inlines = [
         DatosFamiliaresInline,
-        DireccionesAnterioresInline,
         InformacionAcademicaInline,
         ReferenciasPersonalesInline,
         SectorDefensaInline,
@@ -78,14 +73,13 @@ class ReclutaAdmin(nested_admin.NestedModelAdmin):
 #CLASE RECLUTA
             "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido",
             "tipo_documento", "numero_documento", "fecha_expedición", "lugar_expedición",
-            "pasaporte_numero", "fecha_pasaporte", "numero_libretamilitar", "clase_libretamilitar",
-            "distrito_militar", "sobrenombres",  "dia_nacimiento",
+            "pasaporte_numero", "fecha_pasaporte",
+             "dia_nacimiento",
             "mes_nacimiento", "año_nacimiento", "estado_civil", "profesion_oficio",
             "tarjeta_profesional", "señales_corporales", "estatura", "peso", "tipo_via",
             "numero_principal", "letra_principal", "bis", "letra_bis", "cuadrante",
             "numero_secundario", "letra_secundaria", "cuadrante_dos", "nro", "complemento",
             "barrio","numero_celular","telefono_fijo","ciudad","departamento","correo_electronico_personal",
-            "correo_electronico_institucional","facebook","instagram","twitter","otras_redes","direccion_formateada",
         
     )
 
@@ -95,55 +89,19 @@ class ReclutaAdmin(nested_admin.NestedModelAdmin):
 #CLASE RECLUTA
             "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido",
             "tipo_documento", "numero_documento", "fecha_expedición", "lugar_expedición",
-            "pasaporte_numero", "fecha_pasaporte", "numero_libretamilitar", "clase_libretamilitar",
-            "distrito_militar", "sobrenombres",  "dia_nacimiento",
+            "pasaporte_numero", "fecha_pasaporte",
+            "dia_nacimiento",
             "mes_nacimiento", "año_nacimiento", "estado_civil", "profesion_oficio",
             "tarjeta_profesional", "señales_corporales", "estatura", "peso", "tipo_via",
             "numero_principal", "letra_principal", "bis", "letra_bis", "cuadrante",
             "numero_secundario", "letra_secundaria", "cuadrante_dos", "nro", "complemento",
             "barrio","numero_celular","telefono_fijo","ciudad","departamento","correo_electronico_personal",
-            "correo_electronico_institucional","facebook","instagram","twitter","otras_redes","direccion_formateada",
     )
 
  # Filtros disponibles en la barra lateral
     list_filter = (
     )
 
-
-@admin.register(DireccionesAnteriores)
-class DireccionesAnterioresAdmin(admin.ModelAdmin):
-    # ----------  QUÉ COLUMNAS MOSTRAR EN LA LISTA  ----------
-    list_display = (
-
-#CLASE DIRECCIONES ANTERIORES
-            "desde_1","hasta_1", "tipo_via_anterior_1",
-            "numero_principal_anterior_1", "letra_principal_anterior_1", "bis_anterior_1", "letra_bis_anterior_1", "cuadrante_anterior_1",
-            "numero_secundario_anterior_1", "letra_secundaria_anterior_1", "cuadrante_dos_anterior_1", "nro_anterior_1", "complemento_anterior_1", 
-            "telefono_direccion_anterior_1_1","telefono_direccion_anterior_1_2", "ciudad_direccion_anterior_1",
-            "desde_2" ,"hasta_2", "tipo_via_anterior_2", "numero_principal_anterior_2", "letra_principal_anterior_2", "bis_anterior_2",
-            "letra_bis_anterior_2", "cuadrante_anterior_2","numero_secundario_anterior_2", "letra_secundaria_anterior_2",
-            "cuadrante_dos_anterior_2", "nro_anterior_2", "complemento_anterior_2", "telefono_direccion_anterior_2_1",
-            "telefono_direccion_anterior_2_2","ciudad_direccion_anterior_2","direccion_completa_anterior_1","direccion_completa_anterior_2",
-        
-    )
-
-    # ----------  CAMPOS PARA BUSCAR  ----------
-    search_fields = (
-
-#CLASE DIRECCIONES ANTERIORES
-            "desde_1","hasta_1", "tipo_via_anterior_1",
-            "numero_principal_anterior_1", "letra_principal_anterior_1", "bis_anterior_1", "letra_bis_anterior_1", "cuadrante_anterior_1",
-            "numero_secundario_anterior_1", "letra_secundaria_anterior_1", "cuadrante_dos_anterior_1", "nro_anterior_1", "complemento_anterior_1", 
-            "telefono_direccion_anterior_1_1","telefono_direccion_anterior_1_2", "ciudad_direccion_anterior_1",
-            "desde_2" ,"hasta_2", "tipo_via_anterior_2", "numero_principal_anterior_2", "letra_principal_anterior_2", "bis_anterior_2",
-            "letra_bis_anterior_2", "cuadrante_anterior_2","numero_secundario_anterior_2", "letra_secundaria_anterior_2",
-            "cuadrante_dos_anterior_2", "nro_anterior_2", "complemento_anterior_2", "telefono_direccion_anterior_2_1",
-            "telefono_direccion_anterior_2_2","ciudad_direccion_anterior_2","direccion_completa_anterior_1","direccion_completa_anterior_2",
-    )
-
-    # ----------  FILTROS LATERALES  ----------
-    list_filter = (
-    )
 
 @admin.register(DatosFamiliares)
 class DatosFamiliaresAdmin(admin.ModelAdmin):
@@ -237,8 +195,7 @@ class InformacionAcademicaAdmin(admin.ModelAdmin):
 #Estudios
             "estudios_1", "año_estudios_1", "titulo_estudios_1", "nombre_institucion_estudios_1", "ciudad_estudios_1",
             "estudios_2", "año_estudios_2", "titulo_estudios_2", "nombre_institucion_estudios_2", "ciudad_estudios_2",
-            "estudios_3", "año_estudios_3", "titulo_estudios_3", "nombre_institucion_estudios_3", "ciudad_estudios_3",
-            "estudios_4", "año_estudios_4", "titulo_estudios_4", "nombre_institucion_estudios_4", "ciudad_estudios_4",
+
 #Idioma Extranjero
            "idioma_extranjero_1", "lee_idioma_extranjero_1","habla_idioma_extranjero_1","escribe_idioma_extranjero_1",
            "idioma_extranjero_2", "lee_idioma_extranjero_2","habla_idioma_extranjero_2","escribe_idioma_extranjero_2",
@@ -254,8 +211,7 @@ class InformacionAcademicaAdmin(admin.ModelAdmin):
 #Estudios
             "estudios_1", "año_estudios_1", "titulo_estudios_1", "nombre_institucion_estudios_1", "ciudad_estudios_1",
             "estudios_2", "año_estudios_2", "titulo_estudios_2", "nombre_institucion_estudios_2", "ciudad_estudios_2",
-            "estudios_3", "año_estudios_3", "titulo_estudios_3", "nombre_institucion_estudios_3", "ciudad_estudios_3",
-            "estudios_4", "año_estudios_4", "titulo_estudios_4", "nombre_institucion_estudios_4", "ciudad_estudios_4",
+
 #Idioma Extranjero
            "idioma_extranjero_1", "lee_idioma_extranjero_1","habla_idioma_extranjero_1","escribe_idioma_extranjero_1",
            "idioma_extranjero_2", "lee_idioma_extranjero_2","habla_idioma_extranjero_2","escribe_idioma_extranjero_2",
@@ -354,56 +310,46 @@ class BienesRentasAEPAdmin(admin.ModelAdmin):
     list_display = (
             "salarios_y_demas_ingresos_laborales","cesantías_e_intereses_de_cesantías","arriendos","honorarios","otros_ingresos_y_rentas",
             "entidad_financiera_1", "tipo_de_cuenta_1", "numero_de_cuenta_1","entidad_financiera_2", "tipo_de_cuenta_2", "numero_de_cuenta_2",
-            "entidad_financiera_3", "tipo_de_cuenta_3", "numero_de_cuenta_3","entidad_financiera_4", "tipo_de_cuenta_4", "numero_de_cuenta_4",
-            "entidad_financiera_5", "tipo_de_cuenta_5", "numero_de_cuenta_5","entidad_financiera_6", "tipo_de_cuenta_6", "numero_de_cuenta_6",
+       
 
             "tipo_bien_1","ubicacion_bien_1","identificacion_bien_1","avaluo_comercial_bien_1",
             "tipo_bien_2","ubicacion_bien_2","identificacion_bien_2","avaluo_comercial_bien_2",
-            "tipo_bien_3","ubicacion_bien_3","identificacion_bien_3","avaluo_comercial_bien_3",
-            "tipo_bien_4","ubicacion_bien_4","identificacion_bien_4","avaluo_comercial_bien_4",
-            "tipo_bien_5","ubicacion_bien_5","identificacion_bien_5","avaluo_comercial_bien_5",
+     
 
             "entidad_o_persona_obligacion_1", "concepto_obligacion_1", "valor_1",
             "entidad_o_persona_obligacion_2", "concepto_obligacion_2", "valor_2",
-            "entidad_o_persona_obligacion_3", "concepto_obligacion_3", "valor_3",
-            "entidad_o_persona_obligacion_4", "concepto_obligacion_4", "valor_4",
+
 
             "entidad_o_institucion_1","calidad_de_miembro_1",
             "entidad_o_institucion_2","calidad_de_miembro_2",
-            "entidad_o_institucion_3","calidad_de_miembro_3",
-            "entidad_o_institucion_4","calidad_de_miembro_4",
+        
 
             "empresa_1","calidad_de_miembro_AEP_1",
             "empresa_2","calidad_de_miembro_AEP_2",
-            "empresa_3","calidad_de_miembro_AEP_3",
+        
     )
 
     # ----------  CAMPOS PARA BUSCAR  ----------
     search_fields = (
             "salarios_y_demas_ingresos_laborales","cesantías_e_intereses_de_cesantías","arriendos","honorarios","otros_ingresos_y_rentas",
             "entidad_financiera_1", "tipo_de_cuenta_1", "numero_de_cuenta_1","entidad_financiera_2", "tipo_de_cuenta_2", "numero_de_cuenta_2",
-            "entidad_financiera_3", "tipo_de_cuenta_3", "numero_de_cuenta_3","entidad_financiera_4", "tipo_de_cuenta_4", "numero_de_cuenta_4",
-            "entidad_financiera_5", "tipo_de_cuenta_5", "numero_de_cuenta_5","entidad_financiera_6", "tipo_de_cuenta_6", "numero_de_cuenta_6",
+         
 
             "tipo_bien_1","ubicacion_bien_1","identificacion_bien_1","avaluo_comercial_bien_1",
             "tipo_bien_2","ubicacion_bien_2","identificacion_bien_2","avaluo_comercial_bien_2",
-            "tipo_bien_3","ubicacion_bien_3","identificacion_bien_3","avaluo_comercial_bien_3",
-            "tipo_bien_4","ubicacion_bien_4","identificacion_bien_4","avaluo_comercial_bien_4",
-            "tipo_bien_5","ubicacion_bien_5","identificacion_bien_5","avaluo_comercial_bien_5",
+  
 
             "entidad_o_persona_obligacion_1", "concepto_obligacion_1", "valor_1",
             "entidad_o_persona_obligacion_2", "concepto_obligacion_2", "valor_2",
-            "entidad_o_persona_obligacion_3", "concepto_obligacion_3", "valor_3",
-            "entidad_o_persona_obligacion_4", "concepto_obligacion_4", "valor_4",
+ 
 
             "entidad_o_institucion_1","calidad_de_miembro_1",
             "entidad_o_institucion_2","calidad_de_miembro_2",
-            "entidad_o_institucion_3","calidad_de_miembro_3",
-            "entidad_o_institucion_4","calidad_de_miembro_4",
+    
 
             "empresa_1","calidad_de_miembro_AEP_1",
             "empresa_2","calidad_de_miembro_AEP_2",
-            "empresa_3","calidad_de_miembro_AEP_3",
+       
     )
 
     # ----------  FILTROS LATERALES  ----------

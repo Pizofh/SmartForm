@@ -19,17 +19,7 @@ export class InformacionAcademicaPage {
   readonly nombre_institucion_estudios_2 : Locator;
   readonly ciudad_estudios_2 : Locator;
 
-  readonly estudios_3 : Locator;
-  readonly año_estudios_3 : Locator;
-  readonly titulo_estudios_3 :  Locator;
-  readonly nombre_institucion_estudios_3 : Locator;
-  readonly ciudad_estudios_3 : Locator;
 
-  readonly estudios_4 : Locator;
-  readonly año_estudios_4 : Locator;
-  readonly titulo_estudios_4 :  Locator;
-  readonly nombre_institucion_estudios_4 : Locator;
-  readonly ciudad_estudios_4 : Locator;
 
 //IDIOMAS EXTRANJEROS
   
@@ -56,7 +46,7 @@ export class InformacionAcademicaPage {
 constructor(page: Page) {
     this.page = page;
     this.tab = page.locator('text=Informacion Academica');
-    this.informacion_academica_tab=page.locator('#formTabs > li:nth-child(4) > button');
+    this.informacion_academica_tab=page.locator('#formTabs > li:nth-child(3) > button');
 //ESTUDIOS REALIZADOS
 
     this.estudios_1 = page.locator('#id_InformacionAcademica-estudios_1');                  
@@ -71,17 +61,6 @@ constructor(page: Page) {
     this.nombre_institucion_estudios_2 = page.locator('#id_InformacionAcademica-nombre_institucion_estudios_2');
     this.ciudad_estudios_2 = page.locator('#id_InformacionAcademica-ciudad_estudios_2');
 
-    this.estudios_3 = page.locator('#id_InformacionAcademica-estudios_3');
-    this.año_estudios_3 = page.locator('#id_InformacionAcademica-año_estudios_3');
-    this.titulo_estudios_3 = page.locator('#id_InformacionAcademica-titulo_estudios_3');
-    this.nombre_institucion_estudios_3 = page.locator('#id_InformacionAcademica-nombre_institucion_estudios_3');
-    this.ciudad_estudios_3 = page.locator('#id_InformacionAcademica-ciudad_estudios_3');
-
-    this.estudios_4 = page.locator('#id_InformacionAcademica-estudios_4');
-    this.año_estudios_4 = page.locator('#id_InformacionAcademica-año_estudios_4');
-    this.titulo_estudios_4 = page.locator('#id_InformacionAcademica-titulo_estudios_4');
-    this.nombre_institucion_estudios_4 = page.locator('#id_InformacionAcademica-nombre_institucion_estudios_4');
-    this.ciudad_estudios_4 = page.locator('#id_InformacionAcademica-ciudad_estudios_4');
 //IDIOMAS EXTRANJEROS
 
     this.idioma_extranjero_1 = page.locator('#id_InformacionAcademica-idioma_extranjero_1');
@@ -110,7 +89,7 @@ constructor(page: Page) {
   async llenarFormulario() {
 
 
-await this.informacion_academica_tab.click();
+    await this.informacion_academica_tab.click();
 //ESTUDIOS REALIZADOS
     await this.estudios_1.fill('Bachillerato');
     await this.año_estudios_1.fill('2018');
@@ -124,18 +103,7 @@ await this.informacion_academica_tab.click();
     await this.nombre_institucion_estudios_2.fill('Escuela de Aviación Del Ejército');
     await this.ciudad_estudios_2.fill('Bogotá');
 
-    await this.estudios_3.fill('ESTUDIOOOO');
-    await this.año_estudios_3.fill('2025');
-    await this.titulo_estudios_3.fill('estudios ACADEMICOS');
-    await this.nombre_institucion_estudios_3.fill('INSTITUCIÖN FALSA');
-    await this.ciudad_estudios_3.fill('Iunairet Steits');
 
-
-    await this.estudios_4.fill('ESTUDIOOOOSSS');
-    await this.año_estudios_4.fill('2022');
-    await this.titulo_estudios_4.fill('estudios ACADEMICOS');
-    await this.nombre_institucion_estudios_4.fill('INSTITUCIÖN ');
-    await this.ciudad_estudios_4.fill('China');
 //IDIOMAS EXTRANJEROS
 
     await this.idioma_extranjero_1.fill('Inglés');

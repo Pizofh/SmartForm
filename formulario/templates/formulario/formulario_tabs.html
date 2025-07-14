@@ -6,7 +6,6 @@
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
-  <img src="{% static 'img/Logo_Indumil.png' %}" alt="Logo" style="height: 120px; margin-right: 45px;">
   <h2 class="mb-0">FORMULARIO DE DATOS PERSONALES</h2>
 </div>
 
@@ -18,8 +17,6 @@
     <li class="nav-item" role="presentation">
       <button class="nav-link active" id="tab-datos-personales" data-bs-toggle="tab" data-bs-target="#datos_personales" type="button" role="tab" aria-controls="datos_personales" aria-selected="true">Datos Personales</button>
     </li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#direcciones_anteriores" type="button" role="tab">Direcciones Anteriores</button></li>
-    <li class="nav-item" role="presentation">
       <button class="nav-link" id="tab-datos-familiares" data-bs-toggle="tab" data-bs-target="#datos_familiares" type="button" role="tab" aria-controls="datos_familiares" aria-selected="false">Datos Familiares</button>
     </li>
     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#informacion_academica" type="button" role="tab">Información Académica</button></li>
@@ -35,17 +32,7 @@
 <div class="tab-content p-3 border border-top-0">
   <div class="tab-pane fade show active" id="datos_personales" role="tabpanel" aria-labelledby="tab-datos-personales">{% crispy f_recluta %}</div>
 
-  <div class="tab-pane fade" id="direcciones_anteriores" role="tabpanel">{% crispy f_direcciones_anteriores %}</div>
-  <input type="hidden"
-       name="DireccionesAnteriores-direccion_preview_anterior_1"
-       id="id_DireccionesAnteriores-direccion_preview_anterior_1"
-       value="">
 
-<!-- Campo oculto para direccion completa 2 -->
-<input type="hidden"
-       name="DireccionesAnteriores-direccion_preview_anterior_2"
-       id="id_DireccionesAnteriores-direccion_preview_anterior_2"
-       value="">
 
   <div class="tab-pane fade" id="datos_familiares" role="tabpanel" aria-labelledby="tab-datos-familiares">
     {% crispy f_DatosFamiliares %}
@@ -118,105 +105,7 @@
   });
 })();
 </script>
-<!-- Dirección Anteriores_1 -->
-<script>
-(function () {
-  const prefix = "DireccionesAnteriores";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
 
-  function actualizarDireccion_anterior_1() {
-    const partes = [
-      v('tipo_via_anterior_1'), v('numero_principal_anterior_1'), v('letra_principal_anterior_1'),
-      ck('bis_anterior_1') ? 'BIS' : '',
-      v('letra_bis_anterior_1'), v('cuadrante_anterior_1')
-    ];
-
-    if (v('numero_secundario_anterior_1')) {
-      partes.push('#', v('numero_secundario_anterior_1'),
-                        v('letra_secundaria_anterior_1'),
-                        v('cuadrante_dos_anterior_1'));
-    }
-
-    partes.push(v('nro_anterior_1'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_anterior_1')) dir += ', ' + v('complemento_anterior_1');
-
-    const div = document.getElementById('direccion-preview_anterior_1');
-    const hidden = document.getElementById(id('direccion_preview_anterior_1'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_anterior_1', 'numero_principal_anterior_1', 'letra_principal_anterior_1',
-      'bis_anterior_1', 'letra_bis_anterior_1', 'cuadrante_anterior_1',
-      'numero_secundario_anterior_1', 'letra_secundaria_anterior_1',
-      'cuadrante_dos_anterior_1', 'nro_anterior_1', 'complemento_anterior_1'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccion_anterior_1);
-      }
-    });
-    actualizarDireccion_anterior_1();
-  });
-})();
-</script>
-
-<!-- Dirección Anteriores_2 -->
-<script>
-(function () {
-  const prefix = "DireccionesAnteriores";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
-
-  function actualizarDireccion_anterior_2() {
-    const partes = [
-      v('tipo_via_anterior_2'), v('numero_principal_anterior_2'), v('letra_principal_anterior_2'),
-      ck('bis_anterior_2') ? 'BIS' : '',
-      v('letra_bis_anterior_2'), v('cuadrante_anterior_2')
-    ];
-
-    if (v('numero_secundario_anterior_2')) {
-      partes.push('#', v('numero_secundario_anterior_2'),
-                        v('letra_secundaria_anterior_2'),
-                        v('cuadrante_dos_anterior_2'));
-    }
-
-    partes.push(v('nro_anterior_2'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_anterior_2')) dir += ', ' + v('complemento_anterior_2');
-
-    const div = document.getElementById('direccion-preview_anterior_2');
-    const hidden = document.getElementById(id('direccion_preview_anterior_2'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_anterior_2', 'numero_principal_anterior_2', 'letra_principal_anterior_2',
-      'bis_anterior_2', 'letra_bis_anterior_2', 'cuadrante_anterior_2',
-      'numero_secundario_anterior_2', 'letra_secundaria_anterior_2',
-      'cuadrante_dos_anterior_2', 'nro_anterior_2', 'complemento_anterior_2'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccion_anterior_2);
-      }
-    });
-    actualizarDireccion_anterior_2();
-  });
-})();
-</script>
 
 <!-- Dirección CÓNYUGE -->
 <script>

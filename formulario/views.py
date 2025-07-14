@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 from django.shortcuts import redirect, render
 from django.db import transaction
 from .forms import (
-    ReclutaForm, DatosFamiliaresForm, DireccionesAnterioresForm, InformacionAcademicaForm,
+    ReclutaForm, DatosFamiliaresForm, InformacionAcademicaForm,
     ReferenciasPersonalesForm, SectorDefensaForm, BienesRentasAEPForm, SituacionJuridicaForm,
     OtrosDatosForm, ConfirmacionForm, HijoFormSet, HermanoFormSet
 )
@@ -22,7 +22,6 @@ La vista está basada en `TemplateView` y se encarga de:
      - Información personal (`ReclutaForm`)
      - Datos familiares (`DatosFamiliaresForm`)
      - Hijos y hermanos (`HijoFormSet`, `HermanoFormSet`)
-     - Direcciones anteriores (`DireccionesAnterioresForm`)
      - Educación, referencias y sector defensa
      - Bienes y rentas (`BienesRentasAEPForm`)
      - Situación jurídica y otros datos (`OtrosDatosForm`)
@@ -55,7 +54,6 @@ class ReclutaTabsView(TemplateView):
             "f_DatosFamiliares": DatosFamiliaresForm(prefix="DatosFamiliares"),
             "fs_hijos": HijoFormSet(queryset=Hijo.objects.none(), prefix="hijos"),
             "fs_hermanos": HermanoFormSet(queryset=Hermano.objects.none(), prefix="hermanos"),
-            "f_direcciones_anteriores": DireccionesAnterioresForm(prefix="DireccionesAnteriores"),
             "f_informacion_academica": InformacionAcademicaForm(prefix="InformacionAcademica"),
             "f_ReferenciasPersonales": ReferenciasPersonalesForm(prefix="ReferenciasPersonales"),
             "f_SectorDefensa": SectorDefensaForm(prefix="SectorDefensa"),
@@ -74,7 +72,6 @@ class ReclutaTabsView(TemplateView):
         fs_hermanos = HermanoFormSet(request.POST or None, prefix="hermanos")
         f_informacion_academica = InformacionAcademicaForm(request.POST, prefix="InformacionAcademica")
         f_ReferenciasPersonales = ReferenciasPersonalesForm(request.POST, prefix="ReferenciasPersonales")
-        f_direcciones_anteriores = DireccionesAnterioresForm(request.POST, prefix="DireccionesAnteriores")
         f_SectorDefensa = SectorDefensaForm(request.POST, prefix="SectorDefensa")
         f_BienesRentasAEP = BienesRentasAEPForm(request.POST, prefix="BienesRentasAEP")
         f_SituacionJuridica = SituacionJuridicaForm(request.POST, prefix="SituacionJuridica")
@@ -86,7 +83,6 @@ class ReclutaTabsView(TemplateView):
             f_DatosFamiliares.is_valid(),
             fs_hijos.is_valid(),
             fs_hermanos.is_valid(),
-            f_direcciones_anteriores.is_valid(),
             f_informacion_academica.is_valid(),
             f_ReferenciasPersonales.is_valid(),
             f_SectorDefensa.is_valid(),
@@ -116,7 +112,6 @@ class ReclutaTabsView(TemplateView):
                     hermano.save()
 
             for form in [
-                f_direcciones_anteriores,
                 f_informacion_academica,
                 f_ReferenciasPersonales,
                 f_SectorDefensa,
@@ -137,7 +132,6 @@ class ReclutaTabsView(TemplateView):
             "f_DatosFamiliares": f_DatosFamiliares,
             "fs_hijos": fs_hijos,
             "fs_hermanos": fs_hermanos,
-            "f_direcciones_anteriores": f_direcciones_anteriores,
             "f_informacion_academica": f_informacion_academica,
             "f_ReferenciasPersonales": f_ReferenciasPersonales,
             "f_SectorDefensa": f_SectorDefensa,

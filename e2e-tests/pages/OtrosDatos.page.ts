@@ -55,7 +55,7 @@ export class OtrosDatosPage {
   constructor(page: Page) {
     this.page = page;
     this.tab = page.locator('text=Situacion Juridica');
-    this.otros_datos_tab=page.locator('#formTabs > li:nth-child(9) > button');
+    this.otros_datos_tab=page.locator('#formTabs > li:nth-child(8) > button');
 //VIAJES AL EXTERIOR
     this.fecha_viaje_1 = page.locator('#id_OtrosDatos-fecha_viaje_1');
     this.pais_visitado_1 = page.locator('#id_OtrosDatos-pais_visitado_1');

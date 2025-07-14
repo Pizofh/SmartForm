@@ -68,7 +68,7 @@ export class ReferenciasPersonalesPage {
 constructor(page: Page) {
     this.page = page;
     this.tab = page.locator('text=Referencias Personales');
-    this.referencias_personales_tab =page.locator('#formTabs > li:nth-child(5) > button');
+    this.referencias_personales_tab =page.locator('#formTabs > li:nth-child(4) > button');
 
 //REFERENCIA 1
     this.nombre_referencia_1 = page.locator('#id_ReferenciasPersonales-nombre_referencia_1');

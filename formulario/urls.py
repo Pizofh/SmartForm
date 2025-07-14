@@ -17,7 +17,7 @@ Rutas definidas:
 - Rutas de API (`/api/`) registradas mediante un `DefaultRouter` de DRF, que expone los siguientes ViewSets:
 
     - reclutas/: CRUD para la entidad principal `Recluta`.
-    - direcciones/: Datos de direcciones anteriores del recluta.
+
     - datosfamiliares/: Información familiar, incluyendo hijos y hermanos.
     - hijos/: Detalles individuales de cada hijo.
     - hermanos/: Detalles individuales de cada hermano.
@@ -38,7 +38,7 @@ from . import api_views
 # 🔽 Registra tus ViewSets
 router = DefaultRouter()
 router.register(r'reclutas', api_views.ReclutaViewSet)
-router.register(r'direcciones', api_views.DireccionesAnterioresViewSet)
+
 router.register(r'datosfamiliares', api_views.DatosFamiliaresViewSet)
 router.register(r'hijos', api_views.HijoViewSet)
 router.register(r'hermanos', api_views.HermanoViewSet)

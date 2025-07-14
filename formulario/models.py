@@ -19,7 +19,7 @@ class Recluta(models.Model):
     datos de nacimiento, libreta militar, características físicas, dirección detallada
     y redes sociales. Se aplica validación en campos clave para garantizar integridad
     y unicidad.
-    """
+    """ 
 
     # --- Información personal ---
     primer_nombre = models.CharField(max_length=30,validators=[solo_letras])
@@ -37,21 +37,6 @@ class Recluta(models.Model):
     lugar_expedición = models.CharField("Lugar de expedición", max_length=20,validators=[solo_letras])
     pasaporte_numero = models.CharField("Pasaporte No", max_length=12, blank=True,validators=[alfanumerico])
     fecha_pasaporte = models.DateField("Fecha de expedición del pasaporte", null=True, blank=True)
-
-    # --- Libreta militar ---
-    numero_libretamilitar = models.IntegerField(
-        "Libreta militar No", null=True, blank=True,
-        validators=[MinValueValidator(1_000), MaxValueValidator(99_999_999_999)]
-    )
-    clase_libretamilitar = models.CharField(
-        "Clase de Libreta militar", max_length=10, null=True,
-        choices=[
-            ("1C", "Primera Clase"), ("2C", "Segunda Clase"), ("Pv", "Provisional"),
-            ("Ex", "Exonerado"), ("Sr", "Sin Resolver"), ("N/A", "No Aplica")
-        ]
-    )
-    distrito_militar = models.CharField("Distrito Militar", max_length=50, blank=True,validators=[solo_letras])
-    sobrenombres = models.CharField("Sobrenombres", max_length=30, blank=True,validators=[solo_letras])
 
     # --- Fecha de nacimiento (distribuida por partes) ---
     dia_nacimiento = models.IntegerField("Día de nacimiento", null=True, choices=[(i, str(i)) for i in range(1, 32)])
@@ -117,13 +102,6 @@ class Recluta(models.Model):
     ciudad = models.CharField("Ciudad de nacimiento", max_length=30, null=True,validators=[solo_letras])
     departamento = models.CharField("Departamento de nacimiento", max_length=30, null=True,validators=[solo_letras])
     correo_electronico_personal = models.EmailField("Correo Electrónico Personal", null=True)
-    correo_electronico_institucional = models.EmailField("Correo Electrónico Institucional", blank=True, null=True)
-
-    # --- Redes sociales ---
-    facebook = models.CharField("Cuenta de Facebook", max_length=50, blank=True, null=True,validators=[texto_simple])
-    instagram = models.CharField("Cuenta de Instagram", max_length=50, blank=True, null=True,validators=[texto_simple])
-    twitter = models.CharField("Cuenta de Twitter", max_length=50, blank=True, null=True,validators=[texto_simple])
-    otras_redes = models.CharField("Otras Cuentas", max_length=100, blank=True, null=True,validators=[texto_simple])
 
     # Dirección generada automáticamente
     direccion_formateada = models.CharField(max_length=500, blank=True, null=True,validators=[texto_simple])
@@ -181,102 +159,6 @@ class Recluta(models.Model):
         """
         return f"{self.nombres} {self.apellidos}"
 
-
-class DireccionesAnteriores(models.Model):
-    """
-    Modelo que almacena hasta dos direcciones de residencia anteriores de un recluta.
-
-    Permite registrar detalles específicos de cada dirección (como tipo de vía, número, complemento),
-    así como las fechas en que el recluta residió allí y los teléfonos asociados.
-
-    Cada instancia está relacionada con un solo objeto `Recluta`, pero un recluta puede tener varias
-    instancias de `DireccionesAnteriores` si ha cambiado de domicilio más de una vez.
-
-    Attributes:
-        recluta (ForeignKey): Referencia al recluta al que pertenecen las direcciones.
-        direccion_completa_anterior_X (CharField): Texto completo de la dirección anterior.
-        desde_X / hasta_X (DateField): Rango de fechas de residencia.
-        tipo_via_anterior_X, numero_principal_anterior_X, etc. (CharField): Componentes individuales de la dirección.
-        telefono_direccion_anterior_X_Y (IntegerField): Teléfonos asociados a la residencia.
-        ciudad_direccion_anterior_X (CharField): Ciudad de la residencia anterior.
-    """
-
-    # Relación con Recluta (muchas direcciones pueden pertenecer a un solo recluta)
-    recluta = models.ForeignKey(
-        'Recluta',
-        on_delete=models.CASCADE,
-        related_name='direcciones_anteriores',
-        null=True
-    )
-
-    # Dirección anterior 1
-    direccion_completa_anterior_1 = models.CharField(max_length=500, blank=True, null=True,validators=[texto_simple])
-    desde_1 = models.DateField("Desde", blank=True, null=True)
-    hasta_1 = models.DateField("Hasta", blank=True, null=True)
-    tipo_via_anterior_1 = models.CharField("Tipo de vía", max_length=20, blank=True, null=True, choices=[
-        ('Anillo Vial', 'Anillo Vial'), ('Autopista', 'Autopista'), ('Avenida', 'Avenida'),
-        ('Avenida Calle', 'Avenida Calle'), ('Avenida Carrera', 'Avenida Carrera'), ('Calle', 'Calle'),
-        ('Callejón', 'Callejón'), ('Carrera', 'Carrera'), ('Circular', 'Circular'),
-        ('Diagonal', 'Diagonal'), ('Transversal', 'Transversal'),
-    ])
-    numero_principal_anterior_1 = models.CharField("Número", max_length=10, blank=True, null=True,validators=[solo_numeros])
-    letra_principal_anterior_1 = models.CharField("Letra", max_length=2, null=True, blank=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    bis_anterior_1 = models.BooleanField("¿Bis?", default=False)
-    letra_bis_anterior_1 = models.CharField("Letra Bis", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_anterior_1 = models.CharField("Cuadrante", max_length=10, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
-    ], blank=True, null=True)
-    numero_secundario_anterior_1 = models.CharField("Número", max_length=10, blank=True, null=True,validators=[solo_numeros])
-    letra_secundaria_anterior_1 = models.CharField("Letra", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_dos_anterior_1 = models.CharField("Cuadrante", max_length=10, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
-    ], blank=True, null=True)
-    nro_anterior_1 = models.CharField("Número Final", max_length=30, blank=True, null=True,validators=[solo_numeros])
-    complemento_anterior_1 = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True,validators=[texto_simple])
-    telefono_direccion_anterior_1_1 = models.IntegerField("Teléfono 1", blank=True, null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
-    telefono_direccion_anterior_1_2 = models.IntegerField("Teléfono 2", blank=True, null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
-    ciudad_direccion_anterior_1 = models.CharField("Ciudad", max_length=25, blank=True, null=True,validators=[solo_letras])
-
-    # Dirección anterior 2
-    direccion_completa_anterior_2 = models.CharField(max_length=500, blank=True, null=True,validators=[texto_simple])
-    desde_2 = models.DateField("Desde", blank=True, null=True)
-    hasta_2 = models.DateField("Hasta", blank=True, null=True)
-    tipo_via_anterior_2 = models.CharField("Tipo de vía", max_length=20, blank=True, null=True, choices=[
-        ('Anillo Vial', 'Anillo Vial'), ('Autopista', 'Autopista'), ('Avenida', 'Avenida'),
-        ('Avenida Calle', 'Avenida Calle'), ('Avenida Carrera', 'Avenida Carrera'), ('Calle', 'Calle'),
-        ('Callejón', 'Callejón'), ('Carrera', 'Carrera'), ('Circular', 'Circular'),
-        ('Diagonal', 'Diagonal'), ('Transversal', 'Transversal'),
-    ])
-    numero_principal_anterior_2 = models.CharField("Número", max_length=10, blank=True, null=True,validators=[solo_numeros])
-    letra_principal_anterior_2 = models.CharField("Letra", max_length=2, null=True, blank=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    bis_anterior_2 = models.BooleanField("¿Bis?", default=False)
-    letra_bis_anterior_2 = models.CharField("Letra Bis", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_anterior_2 = models.CharField("Cuadrante", max_length=10, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
-    ], blank=True, null=True)
-    numero_secundario_anterior_2 = models.CharField("Número", max_length=10, blank=True, null=True,validators=[solo_numeros])
-    letra_secundaria_anterior_2 = models.CharField("Letra", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_dos_anterior_2 = models.CharField("Cuadrante", max_length=10, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
-    ], blank=True, null=True)
-    nro_anterior_2 = models.CharField("Número Final", max_length=30, blank=True, null=True,validators=[solo_numeros])
-    complemento_anterior_2 = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True,validators=[texto_simple])
-    telefono_direccion_anterior_2_1 = models.IntegerField("Teléfono 1", blank=True, null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
-    telefono_direccion_anterior_2_2 = models.IntegerField("Teléfono 2", blank=True, null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
-    ciudad_direccion_anterior_2 = models.CharField("Ciudad", max_length=25, blank=True, null=True,validators=[solo_letras])
-
-    class Meta:
-        verbose_name = "Dirección Anterior"
-        verbose_name_plural = "Direcciones Anteriores"
-
-    def __str__(self):
-        """
-        Retorna una representación legible del objeto, identificando su ID.
-        
-        Returns:
-            str: Texto representando la instancia de Direcciones Anteriores.
-        """
-        return f"Direcciones Anteriores {self.id}"
 
 
 class DatosFamiliares(models.Model):
@@ -592,19 +474,6 @@ class InformacionAcademica(models.Model):
     nombre_institucion_estudios_2 = models.CharField("Nombre de la Institución", max_length=70, blank=True, null=True,validators=[texto_simple])
     ciudad_estudios_2 = models.CharField("Ciudad", max_length=50, blank=True, null=True,validators=[texto_simple])
 
-    estudios_3 = models.CharField("Estudios Realizados 3", max_length=50, blank=True, null=True,validators=[texto_simple])
-    año_estudios_3 = models.IntegerField("Año", blank=True, null=True,
-                                         validators=[MinValueValidator(1900), MaxValueValidator(2030)])
-    titulo_estudios_3 = models.CharField("Título Recibido", max_length=50, blank=True, null=True,validators=[texto_simple])
-    nombre_institucion_estudios_3 = models.CharField("Nombre de la Institución", max_length=70, blank=True, null=True,validators=[texto_simple])
-    ciudad_estudios_3 = models.CharField("Ciudad", max_length=50, blank=True, null=True,validators=[texto_simple])
-
-    estudios_4 = models.CharField("Estudios Realizados 4", max_length=50, blank=True, null=True,validators=[texto_simple])
-    año_estudios_4 = models.IntegerField("Año", blank=True, null=True,
-                                         validators=[MinValueValidator(1900), MaxValueValidator(2030)])
-    titulo_estudios_4 = models.CharField("Título Recibido", max_length=50, blank=True, null=True,validators=[texto_simple])
-    nombre_institucion_estudios_4 = models.CharField("Nombre de la Institución", max_length=70, blank=True, null=True,validators=[texto_simple])
-    ciudad_estudios_4 = models.CharField("Ciudad", max_length=50, blank=True, null=True,validators=[texto_simple])
 
     # --- Idiomas extranjeros (hasta 2 idiomas) ---
     idioma_extranjero_1 = models.CharField("Idioma extranjero 1", max_length=50, blank=True, null=True,validators=[texto_simple])
@@ -916,21 +785,7 @@ class BienesRentasAEP(models.Model):
     tipo_de_cuenta_2 = models.CharField("Tipo de cuenta 2", blank=True,null=True,max_length=60,validators=[alfanumerico])
     numero_de_cuenta_2 = models.IntegerField("Numero de cuenta 2",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
 
-    entidad_financiera_3 = models.CharField("Entidad Financiera 3", blank=True,null=True,max_length=60,validators=[texto_simple])
-    tipo_de_cuenta_3 = models.CharField("Tipo de cuenta 3", blank=True,null=True,max_length=60,validators=[alfanumerico])
-    numero_de_cuenta_3 = models.IntegerField("Numero de cuenta 3",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
 
-    entidad_financiera_4 = models.CharField("Entidad Financiera 4", blank=True,null=True,max_length=60,validators=[texto_simple])
-    tipo_de_cuenta_4 = models.CharField("Tipo de cuenta 4", blank=True,null=True,max_length=60,validators=[alfanumerico])
-    numero_de_cuenta_4 = models.IntegerField("Numero de cuenta 4",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
-
-    entidad_financiera_5 = models.CharField("Entidad Financiera 5", blank=True,null=True,max_length=60,validators=[texto_simple])
-    tipo_de_cuenta_5 = models.CharField("Tipo de cuenta 5", blank=True,null=True,max_length=60,validators=[alfanumerico])
-    numero_de_cuenta_5 = models.IntegerField("Numero de cuenta 5",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
-
-    entidad_financiera_6 = models.CharField("Entidad Financiera 6", blank=True,null=True,max_length=60,validators=[texto_simple])
-    tipo_de_cuenta_6 = models.CharField("Tipo de cuenta 6", blank=True,null=True,max_length=60,validators=[alfanumerico])
-    numero_de_cuenta_6 = models.IntegerField("Numero de cuenta 6",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
 
 # Bienes patrimoniales
     
@@ -944,20 +799,7 @@ class BienesRentasAEP(models.Model):
     identificacion_bien_2 = models.CharField("Identificación del bien 2", blank=True,null=True, max_length=333,validators=[texto_simple])
     avaluo_comercial_bien_2 = models.IntegerField("Avalúo comercial del bien 2",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
 
-    tipo_bien_3 = models.CharField("Tipo de bien 3", blank=True,null=True,max_length=333,validators=[texto_simple])
-    ubicacion_bien_3 = models.CharField("Ubicación del bien 3 (Ciudad)",blank=True,null=True,max_length=333,validators=[texto_simple])
-    identificacion_bien_3 = models.CharField("Identificación del bien 3", blank=True,null=True, max_length=333,validators=[texto_simple])
-    avaluo_comercial_bien_3 = models.IntegerField("Avalúo comercial del bien 3",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
 
-    tipo_bien_4 = models.CharField("Tipo de bien 4", blank=True,null=True,max_length=333,validators=[texto_simple])
-    ubicacion_bien_4 = models.CharField("Ubicación del bien 4 (Ciudad)",blank=True,null=True,max_length=333,validators=[texto_simple])
-    identificacion_bien_4 = models.CharField("Identificación del bien 4", blank=True,null=True, max_length=333,validators=[texto_simple])
-    avaluo_comercial_bien_4 = models.IntegerField("Avalúo comercial del bien 4",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
-
-    tipo_bien_5 = models.CharField("Tipo de bien 5", blank=True,null=True,max_length=333,validators=[texto_simple])
-    ubicacion_bien_5 = models.CharField("Ubicación del bien 5 (Ciudad)",blank=True,null=True,max_length=333,validators=[texto_simple])
-    identificacion_bien_5 = models.CharField("Identificación del bien 5", blank=True,null=True, max_length=333,validators=[texto_simple])
-    avaluo_comercial_bien_5 = models.IntegerField("Avalúo comercial del bien 5",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
 
 # Obligaciones financieras vigentes
     entidad_o_persona_obligacion_1 = models.CharField("Entidad o persona", blank=True, null=True,max_length=333,validators=[texto_simple])
@@ -969,31 +811,20 @@ class BienesRentasAEP(models.Model):
     valor_2 = models.IntegerField("Valor" ,blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
 
 
-    entidad_o_persona_obligacion_3 = models.CharField("Entidad o persona", blank=True, null=True,max_length=333,validators=[texto_simple])
-    concepto_obligacion_3 = models.CharField("Concepto", blank=True, null=True,max_length=333,validators=[texto_simple])
-    valor_3 = models.IntegerField("Valor" ,blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
-
-    entidad_o_persona_obligacion_4 = models.CharField("Entidad o persona", blank=True, null=True,max_length=333,validators=[texto_simple])
-    concepto_obligacion_4= models.CharField("Concepto", blank=True, null=True,max_length=333,validators=[texto_simple])
-    valor_4 = models.IntegerField("Valor" ,blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
 
 # Participación en entidades u organizaciones
     entidad_o_institucion_1 = models.CharField("Entidad o institución 1", blank=True,null=True,max_length=333,validators=[texto_simple])
     calidad_de_miembro_1 = models.CharField("Calidad de miembro 1", blank=True,null=True,max_length=333,validators=[alfanumerico])
     entidad_o_institucion_2 = models.CharField("Entidad o institución 2", blank=True,null=True,max_length=333,validators=[texto_simple])
     calidad_de_miembro_2 = models.CharField("Calidad de miembro 2", blank=True,null=True,max_length=333,validators=[alfanumerico])
-    entidad_o_institucion_3 = models.CharField("Entidad o institución 3", blank=True,null=True,max_length=333,validators=[texto_simple])
-    calidad_de_miembro_3 = models.CharField("Calidad de miembro 3", blank=True,null=True,max_length=333,validators=[alfanumerico])
-    entidad_o_institucion_4 = models.CharField("Entidad o institución 4 ", blank=True,null=True,max_length=333,validators=[texto_simple])
-    calidad_de_miembro_4 = models.CharField("Calidad de miembro 4", blank=True,null=True,max_length=333,validators=[alfanumerico])
+
 
 # Actividad económica privada del aspirante
     empresa_1 = models.CharField("Empresa 1",blank=True,null=True,max_length=333,validators=[texto_simple])
     calidad_de_miembro_AEP_1 = models.CharField("Calidad de miembro 1",blank=True,null=True,max_length=333,validators=[alfanumerico])
     empresa_2 = models.CharField("Empresa 2",blank=True,null=True,max_length=333,validators=[texto_simple])
     calidad_de_miembro_AEP_2 = models.CharField("Calidad de miembro 2",blank=True,null=True,max_length=333,validators=[alfanumerico])
-    empresa_3 = models.CharField("Empresa 3",blank=True,null=True,max_length=333,validators=[texto_simple])
-    calidad_de_miembro_AEP_3 = models.CharField("Calidad de miembro 3",blank=True,null=True,max_length=333,validators=[alfanumerico])
+
 
     class Meta:
         verbose_name = "Bienes y Rentas AEP"

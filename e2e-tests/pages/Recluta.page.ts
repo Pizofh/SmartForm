@@ -14,10 +14,6 @@ export class DatosPersonalesPage {
   readonly lugar_expedición: Locator;
   readonly pasaporte_numero: Locator;
   readonly fecha_pasaporte: Locator;
-  readonly numero_libretamilitar: Locator;
-  readonly clase_libretamilitar: Locator;
-  readonly distrito_militar: Locator;
-  readonly sobrenombres: Locator;
   readonly dia_nacimiento: Locator;
   readonly mes_nacimiento: Locator;
   readonly año_nacimiento: Locator;
@@ -44,11 +40,6 @@ export class DatosPersonalesPage {
   readonly ciudad: Locator;
   readonly departamento: Locator; 
   readonly correo_electronico_personal: Locator; 
-  readonly correo_electronico_institucional: Locator; 
-  readonly facebook: Locator; 
-  readonly instagram: Locator; 
-  readonly twitter: Locator; 
-  readonly otras_redes: Locator; 
   readonly direccion_formateada: Locator; 
 
 
@@ -66,10 +57,7 @@ export class DatosPersonalesPage {
     this.lugar_expedición = page.locator('#id_recluta-lugar_expedición')
     this.pasaporte_numero  = page.locator('#id_recluta-pasaporte_numero');
     this.fecha_pasaporte = page.locator('#id_recluta-fecha_pasaporte');
-    this.numero_libretamilitar = page.locator('#id_recluta-numero_libretamilitar');
-    this.clase_libretamilitar = page.locator('#id_recluta-clase_libretamilitar');
-    this.distrito_militar = page.locator('#id_recluta-distrito_militar');
-    this.sobrenombres = page.locator('#id_recluta-sobrenombres');
+
     this.dia_nacimiento = page.locator('#id_recluta-dia_nacimiento');
     this.mes_nacimiento = page.locator('#id_recluta-mes_nacimiento');
     this.año_nacimiento = page.locator('#id_recluta-año_nacimiento');
@@ -96,11 +84,6 @@ export class DatosPersonalesPage {
     this.ciudad = page.locator('#id_recluta-ciudad');
     this.departamento = page.locator('#id_recluta-departamento');
     this.correo_electronico_personal = page.locator('#id_recluta-correo_electronico_personal');
-    this.correo_electronico_institucional = page.locator('#id_recluta-correo_electronico_institucional');
-    this.facebook = page.locator('#id_recluta-facebook');
-    this.instagram = page.locator('#id_recluta-instagram');
-    this.twitter = page.locator('#id_recluta-twitter');
-    this.otras_redes = page.locator('#id_recluta-otras_redes');
     this.direccion_formateada = page.locator('#direccion-preview');
   }
 
@@ -125,10 +108,7 @@ export class DatosPersonalesPage {
     await this.lugar_expedición.fill('Bogotá');
     await this.pasaporte_numero.fill('Num123456');
     await this.fecha_pasaporte.fill('2019-05-04');
-    await this.numero_libretamilitar.fill('564318');
-    await this.clase_libretamilitar.selectOption('Sr');
-    await this.distrito_militar.fill('Distrito Capital Rimas');
-    await this.sobrenombres.fill('No aplica');
+
     await this.dia_nacimiento.selectOption('12');
     await this.mes_nacimiento.selectOption('8');
     await this.año_nacimiento.fill('2000');
@@ -155,11 +135,6 @@ export class DatosPersonalesPage {
     await this.ciudad.fill('Tunja');
     await this.departamento.fill('Boyacá');
     await this.correo_electronico_personal.fill('stevegarasdnicas@hotmail.com');
-    await this.correo_electronico_institucional.fill('brian.garniasdca@indumil.gov.co');
-    await this.facebook.fill('StasdeveG');
-    await this.instagram.fill('Stasdeveg');
-    await this.twitter.fill('Stevasde');
-    await this.otras_redes.fill('Reddit.stasdeve');
   } 
 
 

@@ -44,7 +44,7 @@ export class SectorDefensaPage {
     this.page = page;
     this.tab = page.locator('text=Datos Personales');
 
-    this.sector_defensa_tab = page.locator('#formTabs > li:nth-child(6) > button');
+    this.sector_defensa_tab = page.locator('#formTabs > li:nth-child(5) > button');
     this.nombresyapellidos_sd_1 = page.locator('#id_SectorDefensa-nombresyapellidos_sd_1');
     this.cargo_sd_1 = page.locator('#id_SectorDefensa-cargo_sd_1');
     this.entidad_sd_1 = page.locator('#id_SectorDefensa-entidad_sd_1');

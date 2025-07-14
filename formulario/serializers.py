@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (
-    Recluta, DireccionesAnteriores, DatosFamiliares, Hijo, Hermano,
+    Recluta,  DatosFamiliares, Hijo, Hermano,
     InformacionAcademica, ReferenciasPersonales, SectorDefensa,
     BienesRentasAEP, SituacionJuridica, OtrosDatos, DocumentoGenerado
 )
@@ -23,8 +23,6 @@ Serializadores definidos:
 - DatosFamiliaresSerializer:
     Incluye hijos y hermanos como relaciones anidadas de solo lectura.
 
-- DireccionesAnterioresSerializer, InformacionAcademicaSerializer, ReferenciasPersonalesSerializer:
-    Serializan datos relacionados con la residencia, educación y referencias del recluta.
 
 - SectorDefensaSerializer:
     Serializa los contactos del recluta dentro del sector defensa.
@@ -64,10 +62,7 @@ class DatosFamiliaresSerializer(serializers.ModelSerializer):
         model = DatosFamiliares
         fields = '__all__'
 
-class DireccionesAnterioresSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DireccionesAnteriores
-        fields = '__all__'
+
 
 class InformacionAcademicaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -106,7 +101,7 @@ class DocumentoGeneradoSerializer(serializers.ModelSerializer):
 
 class ReclutaSerializer(serializers.ModelSerializer):
     datosfamiliares = DatosFamiliaresSerializer(read_only=True)
-    direcciones_anteriores = DireccionesAnterioresSerializer(many=True, read_only=True)
+
     informaciones_academicas = InformacionAcademicaSerializer(many=True, read_only=True)
     referencias_personales = ReferenciasPersonalesSerializer(many=True, read_only=True)
     sector_defensa = SectorDefensaSerializer(many=True, read_only=True)
