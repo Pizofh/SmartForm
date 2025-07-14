@@ -21,10 +21,8 @@
     </li>
     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#informacion_academica" type="button" role="tab">Información Académica</button></li>
     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ReferenciasPersonales" type="button" role="tab">Referencias Personales</button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#SectorDefensa" type="button" role="tab">Sector Defensa</button></li>
     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#BienesRentasAEP" type="button" role="tab">Bienes, Rentas y Actividad Económica Privada</button></li>
     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#SituacionJuridica" type="button" role="tab">Situación Jurídica</button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#OtrosDatos" type="button" role="tab">Otros Datos de Interés</button></li>
     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#confirmar" type="button" role="tab">Confirmar</button></li>
   </ul>
 
@@ -40,10 +38,8 @@
 
   <div class="tab-pane fade" id="informacion_academica" role="tabpanel">{% crispy f_informacion_academica %}</div>
   <div class="tab-pane fade" id="ReferenciasPersonales" role="tabpanel">{% crispy f_ReferenciasPersonales %}</div>
-  <div class="tab-pane fade" id="SectorDefensa" role="tabpanel">{% crispy f_SectorDefensa %}</div>
   <div class="tab-pane fade" id="BienesRentasAEP" role="tabpanel">{% crispy f_BienesRentasAEP %}</div>
   <div class="tab-pane fade" id="SituacionJuridica" role="tabpanel">{% crispy f_SituacionJuridica %}</div>
-  <div class="tab-pane fade" id="OtrosDatos" role="tabpanel">{% crispy f_OtrosDatos %}</div>
   <div class="tab-pane fade" id="confirmar" role="tabpanel">{% crispy f_confirm %}</div>
 </div>
 
@@ -585,157 +581,6 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 </script>
 
-<!-- Dirección REFERENCIA 1 Sector Defensa -->
-
-<script>
-(function () {
-  const prefix = "SectorDefensa";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
-
-  function actualizarDireccionSD1() {
-    const partes = [
-      v('tipo_via_sd_1'), v('numero_principal_sd_1'), v('letra_principal_sd_1'),
-      ck('bis_sd_1') ? 'BIS' : '',
-      v('letra_bis_sd_1'), v('cuadrante_sd_1')
-    ];
-
-    if (v('numero_secundario_sd_1')) {
-      partes.push('#', v('numero_secundario_sd_1'),
-                        v('letra_secundaria_sd_1'),
-                        v('cuadrante_dos_sd_1'));
-    }
-
-    partes.push(v('nro_sd_1'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_sd_1')) dir += ', ' + v('complemento_sd_1');
-
-    const div = document.getElementById('direccion-preview_sd_1');
-    const hidden = document.getElementById(id('direccion_preview_sd_1'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_sd_1', 'numero_principal_sd_1', 'letra_principal_sd_1',
-      'bis_sd_1', 'letra_bis_sd_1', 'cuadrante_sd_1',
-      'numero_secundario_sd_1', 'letra_secundaria_sd_1',
-      'cuadrante_dos_sd_1', 'nro_sd_1', 'complemento_sd_1'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionSD1);
-      }
-    });
-    actualizarDireccionSD1();
-  });
-})();
-</script>
-
-<!-- Dirección REFERENCIA 2 Sector Defensa -->
-
-<script>
-(function () {
-  const prefix = "SectorDefensa";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
-
-  function actualizarDireccionSD2() {
-    const partes = [
-      v('tipo_via_sd_2'), v('numero_principal_sd_2'), v('letra_principal_sd_2'),
-      ck('bis_sd_2') ? 'BIS' : '',
-      v('letra_bis_sd_2'), v('cuadrante_sd_2')
-    ];
-
-    if (v('numero_secundario_sd_2')) {
-      partes.push('#', v('numero_secundario_sd_2'),
-                        v('letra_secundaria_sd_2'),
-                        v('cuadrante_dos_sd_2'));
-    }
-
-    partes.push(v('nro_sd_2'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_sd_2')) dir += ', ' + v('complemento_sd_2');
-
-    const div = document.getElementById('direccion-preview_sd_2');
-    const hidden = document.getElementById(id('direccion_preview_sd_2'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_sd_2', 'numero_principal_sd_2', 'letra_principal_sd_2',
-      'bis_sd_2', 'letra_bis_sd_2', 'cuadrante_sd_2',
-      'numero_secundario_sd_2', 'letra_secundaria_sd_2',
-      'cuadrante_dos_sd_2', 'nro_sd_2', 'complemento_sd_2'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionSD2);
-      }
-    });
-    actualizarDireccionSD2();
-  });
-})();
-</script>
-
-<!-- Dirección RECOMENDANTE Otros Datos de Interés -->
-<script>
-(function () {
-  const prefix = "OtrosDatos";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
-
-  function actualizarDireccionOtrosDatos() {
-    const partes = [
-      v('tipo_via_recomendante'), v('numero_principal_recomendante'), v('letra_principal_recomendante'),
-      ck('bis_recomendante') ? 'BIS' : '',
-      v('letra_bis_recomendante'), v('cuadrante_recomendante')
-    ];
-
-    if (v('numero_secundario_recomendante')) {
-      partes.push('#', v('numero_secundario_recomendante'),
-                        v('letra_secundaria_recomendante'),
-                        v('cuadrante_dos_recomendante'));
-    }
-
-    partes.push(v('nro_recomendante'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_recomendante')) dir += ', ' + v('complemento_recomendante');
-
-    const div = document.getElementById('direccion-preview_recomendante');
-    const hidden = document.getElementById(id('direccion_preview_recomendante'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_recomendante', 'numero_principal_recomendante', 'letra_principal_recomendante',
-      'bis_recomendante', 'letra_bis_recomendante', 'cuadrante_recomendante',
-      'numero_secundario_recomendante', 'letra_secundaria_recomendante',
-      'cuadrante_dos_recomendante', 'nro_recomendante', 'complemento_recomendante'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionOtrosDatos);
-      }
-    });
-    actualizarDireccionOtrosDatos();
-  });
-})();
-</script>
 
 <!--Formateo de Moneda en los campos-->
 <script>

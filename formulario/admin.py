@@ -1,7 +1,7 @@
 from django.contrib import admin
 import nested_admin
 from .models import (Recluta, DatosFamiliares, InformacionAcademica,
-                     ReferenciasPersonales,SectorDefensa, BienesRentasAEP, SituacionJuridica, OtrosDatos,Hijo,Hermano)
+                     ReferenciasPersonales, BienesRentasAEP, SituacionJuridica,Hijo,Hermano)
 import nested_admin
 
 # -------------------- INLINES ANIDADOS --------------------
@@ -34,10 +34,7 @@ class ReferenciasPersonalesInline(nested_admin.NestedStackedInline):
     model = ReferenciasPersonales
     extra = 0
 
-# Inline para sector defensa
-class SectorDefensaInline(nested_admin.NestedStackedInline):
-    model = SectorDefensa
-    extra = 0
+
 
 # Inline para bienes y rentas (AEP)
 class BienesRentasAEPInline(nested_admin.NestedStackedInline):
@@ -49,10 +46,6 @@ class SituacionJuridicaInline(nested_admin.NestedStackedInline):
     model = SituacionJuridica
     extra = 0
 
-# Inline para otros datos
-class OtrosDatosInline(nested_admin.NestedStackedInline):
-    model = OtrosDatos
-    extra = 0
 
 
 # Admin del modelo Recluta con todos los inlines anidados
@@ -62,10 +55,9 @@ class ReclutaAdmin(nested_admin.NestedModelAdmin):
         DatosFamiliaresInline,
         InformacionAcademicaInline,
         ReferenciasPersonalesInline,
-        SectorDefensaInline,
         BienesRentasAEPInline,
         SituacionJuridicaInline,
-        OtrosDatosInline,
+        
     ]
 # Columnas visibles en la lista de reclutas
     list_display = (
@@ -272,37 +264,6 @@ class ReferenciasPersonalesAdmin(admin.ModelAdmin):
     list_filter = (
     )
 
-@admin.register(SectorDefensa)
-class SectorDefensaAdmin(admin.ModelAdmin):
-    # ----------  QUÉ COLUMNAS MOSTRAR EN LA LISTA  ----------
-    list_display = (
-# Referencia 1
-    "nombresyapellidos_sd_1", "cargo_sd_1","entidad_sd_1","unidad_militar_sd_1", "celular_sd_1", "tipo_via_sd_1",
-    "numero_principal_sd_1","letra_principal_sd_1","bis_sd_1","letra_bis_sd_1", "cuadrante_sd_1", "numero_secundario_sd_1", 
-    "letra_secundaria_sd_1","cuadrante_dos_sd_1","nro_sd_1", "complemento_sd_1","direccion_formateada_sd_1",
-
-# Referencia 2
-    "nombresyapellidos_sd_2", "cargo_sd_2","entidad_sd_2","unidad_militar_sd_2", "celular_sd_2", "tipo_via_sd_2",
-    "numero_principal_sd_2","letra_principal_sd_2","bis_sd_2","letra_bis_sd_2", "cuadrante_sd_2", "numero_secundario_sd_2", 
-    "letra_secundaria_sd_2","cuadrante_dos_sd_2","nro_sd_2", "complemento_sd_2","direccion_formateada_sd_2",
-    )
-
-    # ----------  CAMPOS PARA BUSCAR  ----------
-    search_fields = (
-# Referencia 1
-    "nombresyapellidos_sd_1", "cargo_sd_1","entidad_sd_1","unidad_militar_sd_1", "celular_sd_1", "tipo_via_sd_1",
-    "numero_principal_sd_1","letra_principal_sd_1","bis_sd_1","letra_bis_sd_1", "cuadrante_sd_1", "numero_secundario_sd_1", 
-    "letra_secundaria_sd_1","cuadrante_dos_sd_1","nro_sd_1", "complemento_sd_1","direccion_formateada_sd_1",
-
-# Referencia 2
-    "nombresyapellidos_sd_2", "cargo_sd_2","entidad_sd_2","unidad_militar_sd_2", "celular_sd_2", "tipo_via_sd_2",
-    "numero_principal_sd_2","letra_principal_sd_2","bis_sd_2","letra_bis_sd_2", "cuadrante_sd_2", "numero_secundario_sd_2", 
-    "letra_secundaria_sd_2","cuadrante_dos_sd_2","nro_sd_2", "complemento_sd_2","direccion_formateada_sd_2"
-    )
-
-    # ----------  FILTROS LATERALES  ----------
-    list_filter = (
-    )
 
 @admin.register(BienesRentasAEP)
 class BienesRentasAEPAdmin(admin.ModelAdmin):
@@ -374,47 +335,4 @@ class SituacionJuridicaAdmin(admin.ModelAdmin):
     list_filter = (
     )
 
-
-@admin.register(OtrosDatos)
-class OtrosDatosAdmin(admin.ModelAdmin):
-
-
-    
-    # ----------  QUÉ COLUMNAS MOSTRAR EN LA LISTA  ----------
-    list_display = (
-                        "fecha_viaje_1","pais_visitado_1","motivo_1","permanencia_1",
-                    "fecha_viaje_2","pais_visitado_2","motivo_2","permanencia_2",
-                    "fecha_viaje_3","pais_visitado_3","motivo_3","permanencia_3",
-
-                    "recomendante","celular_recomendante","labora_en_indumil","nombres_y_apellidos_recomendante_1", 
-                    "nombres_y_apellidos_recomendante_2", "cargo_recomendante_1", "cargo_recomendante_2",
-                    "unidad_negocio_recomendante_1","unidad_negocio_recomendante_2",
-
-                    "tipo_via_recomendante","numero_principal_recomendante", "letra_principal_recomendante", "bis_recomendante",
-                    "letra_bis_recomendante", "cuadrante_recomendante", "numero_secundario_recomendante","letra_secundaria_recomendante",
-                    "cuadrante_dos_recomendante","nro_recomendante", "complemento_recomendante",
-                    "razon_de_vinculo","direccion_formateada_recomendante"
-    )
-
-    # ----------  CAMPOS PARA BUSCAR  ----------
-    search_fields = (
-                           "fecha_viaje_1","pais_visitado_1","motivo_1","permanencia_1",
-                    "fecha_viaje_2","pais_visitado_2","motivo_2","permanencia_2",
-                    "fecha_viaje_3","pais_visitado_3","motivo_3","permanencia_3",
-
-                    "recomendante","celular_recomendante","labora_en_indumil","nombres_y_apellidos_recomendante_1", 
-                    "nombres_y_apellidos_recomendante_2", "cargo_recomendante_1", "cargo_recomendante_2",
-                    "unidad_negocio_recomendante_1","unidad_negocio_recomendante_2",
-
-                    "tipo_via_recomendante","numero_principal_recomendante", "letra_principal_recomendante", "bis_recomendante",
-                    "letra_bis_recomendante", "cuadrante_recomendante", "numero_secundario_recomendante","letra_secundaria_recomendante",
-                    "cuadrante_dos_recomendante","nro_recomendante", "complemento_recomendante",
-                    "razon_de_vinculo","direccion_formateada_recomendante"
-    )
-
-    # ----------  FILTROS LATERALES  ----------
-    list_filter = (
-    )
-
-    # Inlines para ReclutaAdmin
 

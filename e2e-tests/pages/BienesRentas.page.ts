@@ -74,7 +74,7 @@ constructor(page: Page) {
     this.tab = page.locator('text=Bienes Rentas');
 
 //Total de Ingresos Último Año Gravable
-    this.bienes_rentas_tab = page.locator('#formTabs > li:nth-child(6) > button');
+    this.bienes_rentas_tab = page.locator('#formTabs > li:nth-child(5) > button');
     this.salarios_y_demas_ingresos_laborales =page.locator('#id_BienesRentasAEP-salarios_y_demas_ingresos_laborales');
     this.cesantías_e_intereses_de_cesantías = page.locator('#id_BienesRentasAEP-cesantías_e_intereses_de_cesantías');
     this.gastos_de_representación = page.locator('#id_BienesRentasAEP-gastos_de_representación');

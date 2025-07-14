@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 from .models import (Recluta,DatosFamiliares, Hijo,Hermano,InformacionAcademica,
-                     ReferenciasPersonales,SectorDefensa,BienesRentasAEP,SituacionJuridica,OtrosDatos)
+                     ReferenciasPersonales,BienesRentasAEP,SituacionJuridica)
 from .serializers import (ReclutaSerializer,DatosFamiliaresSerializer,
-                          HijoSerializer,HermanoSerializer,InformacionAcademicaSerializer,ReferenciasPersonalesSerializer,
-                          SectorDefensaSerializer,BienesRentasAEPSerializer,SituacionJuridicaSerializer,OtrosDatosSerializer)
+                          HijoSerializer,HermanoSerializer,InformacionAcademicaSerializer,ReferenciasPersonalesSerializer
+                          ,BienesRentasAEPSerializer,SituacionJuridicaSerializer)
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -45,11 +45,7 @@ class ReferenciasPersonalesViewSet(viewsets.ModelViewSet):
     serializer_class = ReferenciasPersonalesSerializer
     permission_classes = [IsAuthenticated]
 
-class SectorDefensaViewSet(viewsets.ModelViewSet):
-    """ API para contactos del sector defensa relacionados con el recluta. """
-    queryset = SectorDefensa.objects.all()
-    serializer_class = SectorDefensaSerializer
-    permission_classes = [IsAuthenticated]
+
 
 class BienesRentasAEPViewSet(viewsets.ModelViewSet):
     """ API para los datos patrimoniales y económicos del recluta. """
@@ -63,8 +59,3 @@ class SituacionJuridicaViewSet(viewsets.ModelViewSet):
     serializer_class = SituacionJuridicaSerializer
     permission_classes = [IsAuthenticated]
 
-class OtrosDatosViewSet(viewsets.ModelViewSet):
-    """ API para información adicional del recluta, como viajes y recomendantes. """
-    queryset = OtrosDatos.objects.all()
-    serializer_class = OtrosDatosSerializer
-    permission_classes = [IsAuthenticated]

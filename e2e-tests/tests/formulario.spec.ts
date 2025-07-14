@@ -3,10 +3,8 @@ import { DatosPersonalesPage } from '../pages/Recluta.page';
 import { DatosFamilaresPage } from '../pages/DatosFamiliares.page';
 import { InformacionAcademicaPage } from '../pages/InformacionAcademica.page';
 import { ReferenciasPersonalesPage } from '../pages/ReferenciasPersonales.page';
-import { SectorDefensaPage } from '../pages/SectorDefensa.page';
 import { BienesRentasPage } from '../pages/BienesRentas.page';
 import { SituacionJuridicaPage } from '../pages/SituacionJuridica.page';
-import { OtrosDatosPage } from '../pages/OtrosDatos.page';
 import { ConfirmarPage } from '../pages/Confirmar.page';
 
 
@@ -58,14 +56,6 @@ const direccionHermano2 = await datosfamiliares.getDireccionHermano(2);
   expect(DireccionReferencia2).toBe('Carrera 56 H NORTE # 23 L SUR 457, SEGUNDO PISO');
   expect(DireccionReferencia3).toBe('Avenida 89 G BIS Y SUR # 56 Q ESTE 85, APARTAMENTO OOOO OOOO');
 
-//SECTOR DEFENSA
-  const SectorDefensa =new SectorDefensaPage(page);
-  await SectorDefensa.llenarFormulario();
-
-  const DireccionSectorDefensa1 = await SectorDefensa.obtenerDireccionFormateadaSectorDefensa1();
-  const DireccionSectorDefensa2 = await SectorDefensa.obtenerDireccionFormateadaSectorDefensa2();
-  expect(DireccionSectorDefensa1).toBe('Calle 123 G BIS A OESTE # 89 T SUR 101, complemento');
-  expect(DireccionSectorDefensa2).toBe('Avenida 66 Q C NORTE # 55 N SUR 52, Complemento segundo');
 
 //BIENES Y RENTAS
   const BienesRentas =new BienesRentasPage(page);
@@ -76,13 +66,6 @@ const direccionHermano2 = await datosfamiliares.getDireccionHermano(2);
 //SITUACIÓN JURÍDICA
   const SituacionJuridica =new SituacionJuridicaPage(page);
   await SituacionJuridica.llenarFormulario();
-
-//OTROS DATOS
-  const OtrosDatos =new OtrosDatosPage(page);
-  await OtrosDatos.llenarFormulario();
-  const DireccionRecomendante = await OtrosDatos.obtenerDireccionFormateadaRecomendante();
-  expect(DireccionRecomendante).toBe('Calle 23 B BIS C ESTE # 14 F NORTE 122, Tercer Piso Apartamento 232');
-
 
 await page.click('button[type="submit"]');
 await page.waitForURL('http://127.0.0.1:8000/exito/');

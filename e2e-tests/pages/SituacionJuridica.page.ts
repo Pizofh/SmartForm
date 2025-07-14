@@ -24,7 +24,7 @@ export class SituacionJuridicaPage {
   constructor(page: Page) {
     this.page = page;
     this.tab = page.locator('text=Situacion Juridica');
-    this.situacion_juridica_tab=page.locator('#formTabs > li:nth-child(7) > button');
+    this.situacion_juridica_tab=page.locator('#formTabs > li:nth-child(6) > button');
 
 
     this.fecha_proceso_1 = page.locator('#id_SituacionJuridica-fecha_proceso_1');

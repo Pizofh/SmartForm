@@ -23,10 +23,9 @@ Rutas definidas:
     - hermanos/: Detalles individuales de cada hermano.
     - academica/: Información académica del recluta.
     - referencias/: Referencias personales.
-    - defensa/: Contactos en el sector defensa.
     - bienes/: Bienes y rentas declaradas.
     - situacion/: Situación jurídica del aspirante.
-    - otros/: Otros datos como viajes y recomendantes.
+
 
 Estas rutas permiten tanto la visualización como la gestión programática (via API) de toda la información capturada durante el proceso de reclutamiento.
 """
@@ -44,10 +43,9 @@ router.register(r'hijos', api_views.HijoViewSet)
 router.register(r'hermanos', api_views.HermanoViewSet)
 router.register(r'academica', api_views.InformacionAcademicaViewSet)
 router.register(r'referencias', api_views.ReferenciasPersonalesViewSet)
-router.register(r'defensa', api_views.SectorDefensaViewSet)
 router.register(r'bienes', api_views.BienesRentasAEPViewSet)
 router.register(r'situacion', api_views.SituacionJuridicaViewSet)
-router.register(r'otros', api_views.OtrosDatosViewSet)
+
 
 urlpatterns = [
     path("", ReclutaTabsView.as_view(), name="formulario_tabs"),

@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from .models import (
     Recluta,  DatosFamiliares, Hijo, Hermano,
-    InformacionAcademica, ReferenciasPersonales, SectorDefensa,
-    BienesRentasAEP, SituacionJuridica, OtrosDatos, DocumentoGenerado
+    InformacionAcademica, ReferenciasPersonales, 
+    BienesRentasAEP, SituacionJuridica, DocumentoGenerado
 )
 
 """
@@ -24,8 +24,6 @@ Serializadores definidos:
     Incluye hijos y hermanos como relaciones anidadas de solo lectura.
 
 
-- SectorDefensaSerializer:
-    Serializa los contactos del recluta dentro del sector defensa.
 
 - BienesRentasAEPSerializer:
     Serializa la información patrimonial y económica del recluta.
@@ -33,8 +31,7 @@ Serializadores definidos:
 - SituacionJuridicaSerializer:
     Serializa información jurídica del aspirante.
 
-- OtrosDatosSerializer:
-    Serializa otros datos relevantes como viajes o recomendantes.
+
 
 - DocumentoGeneradoSerializer:
     Serializa los documentos generados automáticamente por el sistema.
@@ -74,10 +71,7 @@ class ReferenciasPersonalesSerializer(serializers.ModelSerializer):
         model = ReferenciasPersonales
         fields = '__all__'
 
-class SectorDefensaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SectorDefensa
-        fields = '__all__'
+
 
 class BienesRentasAEPSerializer(serializers.ModelSerializer):
     class Meta:
@@ -89,10 +83,7 @@ class SituacionJuridicaSerializer(serializers.ModelSerializer):
         model = SituacionJuridica
         fields = '__all__'
 
-class OtrosDatosSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OtrosDatos
-        fields = '__all__'
+
 
 class DocumentoGeneradoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -101,13 +92,10 @@ class DocumentoGeneradoSerializer(serializers.ModelSerializer):
 
 class ReclutaSerializer(serializers.ModelSerializer):
     datosfamiliares = DatosFamiliaresSerializer(read_only=True)
-
     informaciones_academicas = InformacionAcademicaSerializer(many=True, read_only=True)
     referencias_personales = ReferenciasPersonalesSerializer(many=True, read_only=True)
-    sector_defensa = SectorDefensaSerializer(many=True, read_only=True)
     bienes_rentas = BienesRentasAEPSerializer(many=True, read_only=True)
     situaciones_juridicas = SituacionJuridicaSerializer(many=True, read_only=True)
-    otrosdatos_set = OtrosDatosSerializer(many=True, read_only=True)
     documentogenerado_set = DocumentoGeneradoSerializer(many=True, read_only=True)
 
     class Meta:
