@@ -52,7 +52,4 @@ Si estás en entorno de pruebas o desarrollo, el CAPTCHA se puede desactivar con
 Los archivos se almacenan en la carpeta ../media.
 
 
-## 📄 Licencia
-
-Este proyecto es propiedad de INDUMIL. Su uso externo requiere autorización expresa.
 
