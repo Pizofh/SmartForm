@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (
-    Recluta,  DatosFamiliares, Hijo, Hermano,
+    PersonalData,  DatosFamiliares, Hijo, Hermano,
     InformacionAcademica, ReferenciasPersonales, 
     BienesRentasAEP, SituacionJuridica, DocumentoGenerado
 )
@@ -18,7 +18,7 @@ automatiza el mapeo entre los campos del modelo y su representación serializada
 Serializadores definidos:
 
 - HijoSerializer / HermanoSerializer:
-    Serializan las relaciones familiares del recluta.
+    Serializan las relaciones familiares del PersonalData.
 
 - DatosFamiliaresSerializer:
     Incluye hijos y hermanos como relaciones anidadas de solo lectura.
@@ -26,7 +26,7 @@ Serializadores definidos:
 
 
 - BienesRentasAEPSerializer:
-    Serializa la información patrimonial y económica del recluta.
+    Serializa la información patrimonial y económica del PersonalData
 
 - SituacionJuridicaSerializer:
     Serializa información jurídica del aspirante.
@@ -36,9 +36,9 @@ Serializadores definidos:
 - DocumentoGeneradoSerializer:
     Serializa los documentos generados automáticamente por el sistema.
 
-- ReclutaSerializer:
+- PersonalDataSerializer:
     Serializador principal que incluye relaciones anidadas de solo lectura con todos
-    los modelos relacionados. Útil para obtener un perfil completo del recluta en una sola petición.
+    los modelos relacionados. Útil para obtener un perfil completo del PersonalData en una sola petición.
 """
 
 class HijoSerializer(serializers.ModelSerializer):
@@ -90,7 +90,7 @@ class DocumentoGeneradoSerializer(serializers.ModelSerializer):
         model = DocumentoGenerado
         fields = '__all__'
 
-class ReclutaSerializer(serializers.ModelSerializer):
+class PersonalDataSerializer(serializers.ModelSerializer):
     datosfamiliares = DatosFamiliaresSerializer(read_only=True)
     informaciones_academicas = InformacionAcademicaSerializer(many=True, read_only=True)
     referencias_personales = ReferenciasPersonalesSerializer(many=True, read_only=True)
@@ -99,5 +99,5 @@ class ReclutaSerializer(serializers.ModelSerializer):
     documentogenerado_set = DocumentoGeneradoSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Recluta
+        model = PersonalData
         fields = '__all__'

@@ -1,6 +1,6 @@
 from django.contrib import admin
 import nested_admin
-from .models import (Recluta, DatosFamiliares, InformacionAcademica,
+from .models import (PersonalData, DatosFamiliares, InformacionAcademica,
                      ReferenciasPersonales, BienesRentasAEP, SituacionJuridica,Hijo,Hermano)
 import nested_admin
 
@@ -49,8 +49,8 @@ class SituacionJuridicaInline(nested_admin.NestedStackedInline):
 
 
 # Admin del modelo Recluta con todos los inlines anidados
-@admin.register(Recluta)
-class ReclutaAdmin(nested_admin.NestedModelAdmin):
+@admin.register(PersonalData)
+class PersonalDataAdmin(nested_admin.NestedModelAdmin):
     inlines = [
         DatosFamiliaresInline,
         InformacionAcademicaInline,
@@ -78,7 +78,7 @@ class ReclutaAdmin(nested_admin.NestedModelAdmin):
 # Campos habilitados para búsqueda
     search_fields = (
 
-#CLASE RECLUTA
+#PersonalData
             "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido",
             "tipo_documento", "numero_documento", "fecha_expedición", "lugar_expedición",
             "pasaporte_numero", "fecha_pasaporte",

@@ -28,7 +28,7 @@
 
   <!-- Tab content -->
 <div class="tab-content p-3 border border-top-0">
-  <div class="tab-pane fade show active" id="datos_personales" role="tabpanel" aria-labelledby="tab-datos-personales">{% crispy f_recluta %}</div>
+  <div class="tab-pane fade show active" id="datos_personales" role="tabpanel" aria-labelledby="tab-datos-personales">{% crispy f_PersonalData %}</div>
 
 
 
@@ -51,10 +51,10 @@
 
 
 {% block scripts %}
-<!-- Dirección RECLUTA -->
+<!-- Dirección PersonalData -->
 <script>
 (function () {
-  const prefix = "recluta";
+  const prefix = "PersonalData";
   const id = f => `id_${prefix}-${f}`;
   const v = f => document.getElementById(id(f))?.value || "";
   const ck = f => document.getElementById(id(f))?.checked || false;

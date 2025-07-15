@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory 
 from .models import (
-    Recluta, DatosFamiliares, InformacionAcademica,ReferenciasPersonales, BienesRentasAEP, SituacionJuridica, Hijo,Hermano
+    PersonalData, DatosFamiliares, InformacionAcademica,ReferenciasPersonales, BienesRentasAEP, SituacionJuridica, Hijo,Hermano
 )
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, HTML,Field
@@ -34,7 +34,7 @@ class BaseHelperMixin:
         self.helper.form_show_labels = True
 
 
-class ReclutaForm(BaseHelperMixin, forms.ModelForm):
+class PersonalDataForm(BaseHelperMixin, forms.ModelForm):
 
     """
     Formulario ModelForm para la clase `Recluta`.
@@ -59,7 +59,7 @@ class ReclutaForm(BaseHelperMixin, forms.ModelForm):
     )
 
     class Meta:
-        model = Recluta
+        model = PersonalData
         fields = [
             "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido",
             "tipo_documento", "numero_documento", "fecha_expedición", "lugar_expedición",
@@ -160,7 +160,7 @@ class DatosFamiliaresForm(BaseHelperMixin, forms.ModelForm):
 
     class Meta:
         model = DatosFamiliares
-        exclude = ("recluta", )
+        exclude = ("PersonalData", )
         fields = [
 #Datos Conyugue
             "nombre_conyugue", "cedula_conyugue", "profesion_oficio_conyugue", "celular_conyugue",
@@ -917,7 +917,7 @@ class SituacionJuridicaForm(BaseHelperMixin, forms.ModelForm):
 
     class Meta:
         model   = SituacionJuridica
-        exclude = ("recluta",)
+        exclude = ("PersonalData",)
         fields = [
             "fecha_proceso_1", "tipo_de_investigacion_1", "causa_1", "autoridad_1", "estado_del_proceso_1", "responsable_1",
             "fecha_proceso_2", "tipo_de_investigacion_2", "causa_2", "autoridad_2", "estado_del_proceso_2", "responsable_2",

@@ -1,16 +1,16 @@
 from rest_framework import viewsets
-from .models import (Recluta,DatosFamiliares, Hijo,Hermano,InformacionAcademica,
+from .models import (PersonalData,DatosFamiliares, Hijo,Hermano,InformacionAcademica,
                      ReferenciasPersonales,BienesRentasAEP,SituacionJuridica)
-from .serializers import (ReclutaSerializer,DatosFamiliaresSerializer,
+from .serializers import (PersonalDataSerializer,DatosFamiliaresSerializer,
                           HijoSerializer,HermanoSerializer,InformacionAcademicaSerializer,ReferenciasPersonalesSerializer
                           ,BienesRentasAEPSerializer,SituacionJuridicaSerializer)
 from rest_framework.permissions import IsAuthenticated
 
 
-class ReclutaViewSet(viewsets.ModelViewSet):
+class PersonalDataViewSet(viewsets.ModelViewSet):
     """ API para el modelo principal Recluta. """
-    queryset = Recluta.objects.all()
-    serializer_class = ReclutaSerializer
+    queryset = PersonalData.objects.all()
+    serializer_class = PersonalDataSerializer
     permission_classes = [IsAuthenticated]
 
 
