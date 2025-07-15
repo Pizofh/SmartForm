@@ -63,7 +63,7 @@ class Recluta(models.Model):
     tarjeta_profesional = models.CharField("Tarjeta profesional", max_length=15, null=True,validators=[alfanumerico])
     señales_corporales = models.CharField("Señales corporales", max_length=50, null=True,validators=[texto_simple])
     estatura = models.IntegerField("Estatura (cm)", null=True,
-                                   validators=[MinValueValidator(10), MaxValueValidator(400)])
+                                   validators=[MinValueValidator(80), MaxValueValidator(400)])
     peso = models.IntegerField("Peso (kg)", null=True,
                                validators=[MinValueValidator(10), MaxValueValidator(500)])
 

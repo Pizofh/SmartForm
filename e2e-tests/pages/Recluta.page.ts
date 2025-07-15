@@ -137,10 +137,63 @@ export class DatosPersonalesPage {
     await this.correo_electronico_personal.fill('stevegarasdnicas@hotmail.com');
   } 
 
-
   async obtenerDireccionFormateadaRecluta(): Promise<string> {
   const DireccionFormateadaRecluta = await this.direccion_formateada.textContent();
   return DireccionFormateadaRecluta?.trim() ?? '';
 }
+
+  getErrorMessageForField(fieldId: string): Locator {
+    return this.page.locator(`#${fieldId}_error strong`);
+  }
+
+
+  async FillFormWithErrors() {
+
+  function generarNumeroAleatorio(): string {
+  const numero = Math.floor(Math.random() * 1000); // entre 0 y 999
+  return numero.toString();
+}
+
+    const wrongdocument = generarNumeroAleatorio();
+    const wrongphone = generarNumeroAleatorio();
+    await this.primer_nombre.fill('123');
+    await this.segundo_nombre.fill('123');
+    await this.primer_apellido.fill('123');
+    await this.segundo_apellido.fill('123');
+    await this.tipo_documento.selectOption('CC');
+    await this.numero_documento.fill(wrongdocument);
+    await this.fecha_expedición.fill('2018-08-14');
+    await this.lugar_expedición.fill('123');
+    await this.pasaporte_numero.fill('x#$"%&%YRTGERFEDC');
+    await this.fecha_pasaporte.fill('2019-05-04');
+    await this.dia_nacimiento.selectOption('12');
+    await this.mes_nacimiento.selectOption('8');
+    await this.año_nacimiento.fill('999999999');
+    await this.estado_civil.selectOption('Soltero(a)');
+    await this.profesion_oficio.fill('ADFV3"$RR$#%#EREADSFG#"4234SDF');
+    await this.tarjeta_profesional.fill('IA12"#"$%$&%YU/&&%3456');
+    await this.señales_corporales.fill('FGBHGNJKIU(/&%$#"WQSASDCFV');
+    await this.estatura.fill('1');
+    await this.peso.fill('999999')
+    await this.tipo_via.selectOption('Carrera');
+    await this.numero_principal.fill('622222222222222229');
+    await this.letra_principal.selectOption('C');
+    await this.bis.check();
+    await this.letra_bis.selectOption('A');
+    await this.cuadrante.selectOption('ESTE');
+    await this.numero_secundario.fill('6999999999999999999999');
+    await this.letra_secundaria.selectOption('H');
+    await this.cuadrante_dos.selectOption('ESTE');
+    await this.nro.fill('299999999992');
+    await this.complemento.fill('SADFWR#$T%$#%$WREGFH5');
+    await this.barrio.fill('!#$"%#$Y&%HGFBVDS');
+    await this.numero_celular.fill(wrongphone);
+    await this.telefono_fijo.fill('1');
+    await this.ciudad.fill('123a#');
+    await this.departamento.fill('123213rewRF#"$');
+    await this.correo_electronico_personal.fill('steve');
+  } 
+
+
 
 }

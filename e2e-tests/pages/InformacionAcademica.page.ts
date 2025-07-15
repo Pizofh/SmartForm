@@ -126,4 +126,35 @@ constructor(page: Page) {
    await this.otro_check.fill('Playwright, Django, Uipath');
   } 
 
+
+
+      async FillFormWithErrors() {
+
+   await this.informacion_academica_tab.click();
+
+//ESTUDIOS REALIZADOS
+    await this.estudios_1.fill('EDWFDGFBYY&%$#""');
+    await this.año_estudios_1.fill('2');
+    await this.titulo_estudios_1.fill('EDWFDGFBYY&%$#""');
+    await this.nombre_institucion_estudios_1.fill('EDWFDGFBYY&%$#""');
+    await this.ciudad_estudios_1.fill('EDWFDGFBYY&%$#""');
+
+    await this.estudios_2.fill('EDWFDGFBYY&%$#""');
+    await this.año_estudios_2.fill('99999999999999999999999999999999999999999');
+    await this.titulo_estudios_2.fill('EDWFDGFBYY&%$#""');
+    await this.nombre_institucion_estudios_2.fill('EDWFDGFBYY&%$#""');
+    await this.ciudad_estudios_2.fill('EDWFDGFBYY&%$#""');
+
+
+//IDIOMAS EXTRANJEROS
+
+    await this.idioma_extranjero_1.fill('EDWFDGFBYY&%$#');
+    await this.idioma_extranjero_2.fill('EDWFDGFBYY&%$#');
+
+
+//ESPECIALIDADES EN SISTEMAS
+
+   await this.otro_check.fill('EDWFDGFBYY&%$#""');
+  
+      }
 }

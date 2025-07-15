@@ -5,7 +5,6 @@ import { InformacionAcademicaPage } from '../pages/InformacionAcademica.page';
 import { ReferenciasPersonalesPage } from '../pages/ReferenciasPersonales.page';
 import { BienesRentasPage } from '../pages/BienesRentas.page';
 import { SituacionJuridicaPage } from '../pages/SituacionJuridica.page';
-import { ConfirmarPage } from '../pages/Confirmar.page';
 
 
 test('Formulario: datos personales válidos', async ({ page }) => {
