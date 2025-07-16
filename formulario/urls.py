@@ -11,11 +11,10 @@ from . import api_views
 router = DefaultRouter()
 router.register(r'PersonalData', api_views.PersonalDataViewSet)
 
-router.register(r'datosfamiliares', api_views.DatosFamiliaresViewSet)
-router.register(r'hijos', api_views.HijoViewSet)
-router.register(r'hermanos', api_views.HermanoViewSet)
+router.register(r'FamilyData', api_views.FamilyDataViewSet)
+router.register(r'Child', api_views.ChildViewSet)
+router.register(r'Sibling', api_views.SiblingViewSet)
 router.register(r'academica', api_views.InformacionAcademicaViewSet)
-router.register(r'referencias', api_views.ReferenciasPersonalesViewSet)
 router.register(r'bienes', api_views.BienesRentasAEPViewSet)
 router.register(r'situacion', api_views.SituacionJuridicaViewSet)
 

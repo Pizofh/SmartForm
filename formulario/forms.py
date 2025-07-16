@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory 
 from .models import (
-    PersonalData, DatosFamiliares, InformacionAcademica,ReferenciasPersonales, BienesRentasAEP, SituacionJuridica, Hijo,Hermano
+    PersonalData, FamilyData, InformacionAcademica, BienesRentasAEP, SituacionJuridica, Child,Sibling
 )
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, HTML,Field
@@ -61,21 +61,19 @@ class PersonalDataForm(BaseHelperMixin, forms.ModelForm):
     class Meta:
         model = PersonalData
         fields = [
-            "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido",
-            "tipo_documento", "numero_documento", "fecha_expedición", "lugar_expedición",
-            "pasaporte_numero", "fecha_pasaporte",
-              "dia_nacimiento",
-            "mes_nacimiento", "año_nacimiento", "estado_civil", "profesion_oficio",
-            "tarjeta_profesional", "señales_corporales", "estatura", "peso", "tipo_via",
-            "numero_principal", "letra_principal", "bis", "letra_bis", "cuadrante",
-            "numero_secundario", "letra_secundaria", "cuadrante_dos", "nro", "complemento",
-            "barrio","numero_celular","telefono_fijo","ciudad","departamento","correo_electronico_personal",
+            "first_name", "second_name", "lastname", "second_lastname",
+            "document_type", "document_number", "expedition_date", "expedition_place",
+            "passport_number", "passport_date",
+            "birth_day","birth_month", "birth_year", "relationships", "profession",
+            "profesional_id", "body_marks", "height", "weight", "street_type",
+            "principal_number", "principal_letter", "bis", "bis_letter", "quadrant",
+            "secondary_number", "secondary_letter", "quadrant_2", "nmbr", "complement",
+            "neighborhood","phone_number","landline_phone","city","department","personal_email",
              ]
 
         widgets = {
-            'fecha_ingreso': forms.DateInput(attrs={'type': 'date'}),
-            'fecha_expedición': forms.DateInput(attrs={'type': 'date'}),
-            'fecha_pasaporte': forms.DateInput(attrs={'type': 'date'}),
+            'expedition_date': forms.DateInput(attrs={'type': 'date'}),
+            'passport_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -86,30 +84,33 @@ class PersonalDataForm(BaseHelperMixin, forms.ModelForm):
             self.fields["direccion_preview"].initial = self.instance.direccion_completa
 
         self.helper.layout = Layout(
-            'primer_nombre', 'segundo_nombre', 'primer_apellido', 'segundo_apellido',
-            'tipo_documento', 'numero_documento', 'fecha_expedición', 'lugar_expedición',
-            'pasaporte_numero', 'fecha_pasaporte'
-            ,'dia_nacimiento','mes_nacimiento', 'año_nacimiento', 'estado_civil', 'profesion_oficio',
-            'tarjeta_profesional', 'señales_corporales', 'estatura', 'peso',
+            "first_name", "second_name", "lastname", "second_lastname",
+            "document_type", "document_number", "expedition_date", "expedition_place",
+            "passport_number", "passport_date",
+             "birth_day",
+            "birth_month", "birth_year", "relationships", "profession",
+            "profesional_id", "body_marks", "height", "weight",
+       
+            
             Fieldset(
                 'Dirección',
                 Row(
-                    Column('tipo_via', css_class='col-md-2'),
-                    Column('numero_principal', css_class='col-md-1'),
-                    Column('letra_principal', css_class='col-md-2'),
+                    Column('street_type', css_class='col-md-2'),
+                    Column('principal_number', css_class='col-md-1'),
+                    Column('principal_letter', css_class='col-md-2'),
                     Column('bis', css_class='col-md-1'),
-                    Column('letra_bis', css_class='col-md-2'),
-                    Column('cuadrante', css_class='col-md-2'),
-                    Column('numero_secundario', css_class='col-md-1'),
-                    Column('letra_secundaria', css_class='col-md-2'),
-                    Column('cuadrante_dos', css_class='col-md-2'),
-                    Column('nro', css_class='col-md-2'),
-                    Column('complemento', css_class='col-md-2'),
+                    Column('bis_letter', css_class='col-md-2'),
+                    Column('quadrant', css_class='col-md-2'),
+                    Column('secondary_number', css_class='col-md-1'),
+                    Column('secondary_letter', css_class='col-md-2'),
+                    Column('quadrant_2', css_class='col-md-2'),
+                    Column('nmbr', css_class='col-md-2'),
+                    Column('complement', css_class='col-md-2'),
                 ),
 
-        HTML("""
+      HTML("""
         <div class="mt-3">
-        <h5>Dirección construida:</h5>
+        <h5>Address built:</h5>
         <div id="direccion-preview" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
         </div>
             """),
@@ -118,7 +119,7 @@ class PersonalDataForm(BaseHelperMixin, forms.ModelForm):
             ),
             
             
-            'barrio','numero_celular','telefono_fijo','ciudad','departamento','correo_electronico_personal',
+            "neighborhood","phone_number","landline_phone","city","department","personal_email",
         )
 
     def save(self, commit=True):
@@ -134,361 +135,331 @@ class PersonalDataForm(BaseHelperMixin, forms.ModelForm):
 
 
 
-class DatosFamiliaresForm(BaseHelperMixin, forms.ModelForm):
+class FamilyDataForm(BaseHelperMixin, forms.ModelForm):
     """
-    Formulario asociado al modelo DatosFamiliares.
+    Form linked to the FamilyData model.
 
-    Este formulario captura información detallada del entorno familiar del recluta, incluyendo:
-    - Datos del cónyuge (identificación, profesión, celular, dirección)
-    - Datos del padre y la madre (estado vital, contacto, profesión, dirección)
-    - Dirección estructurada para cada persona, con vista previa en campo oculto
+    This form captures detailed information about the recruit's family background, including:
+    - Spouse information (ID, profession, phone, address)
+    - Father's and mother's data (alive status, contact, profession, address)
+    - Structured address fields with preview hidden fields for dynamic rendering
 
-    Además:
-    - Integra `crispy-forms` para una visualización más ordenada con `Fieldset` y `Row`.
-    - Utiliza campos ocultos (`direccion_preview_*`) para mostrar dinámicamente las direcciones generadas.
-    - Incluye vistas parciales para agregar hijos y hermanos mediante `include` en plantillas HTML.
-    - Sobrescribe el método `save()` para almacenar las versiones formateadas de las direcciones en el modelo.
+    Additionally:
+    - Uses `crispy-forms` for clean layout with `Fieldset` and `Row`.
+    - Includes hidden fields (`*_preview_address`) to show generated formatted addresses.
+    - Integrates partial views to add children and siblings via HTML includes.
+    - Overrides `save()` to persist formatted address versions in the model.
 
-    Los datos capturados en este formulario permiten una caracterización completa del núcleo familiar del aspirante.
+    The collected data supports a complete family profile of the applicant.
     """
 
-    direccion_preview_conyugue = forms.CharField(required=False, widget=forms.HiddenInput())
-    direccion_preview_padre = forms.CharField(required=False, widget=forms.HiddenInput())
-    direccion_preview_madre = forms.CharField(required=False, widget=forms.HiddenInput())
-    direccion_preview_hermano = forms.CharField(required=False, widget=forms.HiddenInput())
-
+    spouse_preview_address = forms.CharField(required=False, widget=forms.HiddenInput())
+    father_preview_address = forms.CharField(required=False, widget=forms.HiddenInput())
+    mother_preview_address = forms.CharField(required=False, widget=forms.HiddenInput())
+    sibling_preview_address = forms.CharField(required=False, widget=forms.HiddenInput())
 
     class Meta:
-        model = DatosFamiliares
+        model = FamilyData
         exclude = ("PersonalData", )
         fields = [
-#Datos Conyugue
-            "nombre_conyugue", "cedula_conyugue", "profesion_oficio_conyugue", "celular_conyugue",
-            "tipo_via_conyugue", "numero_principal_conyugue", "letra_principal_conyugue",
-            "bis_conyugue", "letra_bis_conyugue", "cuadrante_conyugue",
-            "numero_secundario_conyugue", "letra_secundaria_conyugue", "cuadrante_dos_conyugue",
-            "nro_conyugue", "complemento_conyugue",
+            # Spouse
+            "spouse_name", "spouse_id", "spouse_profession", "spouse_phone",
+            "spouse_street_type", "spouse_principal_number", "spouse_principal_letter",
+            "spouse_bis", "spouse_bis_letter", "spouse_quadrant",
+            "spouse_second_number", "spouse_second_letter", "spouse_second_quadrant",
+            "spouse_nmbr", "spouse_complement",
 
-#Datos Padre
-            "nombre_padre", "vive_padre","identificación_padre","telefono_padre", "oficio_profesion_padre",
-            "tipo_via_padre", "numero_principal_padre", "letra_principal_padre","bis_padre", "letra_bis_padre", "cuadrante_padre",
-            "numero_secundario_padre", "letra_secundaria_padre", "cuadrante_dos_padre","nro_padre", "complemento_padre",
-#Datos Madre
-            "nombre_madre", "vive_madre",
-            "identificación_madre","telefono_madre", "oficio_profesion_madre","tipo_via_madre", "numero_principal_madre", "letra_principal_madre",
-            "bis_madre", "letra_bis_madre", "cuadrante_madre","numero_secundario_madre", "letra_secundaria_madre", "cuadrante_dos_madre","nro_madre", "complemento_madre",
+            # Father
+            "father_name", "father_lives", "father_id", "father_phone", "father_profession",
+            "father_street_type", "father_principal_number", "father_principal_letter",
+            "father_bis", "father_bis_letter", "father_quadrant",
+            "father_second_number", "father_second_letter", "father_second_quadrant",
+            "father_nmbr", "father_complement",
 
+            # Mother
+            "mother_name", "mother_lives", "mother_id", "mother_phone", "mother_profession",
+            "mother_street_type", "mother_principal_number", "mother_principal_letter",
+            "mother_bis", "mother_bis_letter", "mother_quadrant",
+            "mother_second_number", "mother_second_letter", "mother_second_quadrant",
+            "mother_nmbr", "mother_complement",
         ]
-        
 
     def __init__(self, *args, **kwargs):
-
         """
-        Inicializa el formulario `DatosFamiliaresForm`, configurando el helper de crispy-forms
-        para personalizar el renderizado del formulario.
+        Initializes the `FamilyData` form, configuring crispy-forms helper for layout.
 
-        - Desactiva el tag <form> (form_tag=False) para permitir inclusión en formularios compuestos.
-        - Si se trata de una instancia existente (`self.instance.pk`), inicializa los campos ocultos 
-          que contienen vistas previas de direcciones para el cónyuge, el padre, la madre y un hermano,
-          a partir de los valores calculados y almacenados en el modelo.
+        - Disables <form> tag (form_tag=False) to allow inclusion in composed forms.
+        - For existing instances, populates the hidden preview fields with stored formatted addresses.
         """
-
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_tag = False 
+        self.helper.form_tag = False
 
         if self.instance.pk:
-            self.fields["direccion_preview_conyugue"].initial = self.instance.direccion_completa_conyugue
-            self.fields["direccion_preview_padre"].initial = self.instance.direccion_completa_padre
-            self.fields["direccion_preview_madre"].initial = self.instance.direccion_completa_madre
-            self.fields["direccion_preview_hermano"].initial = self.instance.direccion_completa_hermano
+            self.fields["spouse_preview_address"].initial = self.instance.spouse_built_address
+            self.fields["father_preview_address"].initial = self.instance.father_built_address
+            self.fields["mother_preview_address"].initial = self.instance.mother_built_address
+            self.fields["sibling_preview_address"].initial = self.instance.sibling_built_address
 
-
-   
-
-    
         self.helper.layout = Layout(
-#ESPACIOS CONYGUE 
-            HTML("<h5 class='mt-4'>Información del Cónyugue</h5>"),
-            HTML("""<hr class="my-4">"""),
-            "nombre_conyugue", "cedula_conyugue", "profesion_oficio_conyugue", "celular_conyugue", 
-            
-           
+            # Spouse Section
+            HTML("<h5 class='mt-4'>Spouse Information</h5>"),
+            HTML("<hr class='my-4'>"),
+            "spouse_name", "spouse_id", "spouse_profession", "spouse_phone",
+
             Fieldset(
-                "Dirección Residencia del Conyugue",
+                "Spouse Address",
                 Row(
-                    Column("tipo_via_conyugue", css_class="col-md-2"),
-                    Column("numero_principal_conyugue", css_class="col-md-1"),
-                    Column("letra_principal_conyugue", css_class="col-md-2"),
-                    Column("bis_conyugue", css_class="col-md-1"),
-                    Column("letra_bis_conyugue", css_class="col-md-2"),
-                    Column("cuadrante_conyugue", css_class="col-md-2"),
-                    Column("numero_secundario_conyugue", css_class="col-md-1"),
-                    Column("letra_secundaria_conyugue", css_class="col-md-2"),
-                    Column("cuadrante_dos_conyugue", css_class="col-md-2"),
-                    Column("nro_conyugue", css_class="col-md-2"),
-                    Column("complemento_conyugue", css_class="col-md-2"),
+                    Column("spouse_street_type", css_class="col-md-2"),
+                    Column("spouse_principal_number", css_class="col-md-1"),
+                    Column("spouse_principal_letter", css_class="col-md-2"),
+                    Column("spouse_bis", css_class="col-md-1"),
+                    Column("spouse_bis_letter", css_class="col-md-2"),
+                    Column("spouse_quadrant", css_class="col-md-2"),
+                    Column("spouse_second_number", css_class="col-md-1"),
+                    Column("spouse_second_letter", css_class="col-md-2"),
+                    Column("spouse_second_quadrant", css_class="col-md-2"),
+                    Column("spouse_nmbr", css_class="col-md-2"),
+                    Column("spouse_complement", css_class="col-md-2"),
                 ),
                 HTML("""
                 <div class="mt-3">
-                    <h5>Dirección construida:</h5>
+                    <h5>Formatted address:</h5>
                     <div id="direccion-preview_conyugue" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
                 </div>
                 """),
-                "direccion_preview_conyugue",    
+                "spouse_preview_address",
+            ),
 
-                HTML("""<hr class="my-4">"""),
-                HTML("<h5 class='mt-4'>Información del Padre</h5>"),
-                HTML("""<hr class="my-4">"""),
-#ESPACIOS PADRE   
-                "nombre_padre", "vive_padre","identificación_padre","telefono_padre","oficio_profesion_padre",
+            # Father Section
+            HTML("<hr class='my-4'>"),
+            HTML("<h5 class='mt-4'>Father Information</h5>"),
+            HTML("<hr class='my-4'>"),
+            "father_name", "father_lives", "father_id", "father_phone", "father_profession",
 
             Fieldset(
-                "Dirección Residencia del Padre",
+                "Father Address",
                 Row(
-                    Column("tipo_via_padre", css_class="col-md-2"),
-                    Column("numero_principal_padre", css_class="col-md-1"),
-                    Column("letra_principal_padre", css_class="col-md-2"),
-                    Column("bis_padre", css_class="col-md-1"),
-                    Column("letra_bis_padre", css_class="col-md-2"),
-                    Column("cuadrante_padre", css_class="col-md-2"),
-                    Column("numero_secundario_padre", css_class="col-md-1"),
-                    Column("letra_secundaria_padre", css_class="col-md-2"),
-                    Column("cuadrante_dos_padre", css_class="col-md-2"),
-                    Column("nro_padre", css_class="col-md-2"),
-                    Column("complemento_padre", css_class="col-md-2"),
+                    Column("father_street_type", css_class="col-md-2"),
+                    Column("father_principal_number", css_class="col-md-1"),
+                    Column("father_principal_letter", css_class="col-md-2"),
+                    Column("father_bis", css_class="col-md-1"),
+                    Column("father_bis_letter", css_class="col-md-2"),
+                    Column("father_quadrant", css_class="col-md-2"),
+                    Column("father_second_number", css_class="col-md-1"),
+                    Column("father_second_letter", css_class="col-md-2"),
+                    Column("father_second_quadrant", css_class="col-md-2"),
+                    Column("father_nmbr", css_class="col-md-2"),
+                    Column("father_complement", css_class="col-md-2"),
                 ),
                 HTML("""
                 <div class="mt-3">
-                    <h5>Dirección construida:</h5>
+                    <h5>Formatted address:</h5>
                     <div id="direccion-preview_padre" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
                 </div>
                 """),
-                "direccion_preview_padre",           
+                "father_preview_address",
             ),
-#ESPACIOS MADRE 
 
-            HTML("""<hr class="my-4">"""),
-                HTML("<h5 class='mt-4'>Información de la Madre</h5>"),
-                HTML("""<hr class="my-4">"""),
-                "nombre_madre", "vive_madre","identificación_madre","telefono_madre","oficio_profesion_madre",
+            # Mother Section
+            HTML("<hr class='my-4'>"),
+            HTML("<h5 class='mt-4'>Mother Information</h5>"),
+            HTML("<hr class='my-4'>"),
+            "mother_name", "mother_lives", "mother_id", "mother_phone", "mother_profession",
 
             Fieldset(
-                "Dirección Residencia de la madre",
+                "Mother Address",
                 Row(
-                    Column("tipo_via_madre", css_class="col-md-2"),
-                    Column("numero_principal_madre", css_class="col-md-1"),
-                    Column("letra_principal_madre", css_class="col-md-2"),
-                    Column("bis_madre", css_class="col-md-1"),
-                    Column("letra_bis_madre", css_class="col-md-2"),
-                    Column("cuadrante_madre", css_class="col-md-2"),
-                    Column("numero_secundario_madre", css_class="col-md-1"),
-                    Column("letra_secundaria_madre", css_class="col-md-2"),
-                    Column("cuadrante_dos_madre", css_class="col-md-2"),
-                    Column("nro_madre", css_class="col-md-2"),
-                    Column("complemento_madre", css_class="col-md-2"),
+                    Column("mother_street_type", css_class="col-md-2"),
+                    Column("mother_principal_number", css_class="col-md-1"),
+                    Column("mother_principal_letter", css_class="col-md-2"),
+                    Column("mother_bis", css_class="col-md-1"),
+                    Column("mother_bis_letter", css_class="col-md-2"),
+                    Column("mother_quadrant", css_class="col-md-2"),
+                    Column("mother_second_number", css_class="col-md-1"),
+                    Column("mother_second_letter", css_class="col-md-2"),
+                    Column("mother_second_quadrant", css_class="col-md-2"),
+                    Column("mother_nmbr", css_class="col-md-2"),
+                    Column("mother_complement", css_class="col-md-2"),
                 ),
                 HTML("""
                 <div class="mt-3">
-                    <h5>Dirección construida:</h5>
+                    <h5>Formatted address:</h5>
                     <div id="direccion-preview_madre" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
                 </div>
                 """),
-                "direccion_preview_madre",
+                "mother_preview_address",
             ),
 
+            # Children and Siblings Sections
             HTML("<hr class='my-4'>"),
-            HTML("<h5>Hijos:</h5>"),
-            HTML("{% include 'formulario/partials/_hijos_formset.html' %}"),  
-    
+            HTML("<h5>Children:</h5>"),
+            HTML("{% include 'formulario/partials/_Child_formset.html' %}"),
 
             HTML("<hr class='my-4'>"),
-            HTML("<h5>Hermanos:</h5>"),
-            HTML("{% include 'formulario/partials/_hermanos_formset.html' %}"),  
-       
-
-
-            
-            ),
-            
+            HTML("<h5>Siblings:</h5>"),
+            HTML("{% include 'formulario/partials/_Sibling_formset.html' %}"),
         )
+
     def save(self, commit=True):
-
         """
-        Guarda la instancia del formulario `DatosFamiliaresForm`, actualizando los campos de
-        dirección formateada del cónyuge, padre, madre y hermanos con la información ingresada 
-        desde los campos ocultos (`direccion_preview_*`).
+        Saves the `FamilyData` instance, updating formatted address fields
+        from the corresponding hidden preview inputs.
 
-        Si `commit=True`, persiste inmediatamente los cambios en la base de datos. 
-        De lo contrario, retorna la instancia sin guardar para posterior manipulación.
+        If `commit=True`, immediately persists to the DB; otherwise,
+        returns unsaved instance for later use.
         """
-              
         instance = super().save(commit=False)
-        instance.direccion_formateada_conyugue = self.cleaned_data.get("direccion_preview_conyugue")
-        instance.direccion_formateada_padre = self.cleaned_data.get("direccion_preview_padre")
-        instance.direccion_formateada_madre = self.cleaned_data.get("direccion_preview_madre")
-        instance.direccion_formateada_hermano = self.cleaned_data.get("direccion_preview_hermano")
+        instance.spouse_built_address = self.cleaned_data.get("spouse_preview_address")
+        instance.father_built_address = self.cleaned_data.get("father_preview_address")
+        instance.mother_built_address = self.cleaned_data.get("mother_preview_address")
+        instance.sibling_built_address = self.cleaned_data.get("sibling_preview_address")
 
         if commit:
             instance.save()
         return instance
 
 
-class HijoForm(forms.ModelForm):
-
+class ChildForm(forms.ModelForm):
     """
-    Formulario para la gestión de datos de un hijo (nombre, edad, identificación) 
-    asociado al modelo `Hijo`.
+    Form for managing Child data (name, age, ID)
+    associated with the `Child` model.
 
-    Este formulario personaliza la presentación con `crispy-forms`, utilizando un 
-    diseño basado en filas (`Row`) y columnas (`Column`) para mejorar la usabilidad.
+    This form uses `crispy-forms` for layout and styling,
+    organizing fields in rows and columns for better UX.
 
-    También incluye campos ocultos necesarios para la integración con un `formset`
-    (el campo `id` y el campo `DELETE`).
+    Hidden fields are included for integration with a formset
+    (`id` and `DELETE`).
     """
 
     class Meta:
-        model = Hijo
-        fields = ['nombre', 'edad', 'identificacion']
+        model = Child
+        fields = ['name', 'age', 'id']
 
     widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'edad': forms.NumberInput(attrs={'class': 'form-control'}),
-            'identificacion': forms.TextInput(attrs={'class': 'form-control'}),
-        }
-        
-            # ➜ ESTO da a cada hijo el mismo “look” crispy
+        'name': forms.TextInput(attrs={'class': 'form-control'}),
+        'age': forms.NumberInput(attrs={'class': 'form-control'}),
+        'id': forms.TextInput(attrs={'class': 'form-control'}),
+    }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper               = FormHelper()
-        self.helper.form_tag      = False          # dentro del formset no queremos <form>
-        self.helper.label_class   = "form-label"
-        self.helper.field_class   = "form-control"
+        self.helper = FormHelper()
+        self.helper.form_tag = False  # No <form> inside formset
+        self.helper.label_class = "form-label"
+        self.helper.field_class = "form-control"
         self.helper.layout = Layout(
             Row(
-                Column("nombre",         css_class="col-md-5"),
-                Column("edad",           css_class="col-md-2"),
-                Column("identificacion", css_class="col-md-3"),
+                Column("name", css_class="col-md-5"),
+                Column("age", css_class="col-md-2"),
+                Column("id", css_class="col-md-3"),
             ),
-                Field("id",     type="hidden"),
-                Field("DELETE", type="hidden"),
+            Field("id", type="hidden"),
+            Field("DELETE", type="hidden"),
         )
 
-        self.helper.render_hidden_fields   = True
+        self.helper.render_hidden_fields = True
         self.helper.render_unmentioned_fields = False
 
 
-HijoFormSet = inlineformset_factory(
-
-    parent_model=DatosFamiliares,      # quién es el “padre”
-    model=Hijo,                        # modelo hijo
-    form=HijoForm,                     # el form que ya tenías
+ChildFormSet = inlineformset_factory(
+    parent_model=FamilyData,
+    model=Child,
+    form=ChildForm,
     extra=1,
     can_delete=True
-    
 )
 
 
-class HermanoForm(forms.ModelForm):
-    
+class SiblingForm(forms.ModelForm):
     """
-    Formulario asociado al modelo `Hermano`, utilizado para capturar la información
-    de hermanos del recluta, incluyendo datos personales, ocupación y dirección estructurada.
+    Form associated with the `Sibling` model,
+    used to capture sibling information of the recruit,
+    including personal data, occupation, and structured address.
 
-    El formulario está personalizado con `crispy-forms` para organizar los campos en filas
-    y columnas, con soporte para edición y eliminación dentro de un `formset`. También
-    incluye un campo oculto para almacenar la dirección formateada.
+    Uses `crispy-forms` for visual layout.
     """
 
-
-    
     class Meta:
-        model = Hermano
+        model = Sibling
         fields = [
-            "primer_apellido_hermano", "segundo_apellido_hermano", "primer_nombre_hermano", "segundo_nombre_hermano",
-            "identificacion_hermano", "ocupacion_hermano", "celular_hermano",
-            "tipo_via_hermano", "numero_principal_hermano", "letra_principal_hermano",
-            "bis_hermano", "letra_bis_hermano", "cuadrante_hermano",
-            "numero_secundario_hermano", "letra_secundaria_hermano", "cuadrante_dos_hermano",
-            "nro_hermano", "complemento_hermano", "direccion_formateada_hermano"
+            "sibling_lastname", "sibling_second_lastname", "sibling_first_name", "sibling_second_name",
+            "sibling_id", "sibling_occupation", "sibling_phone",
+            "sibling_street_type", "sibling_principal_number", "sibling_principal_letter",
+            "sibling_bis", "sibling_bis_letter", "sibling_quadrant",
+            "sibling_second_number", "sibling_second_letter", "sibling_second_quadrant",
+            "sibling_nmbr", "sibling_complement", "sibling_built_address"
         ]
         widgets = {
-            "direccion_formateada_hermano": HiddenInput()
+            "sibling_built_address": HiddenInput()
         }
 
     def __init__(self, *args, **kwargs):
         """
-        Inicializa el formulario, configurando los estilos visuales y el layout
-        de los campos. Marca el campo de dirección formateada como no requerido.
+        Initialize the form, configure crispy styles and mark
+        the formatted address field as optional.
         """
         super().__init__(*args, **kwargs)
-        self.fields['direccion_formateada_hermano'].required = False
-        self.helper               = FormHelper()
-        self.helper.form_tag      = False          # dentro del formset no queremos <form>
-        self.helper.label_class   = "form-label"
-        self.helper.field_class   = "form-control"
+        self.fields['sibling_built_address'].required = False
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.label_class = "form-label"
+        self.helper.field_class = "form-control"
         self.helper.layout = Layout(
             Row(
-                Column("primer_apellido_hermano",       css_class="col-md-4"),
-                Column("segundo_apellido_hermano",      css_class="col-md-4"),
-      
+                Column("sibling_lastname", css_class="col-md-4"),
+                Column("sibling_second_lastname", css_class="col-md-4"),
             ),
-              Row(
-                Column("primer_nombre_hermano",         css_class="col-md-4"),
-                Column("segundo_nombre_hermano",       css_class="col-md-4"),
-          
+            Row(
+                Column("sibling_first_name", css_class="col-md-4"),
+                Column("sibling_second_name", css_class="col-md-4"),
             ),
-              Row(
-                Column("identificacion_hermano",      css_class="col-md-3"),
-                Column("ocupacion_hermano",         css_class="col-md-3"),
-                Column("celular_hermano",       css_class="col-md-3"),
+            Row(
+                Column("sibling_id", css_class="col-md-3"),
+                Column("sibling_occupation", css_class="col-md-3"),
+                Column("sibling_phone", css_class="col-md-3"),
             ),
             HTML("<hr class='my-4'>"),
-            
-              Row(
-                    Column("tipo_via_hermano", css_class="col-md-2"),
-                    Column("numero_principal_hermano", css_class="col-md-2"),
-                    Column("letra_principal_hermano", css_class="col-md-2"),
-                    Column("bis_hermano", css_class="col-md-2"),
-                    Column("letra_bis_hermano", css_class="col-md-2"),
-                    Column("cuadrante_hermano", css_class="col-md-2"),
-                    Column("numero_secundario_hermano", css_class="col-md-2"),
-                    Column("letra_secundaria_hermano", css_class="col-md-2"),
-                    Column("cuadrante_dos_hermano", css_class="col-md-2"),
-                    Column("nro_hermano", css_class="col-md-2"),
-                    Column("complemento_hermano", css_class="col-md-2"),
+            Row(
+                Column("sibling_street_type", css_class="col-md-2"),
+                Column("sibling_principal_number", css_class="col-md-2"),
+                Column("sibling_principal_letter", css_class="col-md-2"),
+                Column("sibling_bis", css_class="col-md-2"),
+                Column("sibling_bis_letter", css_class="col-md-2"),
+                Column("sibling_quadrant", css_class="col-md-2"),
+                Column("sibling_second_number", css_class="col-md-2"),
+                Column("sibling_second_letter", css_class="col-md-2"),
+                Column("sibling_second_quadrant", css_class="col-md-2"),
+                Column("sibling_nmbr", css_class="col-md-2"),
+                Column("sibling_complement", css_class="col-md-2"),
             ),
-            
             Field("id", type="hidden"),
             Field("DELETE", type="hidden"),
-            Field("direccion_formateada_hermano", type="hidden"),
+            Field("sibling_built_address", type="hidden"),
         )
 
-        self.helper.render_hidden_fields   = True
+        self.helper.render_hidden_fields = True
         self.helper.render_unmentioned_fields = False
 
     def save(self, commit=True):
-
         """
-        Guarda la instancia del modelo `Hermano`, asegurándose de que la dirección formateada
-        capturada desde el campo oculto se asigne correctamente al campo correspondiente del modelo.
+        Save the instance of `Sibling`, ensuring the formatted address
+        from the hidden field is correctly assigned.
         """
-        
         instance = super().save(commit=False)
-        instance.direccion_formateada_hermano = self.cleaned_data.get("direccion_formateada_hermano")
+        instance.sibling_built_address = self.cleaned_data.get("sibling_built_address")
         if commit:
             instance.save()
         return instance
 
 
-HermanoFormSet = inlineformset_factory(
-    parent_model=DatosFamiliares,      # quién es el “padre”
-    model=Hermano,                        # modelo hijo
-    form=HermanoForm,                     # el form que ya tenías
+SiblingFormSet = inlineformset_factory(
+    parent_model=FamilyData,
+    model=Sibling,
+    form=SiblingForm,
     extra=1,
     can_delete=True
 )
-
 
 
 class InformacionAcademicaForm(BaseHelperMixin, forms.ModelForm):
@@ -575,151 +546,6 @@ class InformacionAcademicaForm(BaseHelperMixin, forms.ModelForm):
                 "otro_check",
             )
         )
-
-
-class ReferenciasPersonalesForm(forms.ModelForm):
-
-    """
-    Formulario para capturar hasta tres referencias personales del recluta, incluyendo su nombre,
-    ocupación, empresa, ciudad, teléfono y una dirección completa construida a partir de múltiples 
-    campos (tipo de vía, número, letras, complementos, etc.).
-
-    Utiliza `crispy-forms` para organizar el formulario en tres secciones claramente separadas mediante
-    `Fieldset`, y añade un campo oculto para previsualizar la dirección construida de cada referencia.
-    El método `save()` guarda esta dirección en campos formateados del modelo `ReferenciasPersonales`.
-
-    Este formulario no incluye la etiqueta `<form>` (`form_tag = False`) porque se renderiza dentro de
-    un formulario principal.
-    """
-
-    direccion_preview_referencia_1 = forms.CharField(required=False, widget=forms.HiddenInput())
-    direccion_preview_referencia_2 = forms.CharField(required=False, widget=forms.HiddenInput())
-    direccion_preview_referencia_3 = forms.CharField(required=False, widget=forms.HiddenInput())
-    class Meta:
-        model = ReferenciasPersonales
-        fields = [
-# Referencia 1
-            "nombre_referencia_1", "ocupacion_referencia_1", "empresa_referencia_1", "tiempo_referencia_1", "ciudad_referencia_1", "telefono_referencia_1",
-            "tipo_via_referencia_1", "numero_principal_referencia_1", "letra_principal_referencia_1", "bis_referencia_1", "letra_bis_referencia_1",
-            "cuadrante_referencia_1", "numero_secundario_referencia_1", "letra_secundaria_referencia_1", "cuadrante_dos_referencia_1",
-            "nro_referencia_1", "complemento_referencia_1",
-
-# Referencia 2
-            "nombre_referencia_2", "ocupacion_referencia_2", "empresa_referencia_2", "tiempo_referencia_2", "ciudad_referencia_2", "telefono_referencia_2",
-            "tipo_via_referencia_2", "numero_principal_referencia_2", "letra_principal_referencia_2", "bis_referencia_2", "letra_bis_referencia_2",
-            "cuadrante_referencia_2", "numero_secundario_referencia_2", "letra_secundaria_referencia_2", "cuadrante_dos_referencia_2",
-            "nro_referencia_2", "complemento_referencia_2",
-# Referencia 3
-            "nombre_referencia_3", "ocupacion_referencia_3", "empresa_referencia_3", "tiempo_referencia_3", "ciudad_referencia_3", "telefono_referencia_3",
-            "tipo_via_referencia_3", "numero_principal_referencia_3", "letra_principal_referencia_3", "bis_referencia_3", "letra_bis_referencia_3",
-            "cuadrante_referencia_3", "numero_secundario_referencia_3", "letra_secundaria_referencia_3", "cuadrante_dos_referencia_3",
-            "nro_referencia_3", "complemento_referencia_3",
-        ]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_tag = False
-
-        if self.instance.pk:
-            self.fields["direccion_preview_referencia_1"].initial = self.instance.direccion_preview_referencia_1
-            self.fields["direccion_preview_referencia_2"].initial = self.instance.direccion_preview_referencia_2
-            self.fields["direccion_preview_referencia_3"].initial = self.instance.direccion_preview_referencia_3
-        self.helper = FormHelper()
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-           
-#Referencia 1
-            Fieldset(
-                "Referencia 1",
-                HTML("""<hr class="my-4">"""),
-                "nombre_referencia_1", "ocupacion_referencia_1", "empresa_referencia_1", "tiempo_referencia_1",
-                "ciudad_referencia_1", "telefono_referencia_1",
-                Row(
-                    Column("tipo_via_referencia_1", css_class="col-md-2"),
-                    Column("numero_principal_referencia_1", css_class="col-md-1"),
-                    Column("letra_principal_referencia_1", css_class="col-md-2"),
-                    Column("bis_referencia_1", css_class="col-md-1"),
-                    Column("letra_bis_referencia_1", css_class="col-md-2"),
-                    Column("cuadrante_referencia_1", css_class="col-md-2"),
-                    Column("numero_secundario_referencia_1", css_class="col-md-1"),
-                    Column("letra_secundaria_referencia_1", css_class="col-md-2"),
-                    Column("cuadrante_dos_referencia_1", css_class="col-md-2"),
-                    Column("nro_referencia_1", css_class="col-md-2"),
-                    Column("complemento_referencia_1", css_class="col-md-2"),
-                ),
-                HTML("""
-                <div class="mt-3">
-                    <h5>Dirección construida:</h5>
-                    <div id="direccion-preview_referencia_1" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
-                </div>
-                """),
-                "direccion_preview_referencia_1",
-            ),
-#Referencia 2
-          
-            Fieldset(
-                "Referencia 2",
-                HTML("""<hr class="my-4">"""),
-                "nombre_referencia_2", "ocupacion_referencia_2", "empresa_referencia_2", "tiempo_referencia_2",
-                "ciudad_referencia_2", "telefono_referencia_2",
-                Row(
-                    Column("tipo_via_referencia_2", css_class="col-md-2"),
-                    Column("numero_principal_referencia_2", css_class="col-md-1"),
-                    Column("letra_principal_referencia_2", css_class="col-md-2"),
-                    Column("bis_referencia_2", css_class="col-md-1"),
-                    Column("letra_bis_referencia_2", css_class="col-md-2"),
-                    Column("cuadrante_referencia_2", css_class="col-md-2"),
-                    Column("numero_secundario_referencia_2", css_class="col-md-1"),
-                    Column("letra_secundaria_referencia_2", css_class="col-md-2"),
-                    Column("cuadrante_dos_referencia_2", css_class="col-md-2"),
-                    Column("nro_referencia_2", css_class="col-md-2"),
-                    Column("complemento_referencia_2", css_class="col-md-2"),
-                ),
-                HTML("""
-                <div class="mt-3">
-                    <h5>Dirección construida:</h5>
-                    <div id="direccion-preview_referencia_2" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
-                </div>
-                """),
-                "direccion_preview_referencia_2",
-            ),
-#Referencia 3
-            Fieldset(
-                "Referencia 3",
-                HTML("""<hr class="my-4">"""),
-                "nombre_referencia_3", "ocupacion_referencia_3", "empresa_referencia_3", "tiempo_referencia_3",
-                "ciudad_referencia_3", "telefono_referencia_3",
-                Row(
-                    Column("tipo_via_referencia_3", css_class="col-md-2"),
-                    Column("numero_principal_referencia_3",css_class="col-md-1"),
-                    Column("letra_principal_referencia_3",css_class="col-md-2"),
-                    Column("bis_referencia_3",css_class="col-md-1"),
-                    Column("letra_bis_referencia_3",css_class="col-md-2"), 
-                    Column("cuadrante_referencia_3",css_class="col-md-2"),
-                    Column("numero_secundario_referencia_3",css_class="col-md-1"),
-                    Column("letra_secundaria_referencia_3",css_class="col-md-2"),
-                    Column("cuadrante_dos_referencia_3",css_class="col-md-2"),
-                    Column("nro_referencia_3",css_class="col-md-2"),
-                    Column("complemento_referencia_3",css_class="col-md-2")
-                ),
-                HTML("""
-                <div class="mt-3">
-                    <h5>Dirección construida:</h5>
-                    <div id="direccion-preview_referencia_3" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
-                </div>
-                """),
-                "direccion_preview_referencia_3",
-            ),
-        )
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        instance.direccion_formateada_referencia_1 = self.cleaned_data.get("direccion_preview_referencia_1")
-        instance.direccion_formateada_referencia_2 = self.cleaned_data.get("direccion_preview_referencia_2")
-        instance.direccion_formateada_referencia_3 = self.cleaned_data.get("direccion_preview_referencia_3")
-        if commit:
-            instance.save()
-        return instance
 
 
 

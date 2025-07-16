@@ -1,0 +1,41 @@
+{% load crispy_forms_tags %}
+
+{{ fs_Child.management_form }}
+
+<div id="formset-Child">
+  {% for form in fs_Child %}
+    <div class="card mb-3 Child-form">
+      <div class="card-body">
+        <h6 class="card-title mb-3">Child {{ forloop.counter }}</h6>
+        {% crispy form %}
+        {{ form.DELETE.as_hidden }}  {# ← now hidden #}
+
+        <button type="button"
+                class="btn btn-sm btn-outline-danger ms-3 delete-Child">
+          Delete
+        </button>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">No children registered.</p>
+  {% endfor %}
+</div>
+
+<div id="empty-form-Child" class="d-none">
+  <div class="card mb-3 Child-form">
+    <div class="card-body">
+      <h6 class="card-title mb-3">Child __NUM__</h6>
+      {% crispy fs_Child.empty_form %}
+      {{ fs_Child.empty_form.DELETE.as_hidden }}  {# ← hidden here too #}
+
+      <button type="button"
+              class="btn btn-sm btn-outline-danger ms-3 delete-Child">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="btn btn-sm btn-secondary" id="add-Child">
+  + Add Child
+</button>

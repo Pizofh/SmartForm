@@ -2,11 +2,11 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}FORMULARIO DE DATOS PERSONALES{% endblock %}
+{% block title %}FORMULARIO DE Personal Data{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
-  <h2 class="mb-0">FORMULARIO DE DATOS PERSONALES</h2>
+  <h2 class="mb-0">FORMULARIO DE Personal Data</h2>
 </div>
 
 <form method="post" enctype="multipart/form-data" id="wizardForm" novalidate>
@@ -14,13 +14,13 @@
 
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" id="formTabs" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="tab-datos-personales" data-bs-toggle="tab" data-bs-target="#datos_personales" type="button" role="tab" aria-controls="datos_personales" aria-selected="true">Datos Personales</button>
-    </li>
-      <button class="nav-link" id="tab-datos-familiares" data-bs-toggle="tab" data-bs-target="#datos_familiares" type="button" role="tab" aria-controls="datos_familiares" aria-selected="false">Datos Familiares</button>
-    </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="tab-personal-data" data-bs-toggle="tab" data-bs-target="#personal_data" type="button" role="tab" aria-controls="personal_data" aria-selected="true">Personal Data</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="tab-family-data" data-bs-toggle="tab" data-bs-target="#Family_Data" type="button" role="tab" aria-controls="Family_Data" aria-selected="false">Family Data</button>
+  </li>
     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#informacion_academica" type="button" role="tab">Información Académica</button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ReferenciasPersonales" type="button" role="tab">Referencias Personales</button></li>
     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#BienesRentasAEP" type="button" role="tab">Bienes, Rentas y Actividad Económica Privada</button></li>
     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#SituacionJuridica" type="button" role="tab">Situación Jurídica</button></li>
     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#confirmar" type="button" role="tab">Confirmar</button></li>
@@ -28,16 +28,14 @@
 
   <!-- Tab content -->
 <div class="tab-content p-3 border border-top-0">
-  <div class="tab-pane fade show active" id="datos_personales" role="tabpanel" aria-labelledby="tab-datos-personales">{% crispy f_PersonalData %}</div>
+  <div class="tab-pane fade show active" id="personal_data" role="tabpanel" aria-labelledby="tab-personal-data">{% crispy f_PersonalData %}</div>
 
 
 
-  <div class="tab-pane fade" id="datos_familiares" role="tabpanel" aria-labelledby="tab-datos-familiares">
-    {% crispy f_DatosFamiliares %}
-  </div> 
+  <div class="tab-pane fade" id="Family_Data" role="tabpanel" aria-labelledby="tab-family-data">{% crispy f_FamilyData %}</div> 
 
   <div class="tab-pane fade" id="informacion_academica" role="tabpanel">{% crispy f_informacion_academica %}</div>
-  <div class="tab-pane fade" id="ReferenciasPersonales" role="tabpanel">{% crispy f_ReferenciasPersonales %}</div>
+
   <div class="tab-pane fade" id="BienesRentasAEP" role="tabpanel">{% crispy f_BienesRentasAEP %}</div>
   <div class="tab-pane fade" id="SituacionJuridica" role="tabpanel">{% crispy f_SituacionJuridica %}</div>
   <div class="tab-pane fade" id="confirmar" role="tabpanel">{% crispy f_confirm %}</div>
@@ -106,7 +104,7 @@
 <!-- Dirección CÓNYUGE -->
 <script>
 (function () {
-  const prefix = "DatosFamiliares";
+  const prefix = "FamilyData";
   const id = f => `id_${prefix}-${f}`;
   const v = f => document.getElementById(id(f))?.value || "";
   const ck = f => document.getElementById(id(f))?.checked || false;
@@ -156,7 +154,7 @@
 <!-- Dirección PADRE -->
 <script>
 (function () {
-  const prefix = "DatosFamiliares";
+  const prefix = "FamilyData";
   const id = f => `id_${prefix}-${f}`;
   const v = f => document.getElementById(id(f))?.value || "";
   const ck = f => document.getElementById(id(f))?.checked || false;
@@ -206,7 +204,7 @@
 <!-- Dirección MADRE -->
 <script>
 (function () {
-  const prefix = "DatosFamiliares";
+  const prefix = "FamilyData";
   const id = f => `id_${prefix}-${f}`;
   const v = f => document.getElementById(id(f))?.value || "";
   const ck = f => document.getElementById(id(f))?.checked || false;
@@ -253,20 +251,20 @@
 })();
 </script>
 
-<!-- AGREGAR HIJOS -->
+<!-- AGREGAR Child -->
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  const formset = document.getElementById("formset-hijos");
-  const totalForms = document.querySelector("#id_hijos-TOTAL_FORMS");
-  const emptyFormTemplate = document.getElementById("empty-form-hijo").innerHTML;
-  const addButton = document.getElementById("add-hijo");
+  const formset = document.getElementById("formset-Child");
+  const totalForms = document.querySelector("#id_Child-TOTAL_FORMS");
+  const emptyFormTemplate = document.getElementById("empty-form-Child").innerHTML;
+  const addButton = document.getElementById("add-Child");
 
   function updateTitles() {
-    const forms = formset.querySelectorAll(".hijo-form:not(.d-none)");
+    const forms = formset.querySelectorAll(".Child-form:not(.d-none)");
     forms.forEach((form, index) => {
       const title = form.querySelector(".card-title");
-      if (title) title.textContent = `Hijo ${index + 1}`;
+      if (title) title.textContent = `Child ${index + 1}`;
     });
   }
 
@@ -284,8 +282,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Manejar "Eliminar"
   formset.addEventListener("click", function (e) {
-    if (e.target.classList.contains("delete-hijo")) {
-      const card = e.target.closest(".hijo-form");
+    if (e.target.classList.contains("delete-Child")) {
+      const card = e.target.closest(".Child-form");
       const deleteInput = card.querySelector("input[name$='-DELETE']");
       if (deleteInput) {
         deleteInput.value = "on";           // <- corregido
@@ -299,19 +297,19 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<!-- AGREGAR HERMANOS -->
+<!-- AGREGAR Sibling-->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  const formset = document.getElementById("formset-hermanos");
-  const totalForms = document.querySelector("#id_hermanos-TOTAL_FORMS");
-  const emptyFormTemplate = document.getElementById("empty-form-hermano").innerHTML;
-  const addButton = document.getElementById("add-hermano");
+  const formset = document.getElementById("formset-Sibling");
+  const totalForms = document.querySelector("#id_Sibling-TOTAL_FORMS");
+  const emptyFormTemplate = document.getElementById("empty-form-Sibling").innerHTML;
+  const addButton = document.getElementById("add-Sibling");
 
   function updateTitles() {
-    const forms = formset.querySelectorAll(".hermano-form:not(.d-none)");
+    const forms = formset.querySelectorAll(".Sibling-form:not(.d-none)");
     forms.forEach((form, index) => {
       const title = form.querySelector(".card-title");
-      if (title) title.textContent = `Hermano ${index + 1}`;
+      if (title) title.textContent = `Sibling ${index + 1}`;
     });
   }
 
@@ -326,12 +324,12 @@ document.addEventListener("DOMContentLoaded", function () {
     totalForms.value = index + 1;
     updateTitles();
     const newCard = formset.lastElementChild;
-    bindDireccionHermanoEvents(newCard);
+    bindDireccionSiblingEvents(newCard);
   });
 
   formset.addEventListener("click", function (e) {
-    if (e.target.classList.contains("delete-hermano")) {
-      const card = e.target.closest(".hermano-form");
+    if (e.target.classList.contains("delete-Sibling")) {
+      const card = e.target.closest(".Sibling-form");
       const deleteInput = card.querySelector("input[name$='-DELETE']");
       if (deleteInput) {
         deleteInput.value = "on";
@@ -345,17 +343,17 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<!-- Dirección HERMANO -->
+<!-- Dirección HSibling-->
 <script>
-function bindDireccionHermanoEvents(card) {
+function bindDireccionSiblingoEvents(card) {
   if (card.dataset.binded === "true") return;
   card.dataset.binded = "true";
 
   const campos = [
-    'tipo_via_hermano', 'numero_principal_hermano', 'letra_principal_hermano',
-    'bis_hermano', 'letra_bis_hermano', 'cuadrante_hermano',
-    'numero_secundario_hermano', 'letra_secundaria_hermano',
-    'cuadrante_dos_hermano', 'nro_hermano', 'complemento_hermano'
+    'tipo_via_Sibling', 'numero_principal_Siblingo', 'letra_principal_Sibling',
+    'bis_Sibling', 'letra_bis_Sibling', 'cuadrante_Sibling',
+    'numero_secundario_Sibling', 'letra_secundaria_Sibling',
+    'cuadrante_dos_Sibling', 'nro_Sibling', 'complemento_Sibling'
   ];
 
   function getVal(name) {
@@ -368,32 +366,32 @@ function bindDireccionHermanoEvents(card) {
 
   function construirDireccion() {
     const partes = [
-      getVal('tipo_via_hermano'),
-      getVal('numero_principal_hermano'),
-      getVal('letra_principal_hermano'),
-      isChecked('bis_hermano') ? 'BIS' : '',
-      getVal('letra_bis_hermano'),
-      getVal('cuadrante_hermano')
+      getVal('tipo_via_Sibling'),
+      getVal('numero_principal_Sibling'),
+      getVal('letra_principal_Sibling'),
+      isChecked('bis_Sibling') ? 'BIS' : '',
+      getVal('letra_bis_Sibling'),
+      getVal('cuadrante_Sibling')
     ];
 
-    if (getVal('numero_secundario_hermano')) {
+    if (getVal('numero_secundario_Sibling')) {
       partes.push('#',
-        getVal('numero_secundario_hermano'),
-        getVal('letra_secundaria_hermano'),
-        getVal('cuadrante_dos_hermano')
+        getVal('numero_secundario_Sibling'),
+        getVal('letra_secundaria_Sibling'),
+        getVal('cuadrante_dos_Sibling')
       );
     }
 
-    partes.push(getVal('nro_hermano'));
+    partes.push(getVal('nro_Sibling'));
 
     let dir = partes.filter(Boolean).join(' ');
-    if (getVal('complemento_hermano')) {
-      dir += ', ' + getVal('complemento_hermano');
+    if (getVal('complemento_Sibling')) {
+      dir += ', ' + getVal('complemento_Sibling');
     }
 
-    const output = card.querySelector('.direccion-preview_hermano');
+    const output = card.querySelector('.direccion-preview_Sibling');
     const hidden = [...card.querySelectorAll("input[type='hidden']")].find(
-      input => input.name.includes("-direccion_formateada_hermano")
+      input => input.name.includes("-direccion_formateada_Sibling")
     );
 
     if (output) output.textContent = dir;
@@ -411,175 +409,19 @@ function bindDireccionHermanoEvents(card) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll('.hermano-form').forEach(bindDireccionHermanoEvents);
+  document.querySelectorAll('.Sibling-form').forEach(bindDireccionSiblingEvents);
 
   const observer = new MutationObserver(() => {
-    document.querySelectorAll('.hermano-form').forEach(bindDireccionHermanoEvents);
+    document.querySelectorAll('.Sibling-form').forEach(bindDireccionSiblingEvents);
   });
 
-  observer.observe(document.getElementById('formset-hermanos'), {
+  observer.observe(document.getElementById('formset-Sibling'), {
     childList: true,
     subtree: true
   });
 });
 </script>
 
-
-
-
-
-<!-- Dirección REFERENCIA 1 -->
-
-<script>
-(function () {
-  const prefix = "ReferenciasPersonales";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
-
-  function actualizarDireccionReferencia1() {
-    const partes = [
-      v('tipo_via_referencia_1'), v('numero_principal_referencia_1'), v('letra_principal_referencia_1'),
-      ck('bis_referencia_1') ? 'BIS' : '',
-      v('letra_bis_referencia_1'), v('cuadrante_referencia_1')
-    ];
-
-    if (v('numero_secundario_referencia_1')) {
-      partes.push('#', v('numero_secundario_referencia_1'),
-                        v('letra_secundaria_referencia_1'),
-                        v('cuadrante_dos_referencia_1'));
-    }
-
-    partes.push(v('nro_referencia_1'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_referencia_1')) dir += ', ' + v('complemento_referencia_1');
-
-    const div = document.getElementById('direccion-preview_referencia_1');
-    const hidden = document.getElementById(id('direccion_preview_referencia_1'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_referencia_1', 'numero_principal_referencia_1', 'letra_principal_referencia_1',
-      'bis_referencia_1', 'letra_bis_referencia_1', 'cuadrante_referencia_1',
-      'numero_secundario_referencia_1', 'letra_secundaria_referencia_1',
-      'cuadrante_dos_referencia_1', 'nro_referencia_1', 'complemento_referencia_1'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionReferencia1);
-      }
-    });
-    actualizarDireccionReferencia1();
-  });
-})();
-</script>
-
-<!-- Dirección REFERENCIA 2 -->
-
-<script>
-(function () {
-  const prefix = "ReferenciasPersonales";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
-
-  function actualizarDireccionReferencia2() {
-    const partes = [
-      v('tipo_via_referencia_2'), v('numero_principal_referencia_2'), v('letra_principal_referencia_2'),
-      ck('bis_referencia_2') ? 'BIS' : '',
-      v('letra_bis_referencia_2'), v('cuadrante_referencia_2')
-    ];
-
-    if (v('numero_secundario_referencia_2')) {
-      partes.push('#', v('numero_secundario_referencia_2'),
-                        v('letra_secundaria_referencia_2'),
-                        v('cuadrante_dos_referencia_2'));
-    }
-
-    partes.push(v('nro_referencia_2'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_referencia_2')) dir += ', ' + v('complemento_referencia_2');
-
-    const div = document.getElementById('direccion-preview_referencia_2');
-    const hidden = document.getElementById(id('direccion_preview_referencia_2'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_referencia_2', 'numero_principal_referencia_2', 'letra_principal_referencia_2',
-      'bis_referencia_2', 'letra_bis_referencia_2', 'cuadrante_referencia_2',
-      'numero_secundario_referencia_2', 'letra_secundaria_referencia_2',
-      'cuadrante_dos_referencia_2', 'nro_referencia_2', 'complemento_referencia_2'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionReferencia2);
-      }
-    });
-    actualizarDireccionReferencia2();
-  });
-})();
-</script>
-
-<!-- Dirección REFERENCIA 3 -->
-
-<script>
-(function () {
-  const prefix = "ReferenciasPersonales";
-  const id = f => `id_${prefix}-${f}`;
-  const v = f => document.getElementById(id(f))?.value || "";
-  const ck = f => document.getElementById(id(f))?.checked || false;
-
-  function actualizarDireccionReferencia3() {
-    const partes = [
-      v('tipo_via_referencia_3'), v('numero_principal_referencia_3'), v('letra_principal_referencia_3'),
-      ck('bis_referencia_3') ? 'BIS' : '',
-      v('letra_bis_referencia_3'), v('cuadrante_referencia_3')
-    ];
-
-    if (v('numero_secundario_referencia_3')) {
-      partes.push('#', v('numero_secundario_referencia_3'),
-                        v('letra_secundaria_referencia_3'),
-                        v('cuadrante_dos_referencia_3'));
-    }
-
-    partes.push(v('nro_referencia_3'));
-
-    let dir = partes.filter(Boolean).join(' ');
-    if (v('complemento_referencia_3')) dir += ', ' + v('complemento_referencia_3');
-
-    const div = document.getElementById('direccion-preview_referencia_3');
-    const hidden = document.getElementById(id('direccion_preview_referencia_3'));
-    if (div) div.textContent = dir;
-    if (hidden) hidden.value = dir;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const campos = [
-      'tipo_via_referencia_3', 'numero_principal_referencia_3', 'letra_principal_referencia_3',
-      'bis_referencia_3', 'letra_bis_referencia_3', 'cuadrante_referencia_3',
-      'numero_secundario_referencia_3', 'letra_secundaria_referencia_3',
-      'cuadrante_dos_referencia_3', 'nro_referencia_3', 'complemento_referencia_3'
-    ];
-    campos.forEach(f => {
-      const el = document.getElementById(id(f));
-      if (el) {
-        el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', actualizarDireccionReferencia3);
-      }
-    });
-    actualizarDireccionReferencia3();
-  });
-})();
-</script>
 
 
 <!--Formateo de Moneda en los campos-->

@@ -1,26 +1,26 @@
 from django.contrib import admin
 import nested_admin
-from .models import (PersonalData, DatosFamiliares, InformacionAcademica,
-                     ReferenciasPersonales, BienesRentasAEP, SituacionJuridica,Hijo,Hermano)
+from .models import (PersonalData, FamilyData, InformacionAcademica,
+                     BienesRentasAEP, SituacionJuridica,Child,Sibling)
 import nested_admin
 
 # -------------------- INLINES ANIDADOS --------------------
 
-# Inline para el modelo Hijo dentro de DatosFamiliares
+# Inline para el modeloChild dentro de DatosFamiliares
 
-class HijoInline(nested_admin.NestedTabularInline):
-    model = Hijo
+class ChildInline(nested_admin.NestedTabularInline):
+    model = Child
     extra = 0
     
-# Inline para el modelo Hermano dentro de DatosFamiliares
-class HermanoInline(nested_admin.NestedTabularInline):
-    model = Hermano
+# Inline para el modelo Sibling dentro de DatosFamiliares
+class SiblingInline(nested_admin.NestedTabularInline):
+    model = Sibling
     extra = 0
 
-# Inline para el modelo DatosFamiliares que incluye hijos y hermanos
-class DatosFamiliaresInline(nested_admin.NestedStackedInline):
-    model = DatosFamiliares
-    inlines = [HijoInline,HermanoInline]  # Se anidan hijos y hermanos
+# Inline para el modelo DatosFamiliares que incluye Child y Sibling
+class FamilyDataInline(nested_admin.NestedStackedInline):
+    model = FamilyData
+    inlines = [ChildInline,SiblingInline]  # Se anidan Child y Sibling
     extra = 0
 
 
@@ -29,10 +29,6 @@ class InformacionAcademicaInline(nested_admin.NestedStackedInline):  #
     model = InformacionAcademica
     extra = 0
 
-# Inline para referencias personales
-class ReferenciasPersonalesInline(nested_admin.NestedStackedInline):
-    model = ReferenciasPersonales
-    extra = 0
 
 
 
@@ -52,9 +48,9 @@ class SituacionJuridicaInline(nested_admin.NestedStackedInline):
 @admin.register(PersonalData)
 class PersonalDataAdmin(nested_admin.NestedModelAdmin):
     inlines = [
-        DatosFamiliaresInline,
+        FamilyDataInline,
         InformacionAcademicaInline,
-        ReferenciasPersonalesInline,
+ 
         BienesRentasAEPInline,
         SituacionJuridicaInline,
         
@@ -63,15 +59,15 @@ class PersonalDataAdmin(nested_admin.NestedModelAdmin):
     list_display = (
 
 #CLASE RECLUTA
-            "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido",
-            "tipo_documento", "numero_documento", "fecha_expedición", "lugar_expedición",
-            "pasaporte_numero", "fecha_pasaporte",
-             "dia_nacimiento",
-            "mes_nacimiento", "año_nacimiento", "estado_civil", "profesion_oficio",
-            "tarjeta_profesional", "señales_corporales", "estatura", "peso", "tipo_via",
-            "numero_principal", "letra_principal", "bis", "letra_bis", "cuadrante",
-            "numero_secundario", "letra_secundaria", "cuadrante_dos", "nro", "complemento",
-            "barrio","numero_celular","telefono_fijo","ciudad","departamento","correo_electronico_personal",
+            "first_name", "second_name", "lastname", "second_lastname",
+            "document_type", "document_number", "expedition_date", "expedition_place",
+            "passport_number", "passport_date",
+             "birth_day",
+            "birth_month", "birth_year", "relationships", "profession",
+            "profesional_id", "body_marks", "height", "weight", "street_type",
+            "principal_number", "principal_letter", "bis", "bis_letter", "quadrant",
+            "secondary_number", "secondary_letter", "quadrant_2", "nmbr", "complement",
+            "neighborhood","phone_number","landline_phone","city","department","personal_email",
         
     )
 
@@ -79,15 +75,15 @@ class PersonalDataAdmin(nested_admin.NestedModelAdmin):
     search_fields = (
 
 #PersonalData
-            "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido",
-            "tipo_documento", "numero_documento", "fecha_expedición", "lugar_expedición",
-            "pasaporte_numero", "fecha_pasaporte",
-            "dia_nacimiento",
-            "mes_nacimiento", "año_nacimiento", "estado_civil", "profesion_oficio",
-            "tarjeta_profesional", "señales_corporales", "estatura", "peso", "tipo_via",
-            "numero_principal", "letra_principal", "bis", "letra_bis", "cuadrante",
-            "numero_secundario", "letra_secundaria", "cuadrante_dos", "nro", "complemento",
-            "barrio","numero_celular","telefono_fijo","ciudad","departamento","correo_electronico_personal",
+            "first_name", "second_name", "lastname", "second_lastname",
+            "document_type", "document_number", "expedition_date", "expedition_place",
+            "passport_number", "passport_date",
+             "birth_day",
+            "birth_month", "birth_year", "relationships", "profession",
+            "profesional_id", "body_marks", "height", "weight", "street_type",
+            "principal_number", "principal_letter", "bis", "bis_letter", "quadrant",
+            "secondary_number", "secondary_letter", "quadrant_2", "nmbr", "complement",
+            "neighborhood","phone_number","landline_phone","city","department","personal_email",
     )
 
  # Filtros disponibles en la barra lateral
@@ -95,89 +91,82 @@ class PersonalDataAdmin(nested_admin.NestedModelAdmin):
     )
 
 
-@admin.register(DatosFamiliares)
-class DatosFamiliaresAdmin(admin.ModelAdmin):
-    inlines = [HijoInline,HermanoInline]
-    # ----------  QUÉ COLUMNAS MOSTRAR EN LA LISTA  ----------
+@admin.register(FamilyData)
+class FamilyDataAdmin(admin.ModelAdmin):
+    inlines = [ChildInline, SiblingInline]
+
+    # ----------  COLUMNS TO DISPLAY IN LIST VIEW  ----------
     list_display = (
+        # Spouse Data
+        "spouse_name", "spouse_id", "spouse_profession", "spouse_phone",
+        "spouse_street_type", "spouse_principal_number", "spouse_principal_letter",
+        "spouse_bis", "spouse_bis_letter", "spouse_quadrant",
+        "spouse_second_number", "spouse_second_letter", "spouse_second_quadrant",
+        "spouse_nmbr", "spouse_complement", "spouse_built_address",
 
-#CLASE DATOS FAMILIARES
-      #Datos Conyugue
-            "nombre_conyugue", "cedula_conyugue", "profesion_oficio_conyugue", "celular_conyugue",
-            "tipo_via_conyugue", "numero_principal_conyugue", "letra_principal_conyugue",
-            "bis_conyugue", "letra_bis_conyugue", "cuadrante_conyugue",
-            "numero_secundario_conyugue", "letra_secundaria_conyugue", "cuadrante_dos_conyugue",
-            "nro_conyugue", "complemento_conyugue","direccion_formateada_conyugue",
+        # Father Data
+        "father_name", "father_lives", "father_id", "father_phone", "father_profession",
+        "father_street_type", "father_principal_number", "father_principal_letter",
+        "father_bis", "father_bis_letter", "father_quadrant",
+        "father_second_number", "father_second_letter", "father_second_quadrant",
+        "father_nmbr", "father_complement", "father_built_address",
 
-#Datos Padre
-            "nombre_padre", "vive_padre","identificación_padre","telefono_padre", "oficio_profesion_padre",
-            "tipo_via_padre", "numero_principal_padre", "letra_principal_padre","bis_padre", "letra_bis_padre", "cuadrante_padre",
-            "numero_secundario_padre", "letra_secundaria_padre", "cuadrante_dos_padre","nro_padre", "complemento_padre","direccion_formateada_padre",
-#Datos Madre
-            "nombre_madre", "vive_madre",
-            "identificación_madre","telefono_madre", "oficio_profesion_madre","tipo_via_madre", "numero_principal_madre", "letra_principal_madre",
-            "bis_madre", "letra_bis_madre", "cuadrante_madre","numero_secundario_madre", "letra_secundaria_madre",
-            "cuadrante_dos_madre","nro_madre", "complemento_madre","direccion_formateada_madre",
-
-        
+        # Mother Data
+        "mother_name", "mother_lives", "mother_id", "mother_phone", "mother_profession",
+        "mother_street_type", "mother_principal_number", "mother_principal_letter",
+        "mother_bis", "mother_bis_letter", "mother_quadrant",
+        "mother_second_number", "mother_second_letter", "mother_second_quadrant",
+        "mother_nmbr", "mother_complement", "mother_built_address",
     )
 
-    # ----------  CAMPOS PARA BUSCAR  ----------
+    # ----------  SEARCH FIELDS  ----------
     search_fields = (
+        # Spouse Data
+        "spouse_name", "spouse_id", "spouse_profession", "spouse_phone",
+        "spouse_street_type", "spouse_principal_number", "spouse_principal_letter",
+        "spouse_bis", "spouse_bis_letter", "spouse_quadrant",
+        "spouse_second_number", "spouse_second_letter", "spouse_second_quadrant",
+        "spouse_nmbr", "spouse_complement", "spouse_built_address",
 
-#CLASE DATOS FAMILIARES
-#Datos Conyugue
-            "nombre_conyugue", "cedula_conyugue", "profesion_oficio_conyugue", "celular_conyugue",
-            "tipo_via_conyugue", "numero_principal_conyugue", "letra_principal_conyugue",
-            "bis_conyugue", "letra_bis_conyugue", "cuadrante_conyugue",
-            "numero_secundario_conyugue", "letra_secundaria_conyugue", "cuadrante_dos_conyugue",
-            "nro_conyugue", "complemento_conyugue","direccion_formateada_conyugue",
+        # Father Data
+        "father_name", "father_lives", "father_id", "father_phone", "father_profession",
+        "father_street_type", "father_principal_number", "father_principal_letter",
+        "father_bis", "father_bis_letter", "father_quadrant",
+        "father_second_number", "father_second_letter", "father_second_quadrant",
+        "father_nmbr", "father_complement", "father_built_address",
 
-#Datos Padre
-            "nombre_padre", "vive_padre","identificación_padre","telefono_padre", "oficio_profesion_padre",
-            "tipo_via_padre", "numero_principal_padre", "letra_principal_padre","bis_padre", "letra_bis_padre", "cuadrante_padre",
-            "numero_secundario_padre", "letra_secundaria_padre", "cuadrante_dos_padre","nro_padre", "complemento_padre","direccion_formateada_padre",
-#Datos Madre
-            "nombre_madre", "vive_madre",
-            "identificación_madre","telefono_madre", "oficio_profesion_madre","tipo_via_madre", "numero_principal_madre", "letra_principal_madre",
-            "bis_madre", "letra_bis_madre", "cuadrante_madre","numero_secundario_madre",
-            "letra_secundaria_madre", "cuadrante_dos_madre","nro_madre", "complemento_madre","direccion_formateada_madre",
-
-
+        # Mother Data
+        "mother_name", "mother_lives", "mother_id", "mother_phone", "mother_profession",
+        "mother_street_type", "mother_principal_number", "mother_principal_letter",
+        "mother_bis", "mother_bis_letter", "mother_quadrant",
+        "mother_second_number", "mother_second_letter", "mother_second_quadrant",
+        "mother_nmbr", "mother_complement", "mother_built_address",
     )
 
-    # ----------  FILTROS LATERALES  ----------
-    list_filter = (
-    )
+    # ----------  SIDE FILTERS  ----------
+    list_filter = ()
 
-@admin.register(Hermano)
-class HermanoAdmin(admin.ModelAdmin):
-    
+@admin.register(Sibling)
+class SiblingAdmin(admin.ModelAdmin):
+
     list_display = (
-        "primer_nombre_hermano",
-        "segundo_nombre_hermano",
-        "primer_apellido_hermano",
-        "segundo_apellido_hermano",
-        "identificacion_hermano",
-        "direccion_formateada_hermano",
+        "sibling_first_name",
+        "sibling_second_name",
+        "sibling_lastname",
+        "sibling_second_lastname",
+        "sibling_id",
+        "sibling_built_address",
     )
 
     search_fields = (
-        "primer_nombre_hermano",
-        "segundo_nombre_hermano",
-        "primer_apellido_hermano",
-        "segundo_apellido_hermano",
-        "identificacion_hermano",
-        "direccion_formateada_hermano",
+        "sibling_first_name",
+        "sibling_second_name",
+        "sibling_lastname",
+        "sibling_second_lastname",
+        "sibling_id",
+        "sibling_built_address",
     )
-# El resto de los modelos siguen el patrón similar:
-# 1. Se registran con el decorador @admin.register
-# 2. Se definen sus columnas a mostrar en list_display
-# 3. Se agregan campos relevantes en search_fields
-# 4. Se dejan list_filter vacíos por ahora para evitar sobrecargar la interfaz
 
-# Nota: Este archivo permite una visualización y gestión avanzada de los modelos
-# en el panel de administración de Django, usando `nested_admin` para relaciones complejas.
 
 @admin.register(InformacionAcademica)
 class InformacionAcademicaAdmin(admin.ModelAdmin):
@@ -209,55 +198,6 @@ class InformacionAcademicaAdmin(admin.ModelAdmin):
            "idioma_extranjero_2", "lee_idioma_extranjero_2","habla_idioma_extranjero_2","escribe_idioma_extranjero_2",
 #Ofimática
             "word_check", "excel_check", "powerpoint_check", "access_check", "internet_check","otro_check"
-    )
-
-    # ----------  FILTROS LATERALES  ----------
-    list_filter = (
-    )
-
-@admin.register(ReferenciasPersonales)
-class ReferenciasPersonalesAdmin(admin.ModelAdmin):
-
-    # ----------  QUÉ COLUMNAS MOSTRAR EN LA LISTA  ----------
-    list_display = (
-# Referencia 1
-            "nombre_referencia_1", "ocupacion_referencia_1", "empresa_referencia_1", "tiempo_referencia_1", "ciudad_referencia_1", "telefono_referencia_1",
-            "tipo_via_referencia_1", "numero_principal_referencia_1", "letra_principal_referencia_1", "bis_referencia_1", "letra_bis_referencia_1",
-            "cuadrante_referencia_1", "numero_secundario_referencia_1", "letra_secundaria_referencia_1", "cuadrante_dos_referencia_1",
-            "nro_referencia_1", "complemento_referencia_1","direccion_formateada_referencia_1",
-
-# Referencia 2
-            "nombre_referencia_2", "ocupacion_referencia_2", "empresa_referencia_2", "tiempo_referencia_2", "ciudad_referencia_2", "telefono_referencia_2",
-            "tipo_via_referencia_2", "numero_principal_referencia_2", "letra_principal_referencia_2", "bis_referencia_2", "letra_bis_referencia_2",
-            "cuadrante_referencia_2", "numero_secundario_referencia_2", "letra_secundaria_referencia_2", "cuadrante_dos_referencia_2",
-            "nro_referencia_2", "complemento_referencia_2","direccion_formateada_referencia_2",
-# Referencia 3
-            "nombre_referencia_3", "ocupacion_referencia_3", "empresa_referencia_3", "tiempo_referencia_3", "ciudad_referencia_3", "telefono_referencia_3",
-            "tipo_via_referencia_3", "numero_principal_referencia_3", "letra_principal_referencia_3", "bis_referencia_3", "letra_bis_referencia_3",
-            "cuadrante_referencia_3", "numero_secundario_referencia_3", "letra_secundaria_referencia_3", "cuadrante_dos_referencia_3",
-            "nro_referencia_3", "complemento_referencia_3","direccion_formateada_referencia_3",
-        
-    )
-
-    # ----------  CAMPOS PARA BUSCAR  ----------
-    search_fields = (
-
-# Referencia 1
-            "nombre_referencia_1", "ocupacion_referencia_1", "empresa_referencia_1", "tiempo_referencia_1", "ciudad_referencia_1", "telefono_referencia_1",
-            "tipo_via_referencia_1", "numero_principal_referencia_1", "letra_principal_referencia_1", "bis_referencia_1", "letra_bis_referencia_1",
-            "cuadrante_referencia_1", "numero_secundario_referencia_1", "letra_secundaria_referencia_1", "cuadrante_dos_referencia_1",
-            "nro_referencia_1", "complemento_referencia_1","direccion_formateada_referencia_1",
-
-# Referencia 2
-            "nombre_referencia_2", "ocupacion_referencia_2", "empresa_referencia_2", "tiempo_referencia_2", "ciudad_referencia_2", "telefono_referencia_2",
-            "tipo_via_referencia_2", "numero_principal_referencia_2", "letra_principal_referencia_2", "bis_referencia_2", "letra_bis_referencia_2",
-            "cuadrante_referencia_2", "numero_secundario_referencia_2", "letra_secundaria_referencia_2", "cuadrante_dos_referencia_2",
-            "nro_referencia_2", "complemento_referencia_2","direccion_formateada_referencia_2",
-# Referencia 3
-            "nombre_referencia_3", "ocupacion_referencia_3", "empresa_referencia_3", "tiempo_referencia_3", "ciudad_referencia_3", "telefono_referencia_3",
-            "tipo_via_referencia_3", "numero_principal_referencia_3", "letra_principal_referencia_3", "bis_referencia_3", "letra_bis_referencia_3",
-            "cuadrante_referencia_3", "numero_secundario_referencia_3", "letra_secundaria_referencia_3", "cuadrante_dos_referencia_3",
-            "nro_referencia_3", "complemento_referencia_3","direccion_formateada_referencia_3",
     )
 
     # ----------  FILTROS LATERALES  ----------

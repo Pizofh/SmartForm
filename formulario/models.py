@@ -5,106 +5,93 @@ from django.core.validators import RegexValidator
 
 # --- Validadores REGEX ---
 
-only_letters = RegexValidator(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ ]+$', 'Solo se permiten letras y espacios.')
-alphanumeric = RegexValidator(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ0-9 ]+$','Solo se permiten letras, números y espacios.')
-simple_text = RegexValidator(r'^[A-Za-zÁÉÍÓÚÑÜüöÖäÄáéíóúñ0-9\s.,¨:#-]*$','Solo letras (incluyendo diéresis), números, espacios y signos básicos.')
-only_numbers = RegexValidator(r'^\d+$', 'Solo se permiten números.')
+only_letters = RegexValidator(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ ]+$', 'Only letters and spaces are allowed.')
+alphanumeric = RegexValidator(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ0-9 ]+$', 'Only letters, numbers, and spaces are allowed.')
+simple_text = RegexValidator(r'^[A-Za-zÁÉÍÓÚÑÜüöÖäÄáéíóúñ0-9\s.,¨:#-]*$', 'Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.')
+only_numbers = RegexValidator(r'^\d+$', 'Only numbers are allowed.')
 
 class PersonalData(models.Model):
     """
-    Modelo que representa la información personal, de identificación, y de contacto
-    de una persona que se registra como recluta en el sistema.
+    Model representing personal, identification, and contact information
+    of a person registered as a recruit in the system.
 
-    Contempla múltiples campos, incluyendo nombre completo, documentos de identidad,
-    datos de nacimiento, libreta militar, características físicas, dirección detallada
-    y redes sociales. Se aplica validación en campos clave para garantizar integridad
-    y unicidad.
-    """ 
+    It includes multiple fields such as full name, ID documents,
+    birth information, military card, physical traits, detailed address,
+    and social networks. Key fields are validated to ensure data integrity
+    and uniqueness.
+    """
 
-    # --- Información personal ---
-    first_name = models.CharField(max_length=30,validators=[only_letters])
-    second_name = models.CharField(max_length=30, blank=True,validators=[only_letters])
-    lastname = models.CharField(max_length=80,validators=[only_letters])
-    second_lastname = models.CharField(max_length=80, blank=True,validators=[only_letters])
+    # --- Personal Information ---
+    first_name = models.CharField("First name", max_length=30, validators=[only_letters])
+    second_name = models.CharField("Second name", max_length=30, blank=True, validators=[only_letters])
+    lastname = models.CharField("Last name", max_length=80, validators=[only_letters])
+    second_lastname = models.CharField("Second last name", max_length=80, blank=True, validators=[only_letters])
 
-    # --- Documentos de identidad ---
-    document_type = models.CharField(
-        "Tipo de documento", max_length=2,
-        choices=[("CC", "Cédula Ciudadanía"), ("CE", "Cédula Extranjería")]
-    )
-    document_number = models.IntegerField("Número de documento", unique=True,validators=[MinValueValidator(1_000), MaxValueValidator(99_999_999_999)])
-    expedition_date = models.DateField("Fecha de expedición de la cédula")
-    expedition_place = models.CharField("Lugar de expedición", max_length=20,validators=[only_letters])
-    passport_number = models.CharField("Pasaporte No", max_length=12, blank=True,validators=[alphanumeric])
-    passport_date = models.DateField("Fecha de expedición del pasaporte", null=True, blank=True)
+    # --- Identity Documents ---
+    document_type = models.CharField("Document type", max_length=2, choices=[("CC", "Citizen ID"), ("CE", "Foreigner ID")])
+    document_number = models.IntegerField("Document number", unique=True, validators=[MinValueValidator(1_000), MaxValueValidator(99_999_999_999)])
+    expedition_date = models.DateField("ID issue date")
+    expedition_place = models.CharField("ID issue place", max_length=20, validators=[only_letters])
+    passport_number = models.CharField("Passport number", max_length=12, blank=True, validators=[alphanumeric])
+    passport_date = models.DateField("Passport issue date", null=True, blank=True)
 
-    # --- Fecha de nacimiento (distribuida por partes) ---
-    dia_nacimiento = models.IntegerField("Día de nacimiento", null=True, choices=[(i, str(i)) for i in range(1, 32)])
-    mes_nacimiento = models.CharField(
-        "Mes de nacimiento", max_length=13, null=True,
-        choices=[(str(i), mes) for i, mes in enumerate([
-            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    # --- Birth Date (distributed) ---
+    birth_day = models.IntegerField("Day of birth", null=True, choices=[(i, str(i)) for i in range(1, 32)])
+    birth_month = models.CharField(
+        "Month of birth", max_length=13, null=True,
+        choices=[(str(i), month) for i, month in enumerate([
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
         ], start=1)]
     )
-    año_nacimiento = models.IntegerField("Año de Nacimiento", null=True,
-                                         validators=[MinValueValidator(1900), MaxValueValidator(2025)])
+    birth_year = models.IntegerField("Year of birth", null=True, validators=[MinValueValidator(1900), MaxValueValidator(2025)])
 
-    # --- Estado civil y profesión ---
-    estado_civil = models.CharField(
-        "Estado Civil", max_length=30, null=True,
-        choices=[
-            ("Casado(a)", "Casado(a)"), ("Soltero(a)", "Soltero(a)"),
-            ("Unión Marital de Hecho", "Unión Marital de Hecho"),
-            ("Separado de Hecho", "Separado de Hecho"), ("Divorciado(a)", "Divorciado(a)"), ("Viudo(a)", "Viudo(a)")
-        ]
-    )
-    profesion_oficio = models.CharField("Profesión u Oficio", max_length=30, null=True,validators=[only_letters])
-    tarjeta_profesional = models.CharField("Tarjeta profesional", max_length=15, null=True,validators=[alphanumeric])
-    señales_corporales = models.CharField("Señales corporales", max_length=50, null=True,validators=[simple_text])
-    estatura = models.IntegerField("Estatura (cm)", null=True,
-                                   validators=[MinValueValidator(80), MaxValueValidator(400)])
-    peso = models.IntegerField("Peso (kg)", null=True,
-                               validators=[MinValueValidator(10), MaxValueValidator(500)])
+    # --- Marital Status and Profession ---
+    relationships = models.CharField("Marital status", max_length=30, null=True, choices=[
+        ("Casado(a)", "Married"), ("Soltero(a)", "Single"),
+        ("Unión Marital de Hecho", "Common-law marriage"),
+        ("Separado de Hecho", "Separated"), ("Divorciado(a)", "Divorced"), ("Viudo(a)", "Widowed")
+    ])
+    profession = models.CharField("Profession or occupation", max_length=30, null=True, validators=[only_letters])
+    profesional_id = models.CharField("Professional ID card", max_length=15, null=True, validators=[alphanumeric])
+    body_marks = models.CharField("Body marks", max_length=50, null=True, validators=[simple_text])
+    height = models.IntegerField("Height (cm)", null=True, validators=[MinValueValidator(80), MaxValueValidator(400)])
+    weight = models.IntegerField("Weight (kg)", null=True, validators=[MinValueValidator(10), MaxValueValidator(500)])
 
-    # --- Dirección (estructura desglosada) ---
-    tipo_via = models.CharField("Tipo de vía", max_length=20, null=True,
-                                choices=[('Anillo Vial', 'Anillo Vial'), ('Autopista', 'Autopista'),
-                                         ('Avenida', 'Avenida'), ('Avenida Calle', 'Avenida Calle'),
-                                         ('Avenida Carrera', 'Avenida Carrera'), ('Calle', 'Calle'),
-                                         ('Callejón', 'Callejón'), ('Carrera', 'Carrera'),
-                                         ('Circular', 'Circular'), ('Diagonal', 'Diagonal'),
-                                         ('Transversal', 'Transversal')])
-    numero_principal = models.CharField("Número",max_length=10,null=True,validators=[only_numbers])
-    letra_principal = models.CharField("Letra", max_length=2, null=True, blank=True,
-                                       choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    bis = models.BooleanField("¿Bis?", default=False)
-    letra_bis = models.CharField("Letra Bis", max_length=2, blank=True, null=True,
-                                 choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante = models.CharField("Cuadrante", max_length=10,
-                                 choices=[('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')],
-                                 blank=True, null=True)
-    numero_secundario = models.CharField("Número",max_length=10, null=True,validators=[only_numbers])
-    letra_secundaria = models.CharField("Letra", max_length=2, blank=True, null=True,
-                                        choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_dos = models.CharField("Cuadrante", max_length=10,
-                                     choices=[('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')],
-                                     blank=True, null=True)
-    nro = models.CharField("Número Final", max_length=30, blank=True, null=True,validators=[only_numbers])
-    complemento = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True,validators=[simple_text])
-    barrio = models.CharField("Barrio", max_length=50, null=True,validators=[alphanumeric])
- 
-    # --- Contacto ---
-    numero_celular = models.IntegerField("Número celular", unique=True, null=True,
-                                         validators=[MinValueValidator(1_000), MaxValueValidator(99_999_999_999)])
-    telefono_fijo = models.IntegerField("Numero de teléfono fijo", blank=True, null=True,
-                                        validators=[MinValueValidator(1_000), MaxValueValidator(99_999_999_999)])
-    ciudad = models.CharField("Ciudad de nacimiento", max_length=30, null=True,validators=[only_letters])
-    departamento = models.CharField("Departamento de nacimiento", max_length=30, null=True,validators=[only_letters])
-    correo_electronico_personal = models.EmailField("Correo Electrónico Personal", null=True)
+    # --- Address (structured) ---
+    street_type = models.CharField("Street type", max_length=20, null=True, choices=[
+        ('Anillo Vial', 'Ring road'), ('Autopista', 'Highway'),
+        ('Avenida', 'Avenue'), ('Avenida Calle', 'Avenue Street'),
+        ('Avenida Carrera', 'Avenue Road'), ('Calle', 'Street'),
+        ('Callejón', 'Alley'), ('Carrera', 'Road'),
+        ('Circular', 'Circle'), ('Diagonal', 'Diagonal'),
+        ('Transversal', 'Cross street')
+    ])
+    principal_number = models.CharField("Main number", max_length=10, null=True, validators=[only_numbers])
+    principal_letter = models.CharField("Main letter", max_length=2, null=True, blank=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    bis = models.BooleanField("Bis?", default=False)
+    bis_letter = models.CharField("Bis letter", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    quadrant = models.CharField("Quadrant", max_length=10, choices=[
+        ('ESTE', 'EAST'), ('OESTE', 'WEST'), ('NORTE', 'NORTH'), ('SUR', 'SOUTH')
+    ], blank=True, null=True)
+    secondary_number = models.CharField("Secondary number", max_length=10, null=True, validators=[only_numbers])
+    secondary_letter = models.CharField("Secondary letter", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    quadrant_2 = models.CharField("Second quadrant", max_length=10, choices=[
+        ('ESTE', 'EAST'), ('OESTE', 'WEST'), ('NORTE', 'NORTH'), ('SUR', 'SOUTH')
+    ], blank=True, null=True)
+    nmbr = models.CharField("Final number", max_length=30, blank=True, null=True, validators=[only_numbers])
+    complement = models.CharField("Address complement / special location", max_length=30, blank=True, null=True, validators=[simple_text])
+    neighborhood = models.CharField("Neighborhood", max_length=50, null=True, validators=[alphanumeric])
 
-    # Dirección generada automáticamente
-    direccion_formateada = models.CharField(max_length=500, blank=True, null=True,validators=[simple_text])
+    # --- Contact ---
+    phone_number = models.IntegerField("Mobile phone number", unique=True, null=True, validators=[MinValueValidator(1_000), MaxValueValidator(99_999_999_999)])
+    landline_phone = models.IntegerField("Landline phone number", blank=True, null=True, validators=[MinValueValidator(1_000), MaxValueValidator(99_999_999_999)])
+    city = models.CharField("City of birth", max_length=30, null=True, validators=[only_letters])
+    department = models.CharField("Department of birth", max_length=30, null=True, validators=[only_letters])
+    personal_email = models.EmailField("Personal email address", null=True)
+
+    # Automatically generated address
+    formated_address = models.CharField("Formatted address", max_length=500, blank=True, null=True, validators=[simple_text])
 
     class Meta:
         verbose_name = "PersonalData"
@@ -113,324 +100,319 @@ class PersonalData(models.Model):
     @property
     def nombres(self):
         """
-        Devuelve el nombre completo concatenado, omitiendo espacios innecesarios.
+        Returns the concatenated first and second names, avoiding extra spaces.
         """
         return f"{self.first_name} {self.second_name}".strip()
 
     @property
     def apellidos(self):
         """
-        Devuelve los apellidos concatenados, omitiendo espacios innecesarios.
+        Returns the concatenated last names, avoiding extra spaces.
         """
         return f"{self.lastname} {self.second_lastname}".strip()
 
     @property
     def direccion_completa(self):
         """
-        Construye y devuelve la dirección del recluta de manera estructurada y legible.
+        Builds and returns the recruit's complete address in a structured format.
         """
-        partes = [
-            self.tipo_via,
-            self.numero_principal,
-            self.letra_principal,
+        parts = [
+            self.street_type,
+            self.principal_number,
+            self.principal_letter,
             "BIS" if self.bis else "",
-            self.letra_bis,
-            self.cuadrante,
+            self.bis_letter,
+            self.quadrant,
         ]
-        if self.numero_secundario:
-            partes.extend(["#", self.numero_secundario, self.letra_secundaria, self.cuadrante_dos])
-        partes.append(self.nro)
-        direccion = " ".join(filter(None, partes))
-        if self.complemento:
-            direccion += f", {self.complemento}"
-        return direccion.strip()
+        if self.secondary_number:
+            parts.extend(["#", self.secondary_number, self.secondary_letter, self.quadrant_2])
+        parts.append(self.nmbr)
+        address = " ".join(filter(None, parts))
+        if self.complement:
+            address += f", {self.complement}"
+        return address.strip()
 
     def save(self, *args, **kwargs):
         """
-        Al guardar el modelo, genera automáticamente la dirección formateada
-        usando los campos de dirección desglosada.
+        Automatically generates and saves the formatted address upon saving the object.
         """
-        self.direccion_formateada = self.direccion_completa
+        self.formated_address = self.direccion_completa
         super().save(*args, **kwargs)
 
     def __str__(self):
         """
-        Devuelve una representación legible del objeto (nombre completo).
+        Returns a readable representation of the object (full name).
         """
         return f"{self.nombres} {self.apellidos}"
 
 
 
-class DatosFamiliares(models.Model):
-
+class FamilyData(models.Model):
     """
-    Modelo que almacena información familiar detallada del recluta.
+    Model that stores detailed family information of the recruit.
 
-    Contiene los datos del cónyuge, padre y madre, incluyendo nombres, identificación,
-    teléfonos, profesión y dirección. Las direcciones siguen el mismo desglose estructurado
-    usado en el modelo principal de Recluta.
+    Includes spouse, father, and mother data such as names, IDs, phones,
+    professions, and addresses. The address fields follow the same structure
+    used in the main PersonalData model.
 
-    Se relaciona 1:1 con un único objeto Recluta.
+    Has a 1:1 relationship with a single PersonalData object.
 
     Attributes:
-        recluta (OneToOneField): Relación directa con el modelo Recluta.
-        nombre_conyugue (CharField): Nombre completo del cónyuge.
-        cedula_conyugue (CharField): Cédula del cónyuge.
-        ... (continúan atributos similares para padre y madre)
+        PersonalData (OneToOneField): Direct relationship with the PersonalData model.
+        spouse_name (CharField): Full name of the spouse.
+        spouse_id (CharField): Spouse's ID.
+        ... (similar attributes for father and mother)
     """
 
-    # Relación directa con Recluta (uno a uno)
+    # One-to-one relationship with PersonalData
     PersonalData = models.OneToOneField(PersonalData, on_delete=models.CASCADE, null=True)
 
-    # --- Datos del cónyuge ---
-    nombre_conyugue = models.CharField("Nombre del Cónyugue", max_length=50, blank=True,validators=[only_letters])
-    cedula_conyugue = models.IntegerField("Cédula del Cónyugue", validators=[MinValueValidator(1_000), MaxValueValidator(999_999_999_999)], blank=True, null=True)
-    profesion_oficio_conyugue = models.CharField("Profesión del Cónyugue", max_length=50, blank=True, null=True,validators=[only_letters])
-    celular_conyugue = models.IntegerField("Celular del Cónyugue", max_length=15, blank=True,validators=[MinValueValidator(1_000), MaxValueValidator(999_999_999_999)])
-    tipo_via_conyugue = models.CharField("Tipo de vía", max_length=20, null=True, blank=True, choices=[
-        ('Anillo Vial', 'Anillo Vial'), ('Autopista', 'Autopista'), ('Avenida', 'Avenida'),
-        ('Avenida Calle', 'Avenida Calle'), ('Avenida Carrera', 'Avenida Carrera'), ('Calle', 'Calle'),
-        ('Callejón', 'Callejón'), ('Carrera', 'Carrera'), ('Circular', 'Circular'),
-        ('Diagonal', 'Diagonal'), ('Transversal', 'Transversal'),
+    # --- Spouse data ---
+    spouse_name = models.CharField("Spouse's Name", max_length=50, blank=True, validators=[only_letters])
+    spouse_id = models.IntegerField("Spouse's ID", validators=[MinValueValidator(1_000), MaxValueValidator(999_999_999_999)], blank=True, null=True)
+    spouse_profession = models.CharField("Spouse's Profession", max_length=50, blank=True, null=True, validators=[only_letters])
+    spouse_phone = models.IntegerField("Spouse's Mobile", max_length=15, blank=True, validators=[MinValueValidator(1_000), MaxValueValidator(999_999_999_999)])
+    spouse_street_type = models.CharField("Street Type", max_length=20, null=True, blank=True, choices=[
+    ('Ring Road', 'Ring Road'), ('Highway', 'Highway'), ('Avenue', 'Avenue'),
+    ('Avenue Street', 'Avenue Street'), ('Avenue Road', 'Avenue Road'), ('Street', 'Street'),
+    ('Alley', 'Alley'), ('Road', 'Road'), ('Circle', 'Circle'),
+    ('Diagonal', 'Diagonal'), ('Cross Street', 'Cross Street'),
     ])
-    numero_principal_conyugue = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_principal_conyugue = models.CharField("Letra", max_length=2, null=True, blank=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    bis_conyugue = models.BooleanField("¿Bis?", default=False)
-    letra_bis_conyugue = models.CharField("Letra Bis", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_conyugue = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
+    spouse_principal_number = models.CharField("Main Number", max_length=10, null=True, blank=True, validators=[only_numbers])
+    spouse_principal_letter = models.CharField("Main Letter", max_length=2, null=True, blank=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    spouse_bis = models.BooleanField("Bis?", default=False)
+    spouse_bis_letter = models.CharField("Bis Letter", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    spouse_quadrant = models.CharField("Quadrant", max_length=10, blank=True, null=True, choices=[
+       ('EAST', 'EAST'), ('WEST', 'WEST'), ('NORTH', 'NORTH'), ('SOUTH', 'SOUTH')
     ])
-    numero_secundario_conyugue = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_secundaria_conyugue = models.CharField("Letra", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_dos_conyugue = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
+    spouse_second_number = models.CharField("Secondary Number", max_length=10, null=True, blank=True, validators=[only_numbers])
+    spouse_second_letter = models.CharField("Secondary Letter", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    spouse_second_quadrant = models.CharField("Secondary Quadrant", max_length=10, blank=True, null=True, choices=[
+        ('EAST', 'EAST'), ('WEST', 'WEST'), ('NORTH', 'NORTH'), ('SOUTH', 'SOUTH')
     ])
-    nro_conyugue = models.CharField("Número Final", max_length=30, blank=True, null=True,validators=[only_numbers])
-    complemento_conyugue = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True,validators=[simple_text])
-    direccion_formateada_conyugue = models.CharField(max_length=500, blank=True, null=True,validators=[simple_text])
+    spouse_nmbr = models.CharField("Final Number", max_length=30, blank=True, null=True, validators=[only_numbers])
+    spouse_complement = models.CharField("Complement/Special Address", max_length=30, blank=True, null=True, validators=[simple_text])
+    spouse_built_address = models.CharField("Formatted Address", max_length=500, blank=True, null=True, validators=[simple_text])
 
-    # --- Datos del padre ---
-    nombre_padre = models.CharField("Nombre del padre", max_length=55, null=True,validators=[only_letters])
-    vive_padre = models.CharField("¿Vive?", null=True, choices=[("Sí", "Sí"), ("No", "No")])
-    identificación_padre = models.IntegerField("CC No", null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
-    telefono_padre = models.IntegerField("Teléfono del Padre", blank=True, null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
-    oficio_profesion_padre = models.CharField("Profesión u Oficio", blank=True, null=True, max_length=50,validators=[only_letters])
+    # --- Father data ---
+    father_name = models.CharField("Father's Name", max_length=55, null=True, validators=[only_letters])
+    father_lives = models.CharField("Is Alive?", null=True, choices=[("Sí", "Yes"), ("No", "No")])
+    father_id = models.IntegerField("ID No.", null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
+    father_phone = models.IntegerField("Father's Phone", blank=True, null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
+    father_profession = models.CharField("Father's Profession", blank=True, null=True, max_length=50, validators=[only_letters])
 
-    tipo_via_padre = models.CharField("Tipo de vía", max_length=20, null=True, blank=True, choices=[
-        ('Anillo Vial', 'Anillo Vial'), ('Autopista', 'Autopista'), ('Avenida', 'Avenida'),
-        ('Avenida Calle', 'Avenida Calle'), ('Avenida Carrera', 'Avenida Carrera'), ('Calle', 'Calle'),
-        ('Callejón', 'Callejón'), ('Carrera', 'Carrera'), ('Circular', 'Circular'),
-        ('Diagonal', 'Diagonal'), ('Transversal', 'Transversal'),
+    father_street_type = models.CharField("Street Type", max_length=20, null=True, blank=True, choices=[
+    ('Ring Road', 'Ring Road'), ('Highway', 'Highway'), ('Avenue', 'Avenue'),
+    ('Avenue Street', 'Avenue Street'), ('Avenue Road', 'Avenue Road'), ('Street', 'Street'),
+    ('Alley', 'Alley'), ('Road', 'Road'), ('Circle', 'Circle'),
+    ('Diagonal', 'Diagonal'), ('Cross Street', 'Cross Street'),
     ])
-    numero_principal_padre = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_principal_padre = models.CharField("Letra", max_length=2, null=True, blank=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    bis_padre = models.BooleanField("¿Bis?", default=False)
-    letra_bis_padre = models.CharField("Letra Bis", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_padre = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
+    father_principal_number = models.CharField("Main Number", max_length=10, null=True, blank=True, validators=[only_numbers])
+    father_principal_letter = models.CharField("Main Letter", max_length=2, null=True, blank=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    father_bis = models.BooleanField("Bis?", default=False)
+    father_bis_letter = models.CharField("Bis Letter", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    father_quadrant = models.CharField("Quadrant", max_length=10, blank=True, null=True, choices=[
+       ('EAST', 'EAST'), ('WEST', 'WEST'), ('NORTH', 'NORTH'), ('SOUTH', 'SOUTH')
     ])
-    numero_secundario_padre = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_secundaria_padre = models.CharField("Letra", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_dos_padre = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
+    father_second_number = models.CharField("Secondary Number", max_length=10, null=True, blank=True, validators=[only_numbers])
+    father_second_letter = models.CharField("Secondary Letter", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    father_second_quadrant = models.CharField("Secondary Quadrant", max_length=10, blank=True, null=True, choices=[
+       ('EAST', 'EAST'), ('WEST', 'WEST'), ('NORTH', 'NORTH'), ('SOUTH', 'SOUTH')
     ])
-    nro_padre = models.CharField("Número Final", max_length=30, blank=True, null=True,validators=[only_numbers])
-    complemento_padre = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True,validators=[simple_text])
-    direccion_formateada_padre = models.CharField(max_length=500, blank=True, null=True,validators=[simple_text])
+    father_nmbr = models.CharField("Final Number", max_length=30, blank=True, null=True, validators=[only_numbers])
+    father_complement = models.CharField("Complement/Special Address", max_length=30, blank=True, null=True, validators=[simple_text])
+    father_built_address = models.CharField("Formatted Address", max_length=500, blank=True, null=True, validators=[simple_text])
 
-    # --- Datos de la madre ---
-    nombre_madre = models.CharField("Nombre del madre", max_length=55, null=True,validators=[only_letters])
-    vive_madre = models.CharField("¿Vive?", null=True, choices=[("Sí", "Sí"), ("No", "No")])
-    identificación_madre = models.IntegerField("CC No", null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
-    telefono_madre = models.IntegerField("Teléfono de la Madre", blank=True, null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
-    oficio_profesion_madre = models.CharField("Profesión u Oficio de la Madre", blank=True, null=True, max_length=50,validators=[only_letters])
+    # --- Mother data ---
+    mother_name = models.CharField("Mother's Name", max_length=55, null=True, validators=[only_letters])
+    mother_lives = models.CharField("Is Alive?", null=True, choices=[("Sí", "Yes"), ("No", "No")])
+    mother_id = models.IntegerField("ID No.", null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
+    mother_phone = models.IntegerField("Mother's Phone", blank=True, null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
+    mother_profession = models.CharField("Mother's Profession", blank=True, null=True, max_length=50, validators=[only_letters])
 
-    tipo_via_madre = models.CharField("Tipo de vía", max_length=20, null=True, blank=True, choices=[
-        ('Anillo Vial', 'Anillo Vial'), ('Autopista', 'Autopista'), ('Avenida', 'Avenida'),
-        ('Avenida Calle', 'Avenida Calle'), ('Avenida Carrera', 'Avenida Carrera'), ('Calle', 'Calle'),
-        ('Callejón', 'Callejón'), ('Carrera', 'Carrera'), ('Circular', 'Circular'),
-        ('Diagonal', 'Diagonal'), ('Transversal', 'Transversal'),
+    mother_street_type = models.CharField("Street Type", max_length=20, null=True, blank=True, choices=[
+    ('Ring Road', 'Ring Road'), ('Highway', 'Highway'), ('Avenue', 'Avenue'),
+    ('Avenue Street', 'Avenue Street'), ('Avenue Road', 'Avenue Road'), ('Street', 'Street'),
+    ('Alley', 'Alley'), ('Road', 'Road'), ('Circle', 'Circle'),
+    ('Diagonal', 'Diagonal'), ('Cross Street', 'Cross Street'),
     ])
-    numero_principal_madre = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_principal_madre = models.CharField("Letra", max_length=2, null=True, blank=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    bis_madre = models.BooleanField("¿Bis?", default=False)
-    letra_bis_madre = models.CharField("Letra Bis", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_madre = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
+    mother_principal_number = models.CharField("Main Number", max_length=10, null=True, blank=True, validators=[only_numbers])
+    mother_principal_letter = models.CharField("Main Letter", max_length=2, null=True, blank=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    mother_bis = models.BooleanField("Bis?", default=False)
+    mother_bis_letter = models.CharField("Bis Letter", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    mother_quadrant = models.CharField("Quadrant", max_length=10, blank=True, null=True, choices=[
+         ('EAST', 'EAST'), ('WEST', 'WEST'), ('NORTH', 'NORTH'), ('SOUTH', 'SOUTH')
     ])
-    numero_secundario_madre = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_secundaria_madre = models.CharField("Letra", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_dos_madre = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
+    mother_second_number = models.CharField("Secondary Number", max_length=10, null=True, blank=True, validators=[only_numbers])
+    mother_second_letter = models.CharField("Secondary Letter", max_length=2, blank=True, null=True, choices=[(chr(c), chr(c)) for c in range(65, 91)])
+    mother_second_quadrant = models.CharField("Secondary Quadrant", max_length=10, blank=True, null=True, choices=[
+         ('EAST', 'EAST'), ('WEST', 'WEST'), ('NORTH', 'NORTH'), ('SOUTH', 'SOUTH')
     ])
-    nro_madre = models.CharField("Número Final", max_length=30, blank=True, null=True,validators=[only_numbers])
-    complemento_madre = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True,validators=[simple_text])
-    direccion_formateada_madre = models.CharField(max_length=500, blank=True, null=True,validators=[simple_text])
+    mother_nmbr = models.CharField("Final Number", max_length=30, blank=True, null=True, validators=[only_numbers])
+    mother_complement = models.CharField("Complement/Special Address", max_length=30, blank=True, null=True, validators=[simple_text])
+    mother_built_address = models.CharField("Formatted Address", max_length=500, blank=True, null=True, validators=[simple_text])
 
     class Meta:
-        verbose_name = "Dato Familiar"
-        verbose_name_plural = "Datos Familiares"
+        verbose_name = "Family Data"
+        verbose_name_plural = "Family Data"
 
     def __str__(self):
         """
-        Retorna una representación legible del objeto.
+        Returns a readable representation of the object.
 
         Returns:
-            str: Texto identificador con el ID del objeto.
+            str: Identifier text with the object ID.
         """
-        return f"Datos Familiares {self.id}"
+        return f"Family Data {self.id}"
 
     @property
-    def direccion_completa_conyugue(self):
+    def spouse_full_address(self):
         """
-        Construye la dirección completa del cónyuge a partir de los campos desglosados.
+        Builds the complete address of the spouse from the structured fields.
 
         Returns:
-            str: Dirección formateada del cónyuge.
+            str: Formatted address of the spouse.
         """
-        partes = [
-            self.tipo_via_conyugue,
-            self.numero_principal_conyugue,
-            self.letra_principal_conyugue,
-            "BIS" if self.bis_conyugue else "",
-            self.letra_bis_conyugue,
-            self.cuadrante_conyugue,
+        parts = [
+            self.spouse_street_type,
+            self.spouse_principal_number,
+            self.spouse_principal_letter,
+            "BIS" if self.spouse_bis else "",
+            self.spouse_bis_letter,
+            self.spouse_quadrant,
         ]
-        if self.numero_secundario_conyugue:
-            partes.extend([
-                "#", self.numero_secundario_conyugue,
-                self.letra_secundaria_conyugue, self.cuadrante_dos_conyugue
+        if self.spouse_second_number:
+            parts.extend([
+                "#", self.spouse_second_number,
+                self.spouse_second_letter, self.spouse_second_quadrant
             ])
-        partes.append(self.nro_conyugue)
-        direccion = " ".join(filter(None, partes))
-        if self.complemento_conyugue:
-            direccion += f", {self.complemento_conyugue}"
-        return direccion.strip()
+        parts.append(self.spouse_nmbr)
+        address = " ".join(filter(None, parts))
+        if self.spouse_complement:
+            address += f", {self.spouse_complement}"
+        return address.strip()
 
     def save(self, *args, **kwargs):
         """
-        Al guardar el objeto, genera y guarda la dirección formateada del cónyuge.
+        When saving the object, generates and saves the formatted spouse address.
         """
-        self.direccion_formateada_conyugue = self.direccion_completa_conyugue
+        self.spouse_built_address = self.spouse_full_address
         super().save(*args, **kwargs)
 
 
-class Hijo(models.Model):
+class Child(models.Model):
     """
-    Modelo que representa un hijo o hija del recluta, vinculado a través de los datos familiares.
+    Model representing a child of the applicant, linked through FamilyData.
 
-    Cada hijo está relacionado con una instancia de `DatosFamiliares` y contiene
-    su nombre, edad y número de identificación.
+    Each child is associated with a FamilyData instance and includes their
+    name, age, and identification number.
 
     Attributes:
-        datos_familiares (ForeignKey): Relación muchos a uno con `DatosFamiliares`.
-        nombre (CharField): Nombre del hijo.
-        edad (IntegerField): Edad del hijo, validada para estar entre 0 y 200 años.
-        identificacion (CharField): Número de identificación del hijo.
+        FamilyData (ForeignKey): Many-to-one relationship with `FamilyData`.
+        name (CharField): Child's full name.
+        age (IntegerField): Child's age, validated to be between 0 and 200 years.
+        id (IntegerField): Child's ID number.
     """
 
-    datos_familiares = models.ForeignKey(
-        'DatosFamiliares',
+    FamilyData = models.ForeignKey(
+        'FamilyData',
         on_delete=models.CASCADE,
-        related_name="hijos"
+        related_name="children"
     )
 
-    nombre = models.CharField("Nombre del hijo", max_length=50,validators=[only_letters])
-    edad = models.IntegerField("Edad",validators=[MinValueValidator(0), MaxValueValidator(200)])
-    identificacion = models.IntegerField("Identificación",validators=[MinValueValidator(0), MaxValueValidator(99999_999_999)])
+    name = models.CharField("Child's name", max_length=50, validators=[only_letters])
+    age = models.IntegerField("Age", validators=[MinValueValidator(0), MaxValueValidator(200)])
+    child_id = models.IntegerField("Identification number", validators=[MinValueValidator(0), MaxValueValidator(99999_999_999)])
 
     def __str__(self):
         """
-        Retorna una representación legible del hijo, incluyendo nombre y edad.
+        Returns a readable representation of the child, including name and age.
 
         Returns:
-            str: Nombre y edad del hijo, formateado para visualización.
+            str: Formatted name and age for display.
         """
-        return f"{self.nombre} ({self.edad} años)"
-    
+        return f"{self.name} ({self.age} years old)"
 
-class Hermano(models.Model):
+
+class Sibling(models.Model):
     """
-    Modelo que representa a un hermano o hermana del recluta.
+    Model representing a sibling of the applicant.
 
-    Cada hermano está vinculado a un objeto `DatosFamiliares` y contiene
-    información personal, de contacto y dirección estructurada, similar
-    al modelo del recluta.
+    Each sibling is linked to a `FamilyData` instance and contains personal,
+    contact, and structured address data similar to the applicant.
 
     Attributes:
-        datos_familiares (ForeignKey): Relación con el modelo `DatosFamiliares`.
-        primer_apellido_hermano (CharField): Primer apellido del hermano.
-        segundo_apellido_hermano (CharField): Segundo apellido del hermano.
-        primer_nombre_hermano (CharField): Primer nombre del hermano.
-        segundo_nombre_hermano (CharField): Segundo nombre del hermano.
-        identificacion_hermano (IntegerField): Número de identificación.
-        ocupacion_hermano (CharField): Profesión u ocupación actual.
-        celular_hermano (IntegerField): Número de celular de contacto.
-        tipo_via_hermano, número_principal_hermano, etc.: Dirección desglosada del hermano.
-        direccion_formateada_hermano (CharField): Dirección completa construida a partir de los campos anteriores.
+        FamilyData (ForeignKey): Link to `FamilyData` model.
+        sibling_lastname (CharField): Sibling's last name.
+        sibling_second_lastname (CharField): Sibling's second last name.
+        sibling_first_name (CharField): Sibling's first name.
+        sibling_second_name (CharField): Sibling's middle name.
+        sibling_id (IntegerField): Identification number.
+        sibling_occupation (CharField): Current profession or occupation.
+        sibling_phone (IntegerField): Contact phone number.
+        ...structured address fields...
     """
 
-    datos_familiares = models.ForeignKey(
-        'DatosFamiliares',
+    FamilyData = models.ForeignKey(
+        'FamilyData',
         on_delete=models.CASCADE,
-        related_name="hermanos"
+        related_name="siblings"
     )
 
-    # Datos personales y contacto
-    primer_apellido_hermano = models.CharField("Primer Apellido", blank=True, null=True, max_length=30,validators=[only_letters])
-    segundo_apellido_hermano = models.CharField("Segundo Apellido", blank=True, null=True, max_length=30,validators=[only_letters])
-    primer_nombre_hermano = models.CharField("Primer Nombre", blank=True, null=True, max_length=30,validators=[only_letters])
-    segundo_nombre_hermano = models.CharField("Segundo Nombre", blank=True, null=True, max_length=30,validators=[only_letters])
-    identificacion_hermano = models.IntegerField(
-        "Identificación Hermano 1",
+    # Personal and contact information
+    sibling_lastname = models.CharField("Last name", blank=True, null=True, max_length=30, validators=[only_letters])
+    sibling_second_lastname = models.CharField("Second last name", blank=True, null=True, max_length=30, validators=[only_letters])
+    sibling_first_name = models.CharField("First name", blank=True, null=True, max_length=30, validators=[only_letters])
+    sibling_second_name = models.CharField("Middle name", blank=True, null=True, max_length=30, validators=[only_letters])
+    sibling_id = models.IntegerField(
+        "ID number",
         blank=True, null=True,
         validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)]
     )
-    ocupacion_hermano = models.CharField("Ocupación Hermano 1", blank=True, null=True, max_length=60,validators=[only_letters])
-    celular_hermano = models.IntegerField(
-        "Celular Hermano 1",
+    sibling_occupation = models.CharField("Occupation", blank=True, null=True, max_length=60, validators=[only_letters])
+    sibling_phone = models.IntegerField(
+        "Phone number",
         blank=True, null=True,
         validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)]
     )
 
-    # Dirección desglosada
-    tipo_via_hermano = models.CharField("Tipo de vía", max_length=20, null=True, blank=True, choices=[
-        ('Anillo Vial', 'Anillo Vial'), ('Autopista', 'Autopista'), ('Avenida', 'Avenida'),
-        ('Avenida Calle', 'Avenida Calle'), ('Avenida Carrera', 'Avenida Carrera'), ('Calle', 'Calle'),
-        ('Callejón', 'Callejón'), ('Carrera', 'Carrera'), ('Circular', 'Circular'),
-        ('Diagonal', 'Diagonal'), ('Transversal', 'Transversal')
+    # Structured address
+    sibling_street_type = models.CharField("Street type", max_length=20, null=True, blank=True, choices=[
+        ('Anillo Vial', 'Ring road'), ('Autopista', 'Highway'), ('Avenida', 'Avenue'),
+        ('Avenida Calle', 'Avenue Street'), ('Avenida Carrera', 'Avenue Avenue'), ('Calle', 'Street'),
+        ('Callejón', 'Alley'), ('Carrera', 'Avenue'), ('Circular', 'Circle'),
+        ('Diagonal', 'Diagonal'), ('Transversal', 'Cross street')
     ])
-    numero_principal_hermano = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_principal_hermano = models.CharField("Letra", max_length=2, null=True, blank=True, choices=[
+    sibling_principal_number = models.CharField("Main number", max_length=10, null=True, blank=True, validators=[only_numbers])
+    sibling_principal_letter = models.CharField("Main letter", max_length=2, null=True, blank=True, choices=[
         (chr(c), chr(c)) for c in range(65, 91)
     ])
-    bis_hermano = models.BooleanField("¿Bis?", default=False)
-    letra_bis_hermano = models.CharField("Letra Bis", max_length=2, blank=True, null=True, choices=[
+    sibling_bis = models.BooleanField("Bis?", default=False)
+    sibling_bis_letter = models.CharField("Bis letter", max_length=2, blank=True, null=True, choices=[
         (chr(c), chr(c)) for c in range(65, 91)
     ])
-    cuadrante_hermano = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
+    sibling_quadrant = models.CharField("Quadrant", max_length=10, blank=True, null=True, choices=[
+        ('ESTE', 'EAST'), ('OESTE', 'WEST'), ('NORTE', 'NORTH'), ('SUR', 'SOUTH')
     ])
-    numero_secundario_hermano = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_secundaria_hermano = models.CharField("Letra", max_length=2, blank=True, null=True, choices=[
+    sibling_second_number = models.CharField("Secondary number", max_length=10, null=True, blank=True, validators=[only_numbers])
+    sibling_second_letter = models.CharField("Secondary letter", max_length=2, blank=True, null=True, choices=[
         (chr(c), chr(c)) for c in range(65, 91)
     ])
-    cuadrante_dos_hermano = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
+    sibling_second_quadrant = models.CharField("Second quadrant", max_length=10, blank=True, null=True, choices=[
+        ('ESTE', 'EAST'), ('OESTE', 'WEST'), ('NORTE', 'NORTH'), ('SUR', 'SOUTH')
     ])
-    nro_hermano = models.CharField("Número Final", max_length=30, blank=True, null=True,validators=[only_numbers])
-    complemento_hermano = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True,validators=[simple_text])
-    direccion_formateada_hermano = models.CharField(max_length=500, blank=True, null=True,validators=[simple_text])
+    sibling_nmbr = models.CharField("Final number", max_length=30, blank=True, null=True, validators=[only_numbers])
+    sibling_complement = models.CharField("Address complement / special location", max_length=30, blank=True, null=True, validators=[simple_text])
+    sibling_built_address = models.CharField("Formatted address", max_length=500, blank=True, null=True, validators=[simple_text])
 
     def __str__(self):
         """
-        Retorna una representación legible del hermano para el admin o consola.
+        Returns a readable string representation of the sibling for admin or shell.
 
         Returns:
-            str: Nombre y cédula del hermano en formato compacto.
+            str: Sibling's name and ID in compact format.
         """
-        return f"{self.primer_nombre_hermano or ''} {self.primer_apellido_hermano or ''} - {self.identificacion_hermano or ''}".strip()
-
+        return f"{self.sibling_first_name or ''} {self.sibling_lastname or ''} - {self.sibling_id or ''}".strip()
 
 class InformacionAcademica(models.Model):
     """
@@ -506,149 +488,6 @@ class InformacionAcademica(models.Model):
             str: Texto identificador con el ID de la información académica.
         """
         return f"Información académica {self.id}"
-
-
-class ReferenciasPersonales(models.Model):
-    """
-    Modelo que almacena hasta tres referencias personales del recluta.
-
-    Para cada referencia, se recopila su nombre completo, ocupación, empresa,
-    tiempo de conocimiento, ciudad, teléfono y dirección estructurada. Cada
-    instancia de este modelo está relacionada con un objeto `Recluta`.
-
-    Attributes:
-        recluta (ForeignKey): Relación con el modelo `Recluta`.
-        nombre_referencia_X (CharField): Nombres y apellidos de la referencia.
-        ocupacion_referencia_X (CharField): Ocupación o cargo.
-        empresa_referencia_X (CharField): Empresa donde trabaja o ha trabajado.
-        tiempo_referencia_X (IntegerField): Años de conocimiento.
-        ciudad_referencia_X (CharField): Ciudad de residencia.
-        telefono_referencia_X (IntegerField): Teléfono de contacto.
-        tipo_via_referencia_X ... complemento_referencia_X: Componentes de la dirección.
-        direccion_formateada_referencia_X (CharField): Dirección completa como texto libre.
-    """
-
-    PersonalData = models.ForeignKey(
-        'PersonalData',
-        on_delete=models.CASCADE,
-        related_name='referencias_personales',
-        null=True
-    )
-
-    # --- Referencia 1 ---
-    nombre_referencia_1 = models.CharField("Nombres y apellidos", max_length=333, null=True,validators=[only_letters])
-    ocupacion_referencia_1 = models.CharField("Ocupación", max_length=333, null=True,validators=[only_letters])
-    empresa_referencia_1 = models.CharField("Empresa", max_length=333, null=True, blank=True,validators=[simple_text])
-    tiempo_referencia_1 = models.IntegerField("Tiempo de Conocido (Años)", null=True,
-                                              validators=[MinValueValidator(0), MaxValueValidator(333)])
-    ciudad_referencia_1 = models.CharField("Ciudad", max_length=333, null=True,validators=[simple_text])
-    telefono_referencia_1 = models.IntegerField("Teléfono", null=True,
-                                                validators=[MinValueValidator(100000), MaxValueValidator(999_999_999_999)])
-    tipo_via_referencia_1 = models.CharField("Tipo de vía", max_length=20, null=True, blank=True, choices=[
-        ('Anillo Vial', 'Anillo Vial'), ('Autopista', 'Autopista'), ('Avenida', 'Avenida'),
-        ('Avenida Calle', 'Avenida Calle'), ('Avenida Carrera', 'Avenida Carrera'), ('Calle', 'Calle'),
-        ('Callejón', 'Callejón'), ('Carrera', 'Carrera'), ('Circular', 'Circular'),
-        ('Diagonal', 'Diagonal'), ('Transversal', 'Transversal'),
-    ])
-    numero_principal_referencia_1 = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_principal_referencia_1 = models.CharField("Letra", max_length=2, null=True, blank=True,
-                                                    choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    bis_referencia_1 = models.BooleanField("¿Bis?", default=False)
-    letra_bis_referencia_1 = models.CharField("Letra Bis", max_length=2, blank=True, null=True,
-                                              choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_referencia_1 = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
-    ])
-    numero_secundario_referencia_1 = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_secundaria_referencia_1 = models.CharField("Letra", max_length=2, blank=True, null=True,
-                                                     choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_dos_referencia_1 = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
-    ])
-    nro_referencia_1 = models.CharField("Número Final", max_length=30, blank=True, null=True,validators=[only_numbers])
-    complemento_referencia_1 = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True,validators=[simple_text])
-    direccion_formateada_referencia_1 = models.CharField(max_length=500, blank=True, null=True,validators=[simple_text])
-
-    # --- Referencia 2 ---
-    nombre_referencia_2 = models.CharField("Nombres y apellidos", max_length=333, null=True,validators=[only_letters])
-    ocupacion_referencia_2 = models.CharField("Ocupación", max_length=333, null=True,validators=[only_letters])
-    empresa_referencia_2 = models.CharField("Empresa", max_length=333, null=True, blank=True,validators=[simple_text])
-    tiempo_referencia_2 = models.IntegerField("Tiempo de Conocido (Años)", null=True,
-                                              validators=[MinValueValidator(0), MaxValueValidator(333)])
-    ciudad_referencia_2 = models.CharField("Ciudad", max_length=333, null=True,validators=[simple_text])
-    telefono_referencia_2 = models.IntegerField("Teléfono", null=True,
-                                                validators=[MinValueValidator(100000), MaxValueValidator(999_999_999_999)])
-    tipo_via_referencia_2 = models.CharField("Tipo de vía", max_length=20, null=True, blank=True, choices=[
-        ('Anillo Vial', 'Anillo Vial'), ('Autopista', 'Autopista'), ('Avenida', 'Avenida'),
-        ('Avenida Calle', 'Avenida Calle'), ('Avenida Carrera', 'Avenida Carrera'), ('Calle', 'Calle'),
-        ('Callejón', 'Callejón'), ('Carrera', 'Carrera'), ('Circular', 'Circular'),
-        ('Diagonal', 'Diagonal'), ('Transversal', 'Transversal'),
-    ])
-    numero_principal_referencia_2 = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_principal_referencia_2 = models.CharField("Letra", max_length=2, null=True, blank=True,
-                                                    choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    bis_referencia_2 = models.BooleanField("¿Bis?", default=False)
-    letra_bis_referencia_2 = models.CharField("Letra Bis", max_length=2, blank=True, null=True,
-                                              choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_referencia_2 = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
-    ])
-    numero_secundario_referencia_2 = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_secundaria_referencia_2 = models.CharField("Letra", max_length=2, blank=True, null=True,
-                                                     choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_dos_referencia_2 = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
-    ])
-    nro_referencia_2 = models.CharField("Número Final", max_length=30, blank=True, null=True,validators=[only_numbers])
-    complemento_referencia_2 = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True,validators=[simple_text])
-    direccion_formateada_referencia_2 = models.CharField(max_length=500, blank=True, null=True,validators=[simple_text])
-
-    # --- Referencia 3 ---
-    nombre_referencia_3 = models.CharField("Nombres y apellidos", max_length=333, null=True,validators=[only_letters])
-    ocupacion_referencia_3 = models.CharField("Ocupación", max_length=333, null=True,validators=[only_letters])
-    empresa_referencia_3 = models.CharField("Empresa", max_length=333, null=True, blank=True,validators=[simple_text])
-    tiempo_referencia_3 = models.IntegerField("Tiempo de Conocido (Años)", null=True,
-                                              validators=[MinValueValidator(0), MaxValueValidator(333)])
-    ciudad_referencia_3 = models.CharField("Ciudad", max_length=333, null=True,validators=[simple_text])
-    telefono_referencia_3 = models.IntegerField("Teléfono", null=True,
-                                                validators=[MinValueValidator(100000), MaxValueValidator(999_999_999_999)])
-    tipo_via_referencia_3 = models.CharField("Tipo de vía", max_length=20, null=True, blank=True, choices=[
-        ('Anillo Vial', 'Anillo Vial'), ('Autopista', 'Autopista'), ('Avenida', 'Avenida'),
-        ('Avenida Calle', 'Avenida Calle'), ('Avenida Carrera', 'Avenida Carrera'), ('Calle', 'Calle'),
-        ('Callejón', 'Callejón'), ('Carrera', 'Carrera'), ('Circular', 'Circular'),
-        ('Diagonal', 'Diagonal'), ('Transversal', 'Transversal'),
-    ])
-    numero_principal_referencia_3 = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_principal_referencia_3 = models.CharField("Letra", max_length=2, null=True, blank=True,
-                                                    choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    bis_referencia_3 = models.BooleanField("¿Bis?", default=False)
-    letra_bis_referencia_3 = models.CharField("Letra Bis", max_length=2, blank=True, null=True,
-                                              choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_referencia_3 = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
-    ])
-    numero_secundario_referencia_3 = models.CharField("Número", max_length=10, null=True, blank=True,validators=[only_numbers])
-    letra_secundaria_referencia_3 = models.CharField("Letra", max_length=2, blank=True, null=True,
-                                                     choices=[(chr(c), chr(c)) for c in range(65, 91)])
-    cuadrante_dos_referencia_3 = models.CharField("Cuadrante", max_length=10, blank=True, null=True, choices=[
-        ('ESTE', 'ESTE'), ('OESTE', 'OESTE'), ('NORTE', 'NORTE'), ('SUR', 'SUR')
-    ])
-    nro_referencia_3 = models.CharField("Número Final", max_length=30, blank=True, null=True,validators=[only_numbers])
-    complemento_referencia_3 = models.CharField("Complemento/Dirección especial", max_length=30, blank=True, null=True)
-    direccion_formateada_referencia_3 = models.CharField(max_length=500, blank=True, null=True,validators=[simple_text])
-
-    class Meta:
-        verbose_name = "Referencias Personales"
-        verbose_name_plural = "Referencias Personales"
-
-    def __str__(self):
-        """
-        Retorna una representación legible del objeto en el panel de administración o consola.
-
-        Returns:
-            str: Texto identificador que incluye el ID de la instancia.
-        """
-        return f"Referencias Personales {self.id}"
 
 
 
@@ -768,5 +607,5 @@ class DocumentoGenerado(models.Model):
     
 
     def __str__(self):
-        return f"{self.tipo} de {self.PersonalData}"
+        return f"{self.tipo} de {self.recluta}"
 

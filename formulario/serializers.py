@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (
-    PersonalData,  DatosFamiliares, Hijo, Hermano,
-    InformacionAcademica, ReferenciasPersonales, 
+    PersonalData,  FamilyData, Child, Sibling,
+    InformacionAcademica,
     BienesRentasAEP, SituacionJuridica, DocumentoGenerado
 )
 
@@ -17,11 +17,11 @@ automatiza el mapeo entre los campos del modelo y su representación serializada
 
 Serializadores definidos:
 
-- HijoSerializer / HermanoSerializer:
+- ChildSerializer / SiblingoSerializer:
     Serializan las relaciones familiares del PersonalData.
 
-- DatosFamiliaresSerializer:
-    Incluye hijos y hermanos como relaciones anidadas de solo lectura.
+- FamilyDataSerializer:
+    Incluye Child y Sibling como relaciones anidadas de solo lectura.
 
 
 
@@ -41,22 +41,22 @@ Serializadores definidos:
     los modelos relacionados. Útil para obtener un perfil completo del PersonalData en una sola petición.
 """
 
-class HijoSerializer(serializers.ModelSerializer):
+class ChildSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Hijo
+        model = Child
         fields = '__all__'
 
-class HermanoSerializer(serializers.ModelSerializer):
+class SiblingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Hermano
+        model = Sibling
         fields = '__all__'
 
-class DatosFamiliaresSerializer(serializers.ModelSerializer):
-    hijos = HijoSerializer(many=True, read_only=True)
-    hermanos = HermanoSerializer(many=True, read_only=True)
+class FamilyDataSerializer(serializers.ModelSerializer):
+    Child = ChildSerializer(many=True, read_only=True)
+    Sibling = SiblingSerializer(many=True, read_only=True)
 
     class Meta:
-        model = DatosFamiliares
+        model = FamilyData
         fields = '__all__'
 
 
@@ -64,11 +64,6 @@ class DatosFamiliaresSerializer(serializers.ModelSerializer):
 class InformacionAcademicaSerializer(serializers.ModelSerializer):
     class Meta:
         model = InformacionAcademica
-        fields = '__all__'
-
-class ReferenciasPersonalesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ReferenciasPersonales
         fields = '__all__'
 
 
@@ -91,9 +86,8 @@ class DocumentoGeneradoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PersonalDataSerializer(serializers.ModelSerializer):
-    datosfamiliares = DatosFamiliaresSerializer(read_only=True)
+    FamilyData = FamilyDataSerializer(read_only=True)
     informaciones_academicas = InformacionAcademicaSerializer(many=True, read_only=True)
-    referencias_personales = ReferenciasPersonalesSerializer(many=True, read_only=True)
     bienes_rentas = BienesRentasAEPSerializer(many=True, read_only=True)
     situaciones_juridicas = SituacionJuridicaSerializer(many=True, read_only=True)
     documentogenerado_set = DocumentoGeneradoSerializer(many=True, read_only=True)

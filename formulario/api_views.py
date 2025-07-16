@@ -1,8 +1,8 @@
 from rest_framework import viewsets
-from .models import (PersonalData,DatosFamiliares, Hijo,Hermano,InformacionAcademica,
-                     ReferenciasPersonales,BienesRentasAEP,SituacionJuridica)
-from .serializers import (PersonalDataSerializer,DatosFamiliaresSerializer,
-                          HijoSerializer,HermanoSerializer,InformacionAcademicaSerializer,ReferenciasPersonalesSerializer
+from .models import (PersonalData,FamilyData, Child,Sibling,InformacionAcademica,
+                    BienesRentasAEP,SituacionJuridica)
+from .serializers import (PersonalDataSerializer,FamilyDataSerializer,
+                          ChildSerializer,SiblingSerializer,InformacionAcademicaSerializer
                           ,BienesRentasAEPSerializer,SituacionJuridicaSerializer)
 from rest_framework.permissions import IsAuthenticated
 
@@ -15,22 +15,22 @@ class PersonalDataViewSet(viewsets.ModelViewSet):
 
 
 
-class DatosFamiliaresViewSet(viewsets.ModelViewSet):
+class FamilyDataViewSet(viewsets.ModelViewSet):
     """ API para los datos familiares del recluta. """
-    queryset = DatosFamiliares.objects.all()
-    serializer_class = DatosFamiliaresSerializer
+    queryset = FamilyData.objects.all()
+    serializer_class = FamilyDataSerializer
     permission_classes = [IsAuthenticated]
 
-class HijoViewSet(viewsets.ModelViewSet):
-    """ API para los hijos del recluta. """
-    queryset = Hijo.objects.all()
-    serializer_class = HijoSerializer
+class ChildViewSet(viewsets.ModelViewSet):
+    """ API para los Child del recluta. """
+    queryset = Child.objects.all()
+    serializer_class = ChildSerializer
     permission_classes = [IsAuthenticated]
     
-class HermanoViewSet(viewsets.ModelViewSet):
-    """ API para los hermanos del recluta. """
-    queryset = Hermano.objects.all()
-    serializer_class = HermanoSerializer
+class SiblingViewSet(viewsets.ModelViewSet):
+    """ API para los Sibling del recluta. """
+    queryset = Sibling.objects.all()
+    serializer_class = SiblingSerializer
     permission_classes = [IsAuthenticated]
     
 class InformacionAcademicaViewSet(viewsets.ModelViewSet):
@@ -39,11 +39,7 @@ class InformacionAcademicaViewSet(viewsets.ModelViewSet):
     serializer_class = InformacionAcademicaSerializer
     permission_classes = [IsAuthenticated]
 
-class ReferenciasPersonalesViewSet(viewsets.ModelViewSet):
-    """ API para las referencias personales del recluta. """
-    queryset = ReferenciasPersonales.objects.all()
-    serializer_class = ReferenciasPersonalesSerializer
-    permission_classes = [IsAuthenticated]
+
 
 
 
