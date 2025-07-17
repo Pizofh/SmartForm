@@ -1,4 +1,5 @@
 {% load crispy_forms_tags %}
+
 <!-- Sibling formset management -->
 {{ fs_Sibling.management_form }}
 
@@ -12,7 +13,7 @@
         {% crispy form %}
 
         <div class="direccion-preview_Sibling alert alert-info py-2 px-3 mb-0 fw-bold">
-          Formatted address here...
+          Formatted address preview...
         </div>
 
         {{ form.DELETE.as_hidden }}
@@ -30,12 +31,12 @@
 <div id="empty-form-Sibling" class="d-none">
   <div class="card mb-3 Sibling-form">
     <div class="card-body">
-      <h6 class="card-title mb-3">Sibling__NUM__</h6>
+      <h6 class="card-title mb-3">Sibling __NUM__</h6>
 
       {% crispy fs_Sibling.empty_form %}
 
       <div class="direccion-preview_Sibling alert alert-info py-2 px-3 mb-0 fw-bold">
-        Formatted address here...
+        Formatted address preview...
       </div>
 
       {{ fs_Sibling.empty_form.DELETE.as_hidden }}
@@ -48,7 +49,7 @@
   </div>
 </div>
 
-<!-- Single button to add -->
+<!-- Button to add a new sibling -->
 <button type="button" class="btn btn-sm btn-secondary" id="add-Sibling">
   + Add Sibling
 </button>

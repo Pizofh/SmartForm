@@ -2,8 +2,8 @@ from django.views.generic import TemplateView
 from django.shortcuts import redirect, render
 from django.db import transaction
 from .forms import (
-    FamilyDataForm, InformacionAcademicaForm,
-   BienesRentasAEPForm, SituacionJuridicaForm,
+    FamilyDataForm, AcademicInformationForm,
+   AssetsIncomeAEPForm, LegalSituationForm,
      ConfirmacionForm, ChildFormSet, SiblingFormSet,PersonalDataForm
 
      
@@ -21,9 +21,9 @@ class PersonalDataTabsView(TemplateView):
             "f_FamilyData": FamilyDataForm(prefix="FamilyData"),
             "fs_Child": ChildFormSet(queryset=Child.objects.none(), prefix="Child"),
             "fs_Sibling": SiblingFormSet(queryset=Sibling.objects.none(), prefix="Sibling"),
-            "f_informacion_academica": InformacionAcademicaForm(prefix="InformacionAcademica"),
-            "f_BienesRentasAEP": BienesRentasAEPForm(prefix="BienesRentasAEP"),
-            "f_SituacionJuridica": SituacionJuridicaForm(prefix="SituacionJuridica"),
+            "f_AcademicInformation": AcademicInformationForm(prefix="AcademicInformation"),
+            "f_AssetsIncomeAEP": AssetsIncomeAEPForm(prefix="AssetsIncomeAEP"),
+            "f_LegalSituation": LegalSituationForm(prefix="LegalSituation"),
             "f_confirm": ConfirmacionForm(prefix="confirm"),
         }
         return render(request, self.template_name, context)
@@ -34,9 +34,9 @@ class PersonalDataTabsView(TemplateView):
         f_FamilyData = FamilyDataForm(request.POST, prefix="FamilyData")
         fs_Child = ChildFormSet(request.POST or None, prefix="Child")
         fs_Sibling = SiblingFormSet(request.POST or None, prefix="Sibling")
-        f_informacion_academica = InformacionAcademicaForm(request.POST, prefix="InformacionAcademica")
-        f_BienesRentasAEP = BienesRentasAEPForm(request.POST, prefix="BienesRentasAEP")
-        f_SituacionJuridica = SituacionJuridicaForm(request.POST, prefix="SituacionJuridica")
+        f_AcademicInformation = AcademicInformationForm(request.POST, prefix="AcademicInformation")
+        f_AssetsIncomeAEP = AssetsIncomeAEPForm(request.POST, prefix="AssetsIncomeAEP")
+        f_LegalSituation = LegalSituationForm(request.POST, prefix="LegalSituation")
         f_confirm = ConfirmacionForm(request.POST, prefix="confirm")
 
         if all([
@@ -44,9 +44,9 @@ class PersonalDataTabsView(TemplateView):
             f_FamilyData.is_valid(),
             fs_Child.is_valid(),
             fs_Sibling.is_valid(),
-            f_informacion_academica.is_valid(),
-            f_BienesRentasAEP.is_valid(),
-            f_SituacionJuridica.is_valid(),
+            f_AcademicInformation.is_valid(),
+            f_AssetsIncomeAEP.is_valid(),
+            f_LegalSituation.is_valid(),
             f_confirm.is_valid(),
         ]):
             PersonalData = f_PersonalData.save()
@@ -63,16 +63,16 @@ class PersonalDataTabsView(TemplateView):
 
             for Sibling_form in fs_Sibling:
                 if Sibling_form.cleaned_data and not Sibling_form.cleaned_data.get("DELETE", False):
-                    direccion = Sibling_form.cleaned_data.get("direccion_formateada_Sibling")
+                    address = Sibling_form.cleaned_data.get("sibling_built_address")
                     Sibling = Sibling_form.save(commit=False)
-                    Sibling.direccion_formateada_Sibling = direccion
+                    Sibling.sibling_built_address = address
                     Sibling.FamilyData = FamilyData
                     Sibling.save()
 
             for form in [
-                f_informacion_academica,
-                f_BienesRentasAEP,
-                f_SituacionJuridica,
+                f_AcademicInformation,
+                f_AssetsIncomeAEP,
+                f_LegalSituation,
             ]:
                 obj = form.save(commit=False)
                 obj.PersonalData = PersonalData
@@ -87,9 +87,9 @@ class PersonalDataTabsView(TemplateView):
             "f_FamilyData": f_FamilyData,
             "fs_Child": fs_Child,
             "fs_Sibling": fs_Sibling,
-            "f_informacion_academica": f_informacion_academica,
-            "f_BienesRentasAEP": f_BienesRentasAEP,
-            "f_SituacionJuridica": f_SituacionJuridica,
+            "f_AcademicInformation": f_AcademicInformation,
+            "f_AssetsIncomeAEP": f_AssetsIncomeAEP,
+            "f_LegalSituation": f_LegalSituation,
             "f_confirm": f_confirm,
         }
 

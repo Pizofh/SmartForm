@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory 
 from .models import (
-    PersonalData, FamilyData, InformacionAcademica, BienesRentasAEP, SituacionJuridica, Child,Sibling
+    PersonalData, FamilyData, AcademicInformation, AssetsIncomeAEP, LegalSituation, Child,Sibling
 )
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, HTML,Field
@@ -462,30 +462,29 @@ SiblingFormSet = inlineformset_factory(
 )
 
 
-class InformacionAcademicaForm(BaseHelperMixin, forms.ModelForm):
+class AcademicInformationForm(BaseHelperMixin, forms.ModelForm):
     """
-    Formulario asociado al modelo `InformacionAcademica`. Permite registrar los estudios
-    realizados por el recluta, hasta un máximo de cuatro registros académicos, el manejo de 
-    idiomas extranjeros (lectura, escritura y habla), y conocimientos en herramientas ofimáticas 
-    como Word, Excel, PowerPoint, Access e Internet.
+    Form associated with the `AcademicInformation` model. Allows registering up to two academic 
+    records, foreign language skills (reading, writing, and speaking), and knowledge of 
+    office tools such as Word, Excel, PowerPoint, Access, and Internet.
 
-    El formulario utiliza `crispy-forms` para estructurar el layout en secciones organizadas 
-    mediante `Fieldset` y `Row`, con etiquetas visuales claras y sin `form_tag`, 
-    ya que se usa dentro de un formulario principal más amplio.
+    The form uses `crispy-forms` to organize layout into sections using `Fieldset` and `Row`, 
+    with clear visual labels. The `form_tag` is disabled as this form is used inside a larger parent form.
     """
 
     class Meta:
-        model = InformacionAcademica
+        model = AcademicInformation
         fields = [
-#Estudios
-            "estudios_1", "año_estudios_1", "titulo_estudios_1", "nombre_institucion_estudios_1", "ciudad_estudios_1",
-            "estudios_2", "año_estudios_2", "titulo_estudios_2", "nombre_institucion_estudios_2", "ciudad_estudios_2",
+            # Formal Education
+            "studies_1", "studies_1_year", "studies_title_1", "studies_institution_name_1", "studies_city_1",
+            "studies_2", "studies_2_year", "studies_title_2", "studies_institution_name_2", "studies_city_2",
 
-#Idioma Extranjero
-           "idioma_extranjero_1", "lee_idioma_extranjero_1","habla_idioma_extranjero_1","escribe_idioma_extranjero_1",
-           "idioma_extranjero_2", "lee_idioma_extranjero_2","habla_idioma_extranjero_2","escribe_idioma_extranjero_2",
-#Ofimática
-            "word_check", "excel_check", "powerpoint_check", "access_check", "internet_check","otro_check"
+            # Foreign Languages
+            "foreign_language_1", "can_read_foreign_language_1", "can_speak_foreign_language_1", "can_write_foreign_language_1",
+            "foreign_language_2", "can_read_foreign_language_2", "can_speak_foreign_language_2", "can_write_foreign_language_2",
+
+            # Office Tools
+            "word_check", "excel_check", "powerpoint_check", "access_check", "internet_check", "other_check"
         ]
 
     def __init__(self, *args, **kwargs):
@@ -493,48 +492,43 @@ class InformacionAcademicaForm(BaseHelperMixin, forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
         self.helper.layout = Layout(
-            
+
             Fieldset(
-                
-              "Estudios Realizados",
+                "Completed Studies",
                 HTML("""<hr class="my-4">"""),
                 Row(
-                    Column("estudios_1", css_class="col-md-3"),
-                    Column("año_estudios_1", css_class="col-md-1"),
-                    Column("titulo_estudios_1", css_class="col-md-3"),
-                    Column("nombre_institucion_estudios_1", css_class="col-md-3"),
-                    Column("ciudad_estudios_1", css_class="col-md-2"),
-                ),
-             
-                Row(
-                    Column("estudios_2", css_class="col-md-3"),
-                    Column("año_estudios_2", css_class="col-md-1"),
-                    Column("titulo_estudios_2", css_class="col-md-3"),
-                    Column("nombre_institucion_estudios_2", css_class="col-md-3"),
-                    Column("ciudad_estudios_2", css_class="col-md-2"),
-                ),
-                
-            ),
-            Fieldset(
-                
-                "Idiomas Extranjeros",
-                HTML("""<hr class="my-4">"""),
-                Row(
-                    Column("idioma_extranjero_1", css_class="col-md-3"),
-                    Column("lee_idioma_extranjero_1", css_class="col-md-2"),
-                    Column("habla_idioma_extranjero_1", css_class="col-md-2"),
-                    Column("escribe_idioma_extranjero_1", css_class="col-md-2"),
+                    Column("studies_1", css_class="col-md-3"),
+                    Column("studies_1_year", css_class="col-md-1"),
+                    Column("studies_title_1", css_class="col-md-3"),
+                    Column("studies_institution_name_1", css_class="col-md-3"),
+                    Column("studies_city_1", css_class="col-md-2"),
                 ),
                 Row(
-                    Column("idioma_extranjero_2", css_class="col-md-3"),
-                    Column("lee_idioma_extranjero_2", css_class="col-md-2"),
-                    Column("habla_idioma_extranjero_2", css_class="col-md-2"),
-                    Column("escribe_idioma_extranjero_2", css_class="col-md-2"),
+                    Column("studies_2", css_class="col-md-3"),
+                    Column("studies_2_year", css_class="col-md-1"),
+                    Column("studies_title_2", css_class="col-md-3"),
+                    Column("studies_institution_name_2", css_class="col-md-3"),
+                    Column("studies_city_2", css_class="col-md-2"),
                 ),
             ),
             Fieldset(
-                
-                "Especialidades en Sistemas",
+                "Foreign Languages",
+                HTML("""<hr class="my-4">"""),
+                Row(
+                    Column("foreign_language_1", css_class="col-md-3"),
+                    Column("can_read_foreign_language_1", css_class="col-md-2"),
+                    Column("can_speak_foreign_language_1", css_class="col-md-2"),
+                    Column("can_write_foreign_language_1", css_class="col-md-2"),
+                ),
+                Row(
+                    Column("foreign_language_2", css_class="col-md-3"),
+                    Column("can_read_foreign_language_2", css_class="col-md-2"),
+                    Column("can_speak_foreign_language_2", css_class="col-md-2"),
+                    Column("can_write_foreign_language_2", css_class="col-md-2"),
+                ),
+            ),
+            Fieldset(
+                "Office Tools Proficiency",
                 HTML("""<hr class="my-4">"""),
                 Row(
                     Column("word_check", css_class="col-md-2"),
@@ -543,39 +537,37 @@ class InformacionAcademicaForm(BaseHelperMixin, forms.ModelForm):
                     Column("access_check", css_class="col-md-2"),
                     Column("internet_check", css_class="col-md-2"),
                 ),
-                "otro_check",
+                "other_check",
             )
         )
 
 
 
 
-class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
-
+class AssetsIncomeAEPForm(BaseHelperMixin, forms.ModelForm):
     """
-    Formulario que permite al aspirante registrar su situación económica, patrimonial y financiera
-    correspondiente al formato AEP. Este formulario recopila:
+    Form that allows the applicant to register their economic, asset, and financial situation
+    corresponding to the AEP format. This form collects:
 
-    - Ingresos percibidos durante el último año gravable (salarios, honorarios, arriendos, entre otros).
-    - Información de hasta seis cuentas bancarias nacionales o extranjeras.
-    - Detalles de hasta cinco bienes patrimoniales, con su tipo, ubicación, identificación y avalúo.
-    - Obligaciones económicas vigentes, detallando acreedor, concepto y valor.
-    - Participación en organizaciones o entidades (hasta cuatro).
-    - Actividades económicas privadas del aspirante (hasta tres).
+    - Income received during the last taxable year (salaries, professional fees, rentals, etc.).
+    - Information on up to six national or international bank accounts.
+    - Details of up to five assets, including type, location, ID, and appraisal.
+    - Current financial obligations, specifying creditor, concept, and amount.
+    - Participation in organizations or institutions (up to four).
+    - Applicant's private economic activities (up to three).
 
-    Además, incluye un campo `total_ingresos` que se muestra como solo lectura para reflejar
-    la suma total de ingresos y se calcula dinámicamente desde el cliente.
+    It also includes a `total_income` field displayed as read-only to reflect
+    the total income, calculated dynamically on the client side.
 
-    Se utiliza la librería `crispy-forms` para maquetar visualmente el formulario con `Fieldset`,
-    `Row` y `Column`, agrupando los campos en secciones temáticas claras con encabezados y separadores
-    visuales (`<hr>` y títulos en HTML).
+    The `crispy-forms` library is used to visually lay out the form with `Fieldset`,
+    `Row`, and `Column`, grouping fields into clear thematic sections with headings
+    and visual separators (`<hr>` and HTML titles).
 
-    Este formulario hereda de `BaseHelperMixin` para aplicar un diseño coherente con otros formularios del sistema.
+    This form inherits from `BaseHelperMixin` to ensure consistent design with other system forms.
     """
-     
 
-    total_ingresos = forms.CharField(
-        label="Total de Ingresos",
+    total_income = forms.CharField(
+        label="Total Income",
         required=False,
         widget=forms.TextInput(attrs={
             "readonly": "readonly",
@@ -584,37 +576,33 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
     )
 
     class Meta:
-        model = BienesRentasAEP
+        model = AssetsIncomeAEP
         fields = [
-        
-            "salarios_y_demas_ingresos_laborales","cesantías_e_intereses_de_cesantías","gastos_de_representación","arriendos","honorarios","otros_ingresos_y_rentas",
-            "entidad_financiera_1", "tipo_de_cuenta_1", "numero_de_cuenta_1","entidad_financiera_2", "tipo_de_cuenta_2", "numero_de_cuenta_2",
-         
+            "salary_and_other_income", "layoff_and_interests", "representation_expenses",
+            "leases", "fee", "other_income",
+            "financial_entity_1", "account_type_1", "account_number_1",
+            "financial_entity_2", "account_type_2", "account_number_2",
 
-            "tipo_bien_1","ubicacion_bien_1","identificacion_bien_1","avaluo_comercial_bien_1",
-            "tipo_bien_2","ubicacion_bien_2","identificacion_bien_2","avaluo_comercial_bien_2",
-         
+            "good_type_1", "good_location_1", "good_id_1", "good_appraisal_1",
+            "good_type_2", "good_location_2", "good_id_2", "good_appraisal_2",
 
-            "entidad_o_persona_obligacion_1", "concepto_obligacion_1", "valor_1",
-            "entidad_o_persona_obligacion_2", "concepto_obligacion_2", "valor_2",
+            "obligation_entity_person_1", "obligation_concept_1", "value_1",
+            "obligation_entity_person_2", "obligation_concept_2", "value_2",
 
+            "entity_or_institution_1", "kind_of_member_1",
+            "entity_or_institution_2", "kind_of_member_2",
 
-            "entidad_o_institucion_1","calidad_de_miembro_1",
-            "entidad_o_institucion_2","calidad_de_miembro_2",
-    
-
-            "empresa_1","calidad_de_miembro_AEP_1",
-            "empresa_2","calidad_de_miembro_AEP_2",
-       
+            "company_1", "kind_of_member_AEP_1",
+            "company_2", "kind_of_member_AEP_2",
         ]
 
         widgets = {
-            "salarios_y_demas_ingresos_laborales": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
-            "cesantías_e_intereses_de_cesantías": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
-            "gastos_de_representación" :forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
-            "arriendos": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
-            "honorarios": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
-            "otros_ingresos_y_rentas": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
+            "salary_and_other_income": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
+            "layoff_and_interests": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
+            "representation_expenses": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
+            "leases": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
+            "fee": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
+            "other_income": forms.TextInput(attrs={"inputmode": "numeric", "class": "form-control"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -623,135 +611,128 @@ class BienesRentasAEPForm(BaseHelperMixin, forms.ModelForm):
         self.helper.form_tag = False
         self.helper.layout = Layout(
             Fieldset(
-                "Total de Ingresos Último Año Gravable",
+                "Total Income for the Last Taxable Year",
                 HTML("""<hr class="my-4">"""),
-                "salarios_y_demas_ingresos_laborales",
-                "cesantías_e_intereses_de_cesantías",
-                "gastos_de_representación",
-                "arriendos",
-                "honorarios",
-                "otros_ingresos_y_rentas",
+                "salary_and_other_income",
+                "layoff_and_interests",
+                "representation_expenses",
+                "leases",
+                "fee",
+                "other_income",
                 HTML("""
                     <div class="mt-3">
-                        <label for="id_BienesRentasAEP-total_ingresos">Total de Ingresos</label>
-                        <input type="text" id="id_BienesRentasAEP-total_ingresos" class="form-control fw-bold" readonly />
+                        <label for="id_AssetsIncomeAEPForm-total_income">Total Income</label>
+                        <input type="text" id="id_AssetsIncomeAEPForm-total_income" class="form-control fw-bold" readonly />
                     </div>
-                """), 
+                """),
 
                 HTML("""<hr class="my-4">"""),
-                HTML("<h5>Las cuentas corrientes, de ahorros o tarjeta de crédito que poseo en Colombia y el Exterior son:</h5>"),
+                HTML("<h5>The current, savings or credit card accounts I hold in Colombia and abroad are:</h5>"),
                 HTML("""<hr class="my-4">"""),
 
-             Row(
-                    Column("entidad_financiera_1", css_class="col-md-3"),
-                    Column("tipo_de_cuenta_1", css_class="col-md-3"),
-                    Column("numero_de_cuenta_1", css_class="col-md-3"),
+                Row(
+                    Column("financial_entity_1", css_class="col-md-3"),
+                    Column("account_type_1", css_class="col-md-3"),
+                    Column("account_number_1", css_class="col-md-3"),
                 ),
-            Row(
-                    Column("entidad_financiera_2", css_class="col-md-3"),
-                    Column("tipo_de_cuenta_2", css_class="col-md-3"),
-                    Column("numero_de_cuenta_2", css_class="col-md-3"),
-                ),
-      
-                HTML("""<hr class="my-4">"""),
-                HTML("<h5>Mis bienes patrimoniales son los siguientes:</h5>"),
-                HTML("""<hr class="my-4">"""),
-            Row(
-                    Column("tipo_bien_1", css_class="col-md-3"),
-                    Column("ubicacion_bien_1", css_class="col-md-3"),
-                    Column("identificacion_bien_1", css_class="col-md-3"),
-                    Column("avaluo_comercial_bien_1", css_class="col-md-3"),
-                ),
-            Row(
-                    Column("tipo_bien_2", css_class="col-md-3"),
-                    Column("ubicacion_bien_2", css_class="col-md-3"),
-                    Column("identificacion_bien_2", css_class="col-md-3"),
-                    Column("avaluo_comercial_bien_2", css_class="col-md-3"),
-                ),
-         
-                HTML("""<hr class="my-4">"""),
-                HTML("<h5>Mis Obligaciones vigentes a la fecha:</h5>"),
-                HTML("""<hr class="my-4">"""),
-
-            Row(
-                    Column("entidad_o_persona_obligacion_1", css_class="col-md-3"),
-                    Column("concepto_obligacion_1", css_class="col-md-3"),
-                    Column("valor_1", css_class="col-md-3"),
-                ),
-                  Row(
-                    Column("entidad_o_persona_obligacion_2", css_class="col-md-3"),
-                    Column("concepto_obligacion_2", css_class="col-md-3"),
-                    Column("valor_2", css_class="col-md-3"),
-                ),
-    
-
-                HTML("""<hr class="my-4">"""),
-                HTML("<h5>PARTICIPACION EN ORGANIZACIONES, CORPORACIONES, SOCIEDADES, ASOCIACIONES, ONG's u OTROS.</h5>"),
-                HTML("<h5>En la actualidad participo como miembro de las siguientes organizaciones:</h5>"),
-                HTML("""<hr class="my-4">"""),
-
-            Row(
-                    Column("entidad_o_institucion_1", css_class="col-md-4"),
-                    Column("calidad_de_miembro_1", css_class="col-md-3"),
-                ),
-            Row(
-                    Column("entidad_o_institucion_2", css_class="col-md-4"),
-                    Column("calidad_de_miembro_2", css_class="col-md-3"),
+                Row(
+                    Column("financial_entity_2", css_class="col-md-3"),
+                    Column("account_type_2", css_class="col-md-3"),
+                    Column("account_number_2", css_class="col-md-3"),
                 ),
 
+                HTML("""<hr class="my-4">"""),
+                HTML("<h5>My assets are the following:</h5>"),
+                HTML("""<hr class="my-4">"""),
+                Row(
+                    Column("good_type_1", css_class="col-md-3"),
+                    Column("good_location_1", css_class="col-md-3"),
+                    Column("good_id_1", css_class="col-md-3"),
+                    Column("good_appraisal_1", css_class="col-md-3"),
+                ),
+                Row(
+                    Column("good_type_2", css_class="col-md-3"),
+                    Column("good_location_2", css_class="col-md-3"),
+                    Column("good_id_2", css_class="col-md-3"),
+                    Column("good_appraisal_2", css_class="col-md-3"),
+                ),
 
                 HTML("""<hr class="my-4">"""),
-                HTML("<h5>ACTIVIDAD ECONÓMICA PRIVADA DEL ASPIRANTE</h5>"),
-                HTML("""<hr class="my-4">"""),  
-            Row(
-                    Column("empresa_1", css_class="col-md-4"),
-                    Column("calidad_de_miembro_AEP_1", css_class="col-md-3"),
-                ),   
-            Row(
-                    Column("empresa_2", css_class="col-md-4"),
-                    Column("calidad_de_miembro_AEP_2", css_class="col-md-3"),
-                ),   
-   
+                HTML("<h5>My current financial obligations:</h5>"),
+                HTML("""<hr class="my-4">"""),
+                Row(
+                    Column("obligation_entity_person_1", css_class="col-md-3"),
+                    Column("obligation_concept_1", css_class="col-md-3"),
+                    Column("value_1", css_class="col-md-3"),
+                ),
+                Row(
+                    Column("obligation_entity_person_2", css_class="col-md-3"),
+                    Column("obligation_concept_2", css_class="col-md-3"),
+                    Column("value_2", css_class="col-md-3"),
+                ),
+
+                HTML("""<hr class="my-4">"""),
+                HTML("<h5>PARTICIPATION IN ORGANIZATIONS, CORPORATIONS, SOCIETIES, ASSOCIATIONS, NGOs OR OTHERS</h5>"),
+                HTML("<h5>I am currently a member of the following organizations:</h5>"),
+                HTML("""<hr class="my-4">"""),
+                Row(
+                    Column("entity_or_institution_1", css_class="col-md-4"),
+                    Column("kind_of_member_1", css_class="col-md-3"),
+                ),
+                Row(
+                    Column("entity_or_institution_2", css_class="col-md-4"),
+                    Column("kind_of_member_2", css_class="col-md-3"),
+                ),
+
+                HTML("""<hr class="my-4">"""),
+                HTML("<h5>APPLICANT'S PRIVATE ECONOMIC ACTIVITY</h5>"),
+                HTML("""<hr class="my-4">"""),
+                Row(
+                    Column("company_1", css_class="col-md-4"),
+                    Column("kind_of_member_AEP_1", css_class="col-md-3"),
+                ),
+                Row(
+                    Column("company_2", css_class="col-md-4"),
+                    Column("kind_of_member_AEP_2", css_class="col-md-3"),
+                ),
             ),
         )
 
-
-class SituacionJuridicaForm(BaseHelperMixin, forms.ModelForm):
-
+class LegalSituationForm(BaseHelperMixin, forms.ModelForm):
     """
-        Formulario para registrar información sobre la situación jurídica del aspirante,
-        incluyendo hasta dos procesos judiciales, penales, administrativos, disciplinarios
-        o de cualquier otra índole en los que haya estado vinculado.
+    Form to register information about the applicant's legal situation,
+    including up to two judicial, criminal, administrative, disciplinary,
+    or other legal proceedings in which the applicant has been involved.
 
-        Campos recopilados por cada proceso:
-        - Fecha del proceso
-        - Tipo de investigación
-        - Causa o motivo
-        - Autoridad competente
-        - Estado actual del proceso
-        - Responsable del proceso
+    Fields collected for each process:
+    - Date of the process
+    - Type of investigation
+    - Cause or reason
+    - Competent authority
+    - Current status of the process
+    - Applicant's responsibility in the process
 
-        Características:
-        - Se excluye el campo `recluta` ya que se asigna automáticamente.
-        - Se utilizan widgets personalizados para los campos de fecha.
-        - Maquetación con `crispy-forms`, agrupando la información en dos bloques claros mediante `Fieldset`
-        y separadores visuales (`<hr>` y títulos en HTML).
-    
-        Este formulario forma parte del conjunto de datos requeridos para la evaluación de antecedentes
-        del aspirante, permitiendo un análisis más completo de su historial jurídico.
+    Features:
+    - The `PersonalData` field is excluded because it is assigned automatically.
+    - Custom widgets are used for date fields.
+    - Layout built with `crispy-forms`, grouping information into two clear blocks using `Fieldset`
+      and visual separators (`<hr>` and HTML titles).
+
+    This form is part of the required data for background evaluation
+    of the applicant, allowing a more complete analysis of their legal history.
     """
 
     class Meta:
-        model   = SituacionJuridica
+        model = LegalSituation
         exclude = ("PersonalData",)
         fields = [
-            "fecha_proceso_1", "tipo_de_investigacion_1", "causa_1", "autoridad_1", "estado_del_proceso_1", "responsable_1",
-            "fecha_proceso_2", "tipo_de_investigacion_2", "causa_2", "autoridad_2", "estado_del_proceso_2", "responsable_2",
+            "process_date_1", "investigation_type_1", "cause_1", "autority_1", "process_state_1", "responsible_1",
+            "process_date_2", "investigation_type_2", "cause_2", "autority_2", "process_state_2", "responsible_2",
         ]
 
         widgets = {
-            "fecha_proceso_1": forms.DateInput(attrs={'type': 'date'}),
-            "fecha_proceso_2": forms.DateInput(attrs={'type': 'date'}),
+            "process_date_1": forms.DateInput(attrs={'type': 'date'}),
+            "process_date_2": forms.DateInput(attrs={'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -761,34 +742,32 @@ class SituacionJuridicaForm(BaseHelperMixin, forms.ModelForm):
         self.helper.layout = Layout(
             Fieldset(
                 HTML("""<hr class="my-4">"""),
-                HTML("<h5>SITUACIÓN JURÍDICA</h5>"),
-                HTML("""<hr class="my-4">"""), 
-                HTML("<h5>Procesos judiciales, penales, administrativos, querellas u otro tipo de investigaciones a la cual ha estado vinculado</h5>"),
-                HTML("""<hr class="my-4">"""), 
+                HTML("<h5>LEGAL SITUATION</h5>"),
+                HTML("""<hr class="my-4">"""),
+                HTML("<h5>Judicial, criminal, administrative, disciplinary, or other proceedings in which the applicant has been involved</h5>"),
+                HTML("""<hr class="my-4">"""),
 
-            Row(
-                Column("fecha_proceso_1"),
-                Column("tipo_de_investigacion_1"),
-                Column("causa_1"),
+                Row(
+                    Column("process_date_1"),
+                    Column("investigation_type_1"),
+                    Column("cause_1"),
                 ),
-            Row(
-                Column("autoridad_1"),
-                Column("estado_del_proceso_1"),
-                Column("responsable_1"),
-            ),
-            HTML("""<hr class="my-4">"""),
-            Row(
-                Column("fecha_proceso_2"),
-                Column("tipo_de_investigacion_2"),
-                Column("causa_2")
-            ),
-             Row(
-                Column("autoridad_2"),
-                Column("estado_del_proceso_2"),
-                Column("responsable_2")
-            ),
-
- 
+                Row(
+                    Column("autority_1"),
+                    Column("process_state_1"),
+                    Column("responsible_1"),
+                ),
+                HTML("""<hr class="my-4">"""),
+                Row(
+                    Column("process_date_2"),
+                    Column("investigation_type_2"),
+                    Column("cause_2"),
+                ),
+                Row(
+                    Column("autority_2"),
+                    Column("process_state_2"),
+                    Column("responsible_2"),
+                ),
             ),
         )
 

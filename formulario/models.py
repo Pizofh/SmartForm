@@ -48,9 +48,9 @@ class PersonalData(models.Model):
 
     # --- Marital Status and Profession ---
     relationships = models.CharField("Marital status", max_length=30, null=True, choices=[
-        ("Casado(a)", "Married"), ("Soltero(a)", "Single"),
-        ("Unión Marital de Hecho", "Common-law marriage"),
-        ("Separado de Hecho", "Separated"), ("Divorciado(a)", "Divorced"), ("Viudo(a)", "Widowed")
+        ("Married", "Married"), ("Single", "Single"),
+    ("Common-law marriage", "Common-law marriage"),
+    ("Separated", "Separated"), ("Divorced", "Divorced"), ("Widowed", "Widowed")
     ])
     profession = models.CharField("Profession or occupation", max_length=30, null=True, validators=[only_letters])
     profesional_id = models.CharField("Professional ID card", max_length=15, null=True, validators=[alphanumeric])
@@ -196,7 +196,7 @@ class FamilyData(models.Model):
 
     # --- Father data ---
     father_name = models.CharField("Father's Name", max_length=55, null=True, validators=[only_letters])
-    father_lives = models.CharField("Is Alive?", null=True, choices=[("Sí", "Yes"), ("No", "No")])
+    father_lives = models.CharField("Is Alive?", null=True, choices=[("Yes", "Yes"), ("No", "No")])
     father_id = models.IntegerField("ID No.", null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
     father_phone = models.IntegerField("Father's Phone", blank=True, null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
     father_profession = models.CharField("Father's Profession", blank=True, null=True, max_length=50, validators=[only_letters])
@@ -414,188 +414,181 @@ class Sibling(models.Model):
         """
         return f"{self.sibling_first_name or ''} {self.sibling_lastname or ''} - {self.sibling_id or ''}".strip()
 
-class InformacionAcademica(models.Model):
+class AcademicInformation(models.Model):
     """
-    Modelo que almacena la información académica y conocimientos en idiomas y ofimática de un recluta.
+    Model that stores academic background and knowledge in foreign languages and office tools.
 
-    Se incluyen hasta cuatro niveles de estudios formales, dos idiomas extranjeros con habilidades evaluadas
-    (lectura, escritura, habla), y conocimientos en herramientas ofimáticas comunes como Word, Excel, etc.
+    Includes up to two levels of formal education, two foreign languages with assessed skills
+    (reading, writing, speaking), and knowledge of common office tools such as Word, Excel, etc.
 
     Attributes:
-        recluta (ForeignKey): Relación con el modelo `Recluta`.
-        estudios_X (CharField): Descripción de los estudios realizados en cada nivel.
-        año_estudios_X (IntegerField): Año de finalización de los estudios.
-        titulo_estudios_X (CharField): Título recibido.
-        nombre_institucion_estudios_X (CharField): Nombre de la institución educativa.
-        ciudad_estudios_X (CharField): Ciudad donde se realizaron los estudios.
-        idioma_extranjero_X (CharField): Idioma extranjero declarado.
-        lee_idioma_extranjero_X / habla_ / escribe_ (CharField): Habilidades lingüísticas evaluadas.
-        word_check / excel_check / ... (CharField): Conocimientos en herramientas de ofimática.
-        otro_check (CharField): Campo libre para declarar otras herramientas.
+        PersonalData (ForeignKey): Link to the `PersonalData` model.
+        studies_X (CharField): Description of completed studies at each level.
+        studies_X_year (IntegerField): Year of completion.
+        studies_title_X (CharField): Degree obtained.
+        studies_institution_name_X (CharField): Name of the educational institution.
+        studies_city_X (CharField): City where the studies took place.
+        foreign_language_X (CharField): Declared foreign language.
+        can_read_ / can_speak_ / can_write_ (CharField): Assessed language skills.
+        word_check / excel_check / ... (CharField): Knowledge in office tools.
+        other_check (CharField): Free field for declaring additional tools.
     """
 
     PersonalData = models.ForeignKey(
         'PersonalData',
         on_delete=models.CASCADE,
-        related_name='informaciones_academicas',
+        related_name='academic_information',
         null=True
     )
 
-    # --- Estudios formales (hasta 4 registros) ---
-    estudios_1 = models.CharField("Estudios Realizados 1", max_length=50, blank=True, null=True,validators=[only_letters])
-    año_estudios_1 = models.IntegerField("Año", blank=True, null=True,
+    # --- Formal Education (up to 2 records) ---
+    studies_1 = models.CharField("Completed Studies 1", max_length=50, blank=True, null=True, validators=[only_letters])
+    studies_1_year = models.IntegerField("Year", blank=True, null=True,
                                          validators=[MinValueValidator(1900), MaxValueValidator(2030)])
-    titulo_estudios_1 = models.CharField("Título Recibido", max_length=50, blank=True, null=True,validators=[simple_text])
-    nombre_institucion_estudios_1 = models.CharField("Nombre de la Institución", max_length=70, blank=True, null=True,validators=[simple_text])
-    ciudad_estudios_1 = models.CharField("Ciudad", max_length=50, blank=True, null=True,validators=[simple_text])
+    studies_title_1 = models.CharField("Degree Obtained", max_length=50, blank=True, null=True, validators=[simple_text])
+    studies_institution_name_1 = models.CharField("Institution Name", max_length=70, blank=True, null=True, validators=[simple_text])
+    studies_city_1 = models.CharField("City", max_length=50, blank=True, null=True, validators=[simple_text])
 
-    estudios_2 = models.CharField("Estudios Realizados 2", max_length=50, blank=True, null=True,validators=[simple_text])
-    año_estudios_2 = models.IntegerField("Año", blank=True, null=True,
+    studies_2 = models.CharField("Completed Studies 2", max_length=50, blank=True, null=True, validators=[simple_text])
+    studies_2_year = models.IntegerField("Year", blank=True, null=True,
                                          validators=[MinValueValidator(1900), MaxValueValidator(2030)])
-    titulo_estudios_2 = models.CharField("Título Recibido", max_length=50, blank=True, null=True,validators=[simple_text])
-    nombre_institucion_estudios_2 = models.CharField("Nombre de la Institución", max_length=70, blank=True, null=True,validators=[simple_text])
-    ciudad_estudios_2 = models.CharField("Ciudad", max_length=50, blank=True, null=True,validators=[simple_text])
+    studies_title_2 = models.CharField("Degree Obtained", max_length=50, blank=True, null=True, validators=[simple_text])
+    studies_institution_name_2 = models.CharField("Institution Name", max_length=70, blank=True, null=True, validators=[simple_text])
+    studies_city_2 = models.CharField("City", max_length=50, blank=True, null=True, validators=[simple_text])
 
+    # --- Foreign Languages (up to 2) ---
+    foreign_language_1 = models.CharField("Foreign Language 1", max_length=50, blank=True, null=True, validators=[simple_text])
+    can_read_foreign_language_1 = models.CharField("Can Read?", null=True, blank=True, choices=[("Yes", "Yes"), ("No", "No")])
+    can_speak_foreign_language_1 = models.CharField("Can Speak?", null=True, blank=True, choices=[("Yes", "Yes"), ("No", "No")])
+    can_write_foreign_language_1 = models.CharField("Can Write?", null=True, blank=True, choices=[("Yes", "Yes"), ("No", "No")])
 
-    # --- Idiomas extranjeros (hasta 2 idiomas) ---
-    idioma_extranjero_1 = models.CharField("Idioma extranjero 1", max_length=50, blank=True, null=True,validators=[simple_text])
-    lee_idioma_extranjero_1 = models.CharField("¿Lee?", null=True, blank=True, choices=[("Sí", "Sí"), ("No", "No")])
-    habla_idioma_extranjero_1 = models.CharField("¿Habla?", null=True, blank=True, choices=[("Sí", "Sí"), ("No", "No")])
-    escribe_idioma_extranjero_1 = models.CharField("¿Escribe?", null=True, blank=True, choices=[("Sí", "Sí"), ("No", "No")])
+    foreign_language_2 = models.CharField("Foreign Language 2", max_length=50, blank=True, null=True, validators=[simple_text])
+    can_read_foreign_language_2 = models.CharField("Can Read?", null=True, blank=True, choices=[("Yes", "Yes"), ("No", "No")])
+    can_speak_foreign_language_2 = models.CharField("Can Speak?", null=True, blank=True, choices=[("Yes", "Yes"), ("No", "No")])
+    can_write_foreign_language_2 = models.CharField("Can Write?", null=True, blank=True, choices=[("Yes", "Yes"), ("No", "No")])
 
-    idioma_extranjero_2 = models.CharField("Idioma extranjero 2", max_length=50, blank=True, null=True,validators=[simple_text])
-    lee_idioma_extranjero_2 = models.CharField("¿Lee?", null=True, blank=True, choices=[("Sí", "Sí"), ("No", "No")])
-    habla_idioma_extranjero_2 = models.CharField("¿Escribe?", null=True, blank=True, choices=[("Sí", "Sí"), ("No", "No")])
-    escribe_idioma_extranjero_2 = models.CharField("¿Escribe?", null=True, blank=True, choices=[("Sí", "Sí"), ("No", "No")])
-
-    # --- Conocimientos en herramientas ofimáticas ---
-    word_check = models.CharField("Word", null=True, choices=[("Sí", "Sí"), ("No", "No")])
-    excel_check = models.CharField("Excel", null=True, choices=[("Sí", "Sí"), ("No", "No")])
-    powerpoint_check = models.CharField("Power Point", null=True, choices=[("Sí", "Sí"), ("No", "No")])
-    access_check = models.CharField("Access", null=True, choices=[("Sí", "Sí"), ("No", "No")])
-    internet_check = models.CharField("Internet", null=True, choices=[("Sí", "Sí"), ("No", "No")])
-    otro_check = models.CharField("Otros (Separe por comas)", null=True, blank=True, max_length=333,validators=[simple_text])
+    # --- Office Tools Knowledge ---
+    word_check = models.CharField("Word", null=True, choices=[("Yes", "Yes"), ("No", "No")])
+    excel_check = models.CharField("Excel", null=True, choices=[("Yes", "Yes"), ("No", "No")])
+    powerpoint_check = models.CharField("PowerPoint", null=True, choices=[("Yes", "Yes"), ("No", "No")])
+    access_check = models.CharField("Access", null=True, choices=[("Yes", "Yes"), ("No", "No")])
+    internet_check = models.CharField("Internet", null=True, choices=[("Yes", "Yes"), ("No", "No")])
+    other_check = models.CharField("Other Tools (comma-separated)", null=True, blank=True, max_length=333, validators=[simple_text])
 
     class Meta:
-        verbose_name = "Información Académica"
-        verbose_name_plural = "Informaciones Académicas"
+        verbose_name = "Academic Information"
+        verbose_name_plural = "Academic Information Entries"
 
     def __str__(self):
         """
-        Retorna una representación textual de la instancia para el admin o consola.
+        Returns a string representation of the instance for admin or console.
 
         Returns:
-            str: Texto identificador con el ID de la información académica.
+            str: Identifier text with the ID of the academic information.
         """
-        return f"Información académica {self.id}"
+        return f"Academic Information {self.id}"
 
 
-
-class BienesRentasAEP(models.Model):
-    
+class AssetsIncomeAEP(models.Model):
     """
-    Modelo que representa la información financiera, patrimonial y económica
-    del aspirante a través del formulario AEP (Autodeclaración Económica y Patrimonial).
-    Incluye ingresos, cuentas bancarias, bienes patrimoniales, obligaciones financieras,
-    participación en organizaciones y actividad económica privada.
+    Model representing the financial, asset-related, and economic information
+    of the applicant through the AEP form (Economic and Asset Self-Declaration).
+    Includes income, bank accounts, assets, financial obligations,
+    participation in organizations, and private economic activity.
     """
 
-    # Relación con el aspirante
-    PersonalData = models.ForeignKey('PersonalData', on_delete=models.CASCADE, related_name='bienes_rentas',null=True)
-    salarios_y_demas_ingresos_laborales = models.IntegerField("Salarios y demás ingresos laborales", null=True, blank=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999)])
-    cesantías_e_intereses_de_cesantías = models.IntegerField("Cesantías e intereses de cesantías", null=True, blank=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999)])
-    gastos_de_representación = models.IntegerField("Gastos de representación", null=True, blank=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999)])
-    arriendos = models.IntegerField("Arriendos", null=True, blank=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999)])
-    honorarios = models.IntegerField("Honorarios", null=True, blank=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999)])
-    otros_ingresos_y_rentas = models.IntegerField("Otros ingresos y rentas", null=True, blank=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999)])
+    # Relationship with the applicant
+    PersonalData = models.ForeignKey('PersonalData', on_delete=models.CASCADE, related_name='AssetsIncomeAEP', null=True)
 
-    # Cuentas bancarias (nacionales e internacionales)
+    salary_and_other_income = models.IntegerField("Salaries and other labor income", null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999)])
+    layoff_and_interests = models.IntegerField("Severance pay and interests", null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999)])
+    representation_expenses = models.IntegerField("Representation expenses", null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999)])
+    leases = models.IntegerField("Rentals", null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999)])
+    fee = models.IntegerField("Professional fees", null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999)])
+    other_income = models.IntegerField("Other income and earnings", null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999)])
 
-    entidad_financiera_1 = models.CharField("Entidad Financiera 1", blank=True,null=True,max_length=60,validators=[simple_text])
-    tipo_de_cuenta_1 = models.CharField("Tipo de cuenta 1", blank=True,null=True,max_length=60,validators=[alphanumeric])
-    numero_de_cuenta_1 = models.IntegerField("Numero de cuenta 1",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
+    # Bank accounts (domestic and international)
+    financial_entity_1 = models.CharField("Financial Institution 1", blank=True, null=True, max_length=60, validators=[simple_text])
+    account_type_1 = models.CharField("Account Type 1", blank=True, null=True, max_length=60, validators=[alphanumeric])
+    account_number_1 = models.IntegerField("Account Number 1", blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999_999)])
 
-    entidad_financiera_2 = models.CharField("Entidad Financiera 2", blank=True,null=True,max_length=60,validators=[simple_text])
-    tipo_de_cuenta_2 = models.CharField("Tipo de cuenta 2", blank=True,null=True,max_length=60,validators=[alphanumeric])
-    numero_de_cuenta_2 = models.IntegerField("Numero de cuenta 2",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
+    financial_entity_2 = models.CharField("Financial Institution 2", blank=True, null=True, max_length=60, validators=[simple_text])
+    account_type_2 = models.CharField("Account Type 2", blank=True, null=True, max_length=60, validators=[alphanumeric])
+    account_number_2 = models.IntegerField("Account Number 2", blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999_999)])
 
+    # Assets
+    good_type_1 = models.CharField("Type of Asset 1", blank=True, null=True, max_length=333, validators=[simple_text])
+    good_location_1 = models.CharField("Asset Location 1 (City)", blank=True, null=True, max_length=333, validators=[simple_text])
+    good_id_1 = models.CharField("Asset Identification 1", blank=True, null=True, max_length=333, validators=[simple_text])
+    good_appraisal_1 = models.IntegerField("Commercial Appraisal of Asset 1", blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999_999)])
 
+    good_type_2 = models.CharField("Type of Asset 2", blank=True, null=True, max_length=333, validators=[simple_text])
+    good_location_2 = models.CharField("Asset Location 2 (City)", blank=True, null=True, max_length=333, validators=[simple_text])
+    good_id_2 = models.CharField("Asset Identification 2", blank=True, null=True, max_length=333, validators=[simple_text])
+    good_appraisal_2 = models.IntegerField("Commercial Appraisal of Asset 2", blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999_999)])
 
-# Bienes patrimoniales
-    
-    tipo_bien_1 = models.CharField("Tipo de bien 1", blank=True,null=True,max_length=333,validators=[simple_text])
-    ubicacion_bien_1 = models.CharField("Ubicación del bien 1 (Ciudad)",blank=True,null=True,max_length=333,validators=[simple_text])
-    identificacion_bien_1 = models.CharField("Identificación del bien 1", blank=True,null=True, max_length=333,validators=[simple_text])
-    avaluo_comercial_bien_1 = models.IntegerField("Avalúo comercial del bien 1",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
+    # Current financial obligations
+    obligation_entity_person_1 = models.CharField("Entity or Person 1", blank=True, null=True, max_length=333, validators=[simple_text])
+    obligation_concept_1 = models.CharField("Concept 1", blank=True, null=True, max_length=333, validators=[simple_text])
+    value_1 = models.IntegerField("Amount 1", blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999_999)])
 
-    tipo_bien_2 = models.CharField("Tipo de bien 2", blank=True,null=True,max_length=333,validators=[simple_text])
-    ubicacion_bien_2 = models.CharField("Ubicación del bien 2 (Ciudad)",blank=True,null=True,max_length=333,validators=[simple_text])
-    identificacion_bien_2 = models.CharField("Identificación del bien 2", blank=True,null=True, max_length=333,validators=[simple_text])
-    avaluo_comercial_bien_2 = models.IntegerField("Avalúo comercial del bien 2",blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
+    obligation_entity_person_2 = models.CharField("Entity or Person 2", blank=True, null=True, max_length=333, validators=[simple_text])
+    obligation_concept_2 = models.CharField("Concept 2", blank=True, null=True, max_length=333, validators=[simple_text])
+    value_2 = models.IntegerField("Amount 2", blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(999_999_999_999_999)])
 
+    # Participation in entities or organizations
+    entity_or_institution_1 = models.CharField("Entity or Institution 1", blank=True, null=True, max_length=333, validators=[simple_text])
+    kind_of_member_1 = models.CharField("Member Role 1", blank=True, null=True, max_length=333, validators=[alphanumeric])
+    entity_or_institution_2 = models.CharField("Entity or Institution 2", blank=True, null=True, max_length=333, validators=[simple_text])
+    kind_of_member_2 = models.CharField("Member Role 2", blank=True, null=True, max_length=333, validators=[alphanumeric])
 
-
-# Obligaciones financieras vigentes
-    entidad_o_persona_obligacion_1 = models.CharField("Entidad o persona", blank=True, null=True,max_length=333,validators=[simple_text])
-    concepto_obligacion_1 = models.CharField("Concepto", blank=True, null=True,max_length=333,validators=[simple_text])
-    valor_1 = models.IntegerField("Valor" ,blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
-
-    entidad_o_persona_obligacion_2 = models.CharField("Entidad o persona", blank=True, null=True,max_length=333,validators=[simple_text])
-    concepto_obligacion_2 = models.CharField("Concepto", blank=True, null=True,max_length=333,validators=[simple_text])
-    valor_2 = models.IntegerField("Valor" ,blank=True,null=True,validators=[MinValueValidator(0),MaxValueValidator(999_999_999_999_999)])
-
-
-
-# Participación en entidades u organizaciones
-    entidad_o_institucion_1 = models.CharField("Entidad o institución 1", blank=True,null=True,max_length=333,validators=[simple_text])
-    calidad_de_miembro_1 = models.CharField("Calidad de miembro 1", blank=True,null=True,max_length=333,validators=[alphanumeric])
-    entidad_o_institucion_2 = models.CharField("Entidad o institución 2", blank=True,null=True,max_length=333,validators=[simple_text])
-    calidad_de_miembro_2 = models.CharField("Calidad de miembro 2", blank=True,null=True,max_length=333,validators=[alphanumeric])
-
-
-# Actividad económica privada del aspirante
-    empresa_1 = models.CharField("Empresa 1",blank=True,null=True,max_length=333,validators=[simple_text])
-    calidad_de_miembro_AEP_1 = models.CharField("Calidad de miembro 1",blank=True,null=True,max_length=333,validators=[alphanumeric])
-    empresa_2 = models.CharField("Empresa 2",blank=True,null=True,max_length=333,validators=[simple_text])
-    calidad_de_miembro_AEP_2 = models.CharField("Calidad de miembro 2",blank=True,null=True,max_length=333,validators=[alphanumeric])
-
+    # Applicant's private economic activity
+    company_1 = models.CharField("Company 1", blank=True, null=True, max_length=333, validators=[simple_text])
+    kind_of_member_AEP_1 = models.CharField("Member Role 1", blank=True, null=True, max_length=333, validators=[alphanumeric])
+    company_2 = models.CharField("Company 2", blank=True, null=True, max_length=333, validators=[simple_text])
+    kind_of_member_AEP_2 = models.CharField("Member Role 2", blank=True, null=True, max_length=333, validators=[alphanumeric])
 
     class Meta:
-        verbose_name = "Bienes y Rentas AEP"
-        verbose_name_plural = "Bienes y Rentas AEP"
+        verbose_name = "AEP Assets and Income"
+        verbose_name_plural = "AEP Assets and Income"
 
     def __str__(self):
-        return f"Bienes y Rentas AEP {self.id}"
+        return f"AEP Assets and Income {self.id}"
 
 
-class SituacionJuridica(models.Model):
-
+class LegalSituation(models.Model):
     """
-    Modelo que almacena información sobre procesos judiciales, disciplinarios o
-    administrativos asociados al aspirante. Permite registrar hasta dos procesos
-    diferentes con detalles como tipo de investigación, autoridad competente,
-    estado y responsabilidad.
+    Model that stores information about judicial, disciplinary, or
+    administrative proceedings associated with the applicant. It allows recording
+    up to two different cases with details such as type of investigation,
+    competent authority, status, and responsibility.
     """
 
-    PersonalData = models.ForeignKey('PersonalData', on_delete=models.CASCADE, related_name='situaciones_juridicas',null=True)
- # Primer proceso
-    fecha_proceso_1 = models.DateField("Fecha Proceso 1", blank=True, null=True)
-    tipo_de_investigacion_1 = models.CharField("Tipo de Investigación 1", blank=True,null=True,max_length=333,validators=[simple_text])
-    causa_1 = models.CharField("Causa 1", blank=True,null=True,max_length=333,validators=[simple_text])
-    autoridad_1 = models.CharField("Autoridad 1", blank=True,null=True,max_length=333,validators=[simple_text])
-    estado_del_proceso_1 = models.CharField("Estado del Proceso 1", blank=True,null=True,max_length=333,validators=[simple_text])
-    responsable_1 = models.CharField("¿Responsable?", blank=True,null=True,max_length=333,choices=[("Sí","Sí"),("No","No")])
+    PersonalData = models.ForeignKey(
+        'PersonalData',
+        on_delete=models.CASCADE,
+        related_name='legal_situations',
+        null=True
+    )
 
-# Segundo proceso
-    fecha_proceso_2 = models.DateField("Fecha Proceso 2", blank=True, null=True,validators=[simple_text])
-    tipo_de_investigacion_2 = models.CharField("Tipo de Investigación 2", blank=True,null=True,max_length=333,validators=[simple_text])
-    causa_2 =  models.CharField("Causa 2", blank=True,null=True,max_length=333,validators=[simple_text])
-    autoridad_2 = models.CharField("Autoridad 2", blank=True,null=True,max_length=333,validators=[simple_text])
-    estado_del_proceso_2 = models.CharField("Estado del Proceso 2", blank=True,null=True,max_length=333,validators=[simple_text])
-    responsable_2 = models.CharField("¿Responsable?", blank=True,null=True,max_length=333,choices=[("Sí","Sí"),("No","No")])
-    
+    # First proceeding
+    process_date_1 = models.DateField("Process Date 1", blank=True, null=True)
+    investigation_type_1 = models.CharField("Investigation Type 1", blank=True, null=True, max_length=333, validators=[simple_text])
+    cause_1 = models.CharField("Cause 1", blank=True, null=True, max_length=333, validators=[simple_text])
+    autority_1 = models.CharField("Authority 1", blank=True, null=True, max_length=333, validators=[simple_text])
+    process_state_1 = models.CharField("Process Status 1", blank=True, null=True, max_length=333, validators=[simple_text])
+    responsible_1 = models.CharField("Responsible?", blank=True, null=True, max_length=333, choices=[("Yes", "Yes"), ("No", "No")])
+
+    # Second proceeding
+    process_date_2 = models.DateField("Process Date 2", blank=True, null=True)
+    investigation_type_2 = models.CharField("Investigation Type 2", blank=True, null=True, max_length=333, validators=[simple_text])
+    cause_2 = models.CharField("Cause 2", blank=True, null=True, max_length=333, validators=[simple_text])
+    autority_2 = models.CharField("Authority 2", blank=True, null=True, max_length=333, validators=[simple_text])
+    process_state_2 = models.CharField("Process Status 2", blank=True, null=True, max_length=333, validators=[simple_text])
+    responsible_2 = models.CharField("Responsible?", blank=True, null=True, max_length=333, choices=[("Yes", "Yes"), ("No", "No")])
+
     def __str__(self):
-        return f"Situación Jurídica {self.id}"
+        return f"Legal Situation {self.id}"
 
 
 
@@ -607,5 +600,5 @@ class DocumentoGenerado(models.Model):
     
 
     def __str__(self):
-        return f"{self.tipo} de {self.recluta}"
+        return f"{self.tipo} of {self.PersonalData}"
 

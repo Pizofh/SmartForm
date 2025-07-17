@@ -1,7 +1,7 @@
 from django.contrib import admin
 import nested_admin
-from .models import (PersonalData, FamilyData, InformacionAcademica,
-                     BienesRentasAEP, SituacionJuridica,Child,Sibling)
+from .models import (PersonalData, FamilyData, AcademicInformation,
+                     AssetsIncomeAEP, LegalSituation,Child,Sibling)
 import nested_admin
 
 # -------------------- INLINES ANIDADOS --------------------
@@ -24,22 +24,22 @@ class FamilyDataInline(nested_admin.NestedStackedInline):
     extra = 0
 
 
-# Inline para información académica
-class InformacionAcademicaInline(nested_admin.NestedStackedInline):  #
-    model = InformacionAcademica
+# Inline para AcademicInformation
+class AcademicInformationInline(nested_admin.NestedStackedInline):  #
+    model = AcademicInformation
     extra = 0
 
 
 
 
-# Inline para bienes y rentas (AEP)
-class BienesRentasAEPInline(nested_admin.NestedStackedInline):
-    model = BienesRentasAEP
+# Inline para AssetsIncomeAEP
+class AssetsIncomeAEPInline(nested_admin.NestedStackedInline):
+    model = AssetsIncomeAEP
     extra = 0
 
 # Inline para situación jurídica
 class SituacionJuridicaInline(nested_admin.NestedStackedInline):
-    model = SituacionJuridica
+    model = LegalSituation
     extra = 0
 
 
@@ -49,9 +49,9 @@ class SituacionJuridicaInline(nested_admin.NestedStackedInline):
 class PersonalDataAdmin(nested_admin.NestedModelAdmin):
     inlines = [
         FamilyDataInline,
-        InformacionAcademicaInline,
+        AcademicInformationInline,
  
-        BienesRentasAEPInline,
+        AssetsIncomeAEPInline,
         SituacionJuridicaInline,
         
     ]
@@ -168,111 +168,98 @@ class SiblingAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(InformacionAcademica)
-class InformacionAcademicaAdmin(admin.ModelAdmin):
-    # ----------  QUÉ COLUMNAS MOSTRAR EN LA LISTA  ----------
+@admin.register(AcademicInformation)
+class AcademicInformationAdmin(admin.ModelAdmin):
+    # ----------  COLUMNS TO DISPLAY IN THE LIST VIEW  ----------
     list_display = (
+        # Formal Education
+        "studies_1", "studies_1_year", "studies_title_1", "studies_institution_name_1", "studies_city_1",
+        "studies_2", "studies_2_year", "studies_title_2", "studies_institution_name_2", "studies_city_2",
 
-#Estudios
-            "estudios_1", "año_estudios_1", "titulo_estudios_1", "nombre_institucion_estudios_1", "ciudad_estudios_1",
-            "estudios_2", "año_estudios_2", "titulo_estudios_2", "nombre_institucion_estudios_2", "ciudad_estudios_2",
+        # Foreign Languages
+        "foreign_language_1", "can_read_foreign_language_1", "can_speak_foreign_language_1", "can_write_foreign_language_1",
+        "foreign_language_2", "can_read_foreign_language_2", "can_speak_foreign_language_2", "can_write_foreign_language_2",
 
-#Idioma Extranjero
-           "idioma_extranjero_1", "lee_idioma_extranjero_1","habla_idioma_extranjero_1","escribe_idioma_extranjero_1",
-           "idioma_extranjero_2", "lee_idioma_extranjero_2","habla_idioma_extranjero_2","escribe_idioma_extranjero_2",
-#Ofimática
-            "word_check", "excel_check", "powerpoint_check", "access_check", "internet_check","otro_check"
-        
+        # Office Tools
+        "word_check", "excel_check", "powerpoint_check", "access_check", "internet_check", "other_check"
     )
 
-    # ----------  CAMPOS PARA BUSCAR  ----------
+    # ----------  SEARCHABLE FIELDS  ----------
     search_fields = (
+        # Formal Education
+        "studies_1", "studies_1_year", "studies_title_1", "studies_institution_name_1", "studies_city_1",
+        "studies_2", "studies_2_year", "studies_title_2", "studies_institution_name_2", "studies_city_2",
 
+        # Foreign Languages
+        "foreign_language_1", "can_read_foreign_language_1", "can_speak_foreign_language_1", "can_write_foreign_language_1",
+        "foreign_language_2", "can_read_foreign_language_2", "can_speak_foreign_language_2", "can_write_foreign_language_2",
 
-#Estudios
-            "estudios_1", "año_estudios_1", "titulo_estudios_1", "nombre_institucion_estudios_1", "ciudad_estudios_1",
-            "estudios_2", "año_estudios_2", "titulo_estudios_2", "nombre_institucion_estudios_2", "ciudad_estudios_2",
-
-#Idioma Extranjero
-           "idioma_extranjero_1", "lee_idioma_extranjero_1","habla_idioma_extranjero_1","escribe_idioma_extranjero_1",
-           "idioma_extranjero_2", "lee_idioma_extranjero_2","habla_idioma_extranjero_2","escribe_idioma_extranjero_2",
-#Ofimática
-            "word_check", "excel_check", "powerpoint_check", "access_check", "internet_check","otro_check"
+        # Office Tools
+        "word_check", "excel_check", "powerpoint_check", "access_check", "internet_check", "other_check"
     )
 
-    # ----------  FILTROS LATERALES  ----------
+    # ----------  SIDEBAR FILTERS (EMPTY FOR NOW)  ----------
+    list_filter = (
+        # You can add filters here later if needed
+    )
+
+@admin.register(AssetsIncomeAEP)
+class AssetsIncomeAEPAdmin(admin.ModelAdmin):
+    # ----------  COLUMNS TO DISPLAY IN THE LIST VIEW  ----------
+    list_display = (
+        "salary_and_other_income", "layoff_and_interests", "leases", "fee", "other_income",
+        "financial_entity_1", "account_type_1", "account_number_1", "financial_entity_2", "account_type_2", "account_number_2",
+
+        "good_type_1", "good_location_1", "good_id_1", "good_appraisal_1",
+        "good_type_2", "good_location_2", "good_id_2", "good_appraisal_2",
+
+        "obligation_entity_person_1", "obligation_concept_1", "value_1",
+        "obligation_entity_person_2", "obligation_concept_2", "value_2",
+
+        "entity_or_institution_1", "kind_of_member_1",
+        "entity_or_institution_2", "kind_of_member_2",
+
+        "company_1", "kind_of_member_AEP_1",
+        "company_2", "kind_of_member_AEP_2",
+    )
+
+    # ----------  FIELDS TO ENABLE SEARCHING  ----------
+    search_fields = (
+        "salary_and_other_income", "layoff_and_interests", "leases", "fee", "other_income",
+        "financial_entity_1", "account_type_1", "account_number_1", "financial_entity_2", "account_type_2", "account_number_2",
+
+        "good_type_1", "good_location_1", "good_id_1", "good_appraisal_1",
+        "good_type_2", "good_location_2", "good_id_2", "good_appraisal_2",
+
+        "obligation_entity_person_1", "obligation_concept_1", "value_1",
+        "obligation_entity_person_2", "obligation_concept_2", "value_2",
+
+        "entity_or_institution_1", "kind_of_member_1",
+        "entity_or_institution_2", "kind_of_member_2",
+
+        "company_1", "kind_of_member_AEP_1",
+        "company_2", "kind_of_member_AEP_2",
+    )
+
+    # ----------  SIDEBAR FILTERS  ----------
     list_filter = (
     )
 
 
-@admin.register(BienesRentasAEP)
-class BienesRentasAEPAdmin(admin.ModelAdmin):
-    # ----------  QUÉ COLUMNAS MOSTRAR EN LA LISTA  ----------
+@admin.register(LegalSituation)
+class LegalSituationAdmin(admin.ModelAdmin):
+    # ----------  COLUMNS TO DISPLAY IN THE LIST VIEW  ----------
     list_display = (
-            "salarios_y_demas_ingresos_laborales","cesantías_e_intereses_de_cesantías","arriendos","honorarios","otros_ingresos_y_rentas",
-            "entidad_financiera_1", "tipo_de_cuenta_1", "numero_de_cuenta_1","entidad_financiera_2", "tipo_de_cuenta_2", "numero_de_cuenta_2",
-       
-
-            "tipo_bien_1","ubicacion_bien_1","identificacion_bien_1","avaluo_comercial_bien_1",
-            "tipo_bien_2","ubicacion_bien_2","identificacion_bien_2","avaluo_comercial_bien_2",
-     
-
-            "entidad_o_persona_obligacion_1", "concepto_obligacion_1", "valor_1",
-            "entidad_o_persona_obligacion_2", "concepto_obligacion_2", "valor_2",
-
-
-            "entidad_o_institucion_1","calidad_de_miembro_1",
-            "entidad_o_institucion_2","calidad_de_miembro_2",
-        
-
-            "empresa_1","calidad_de_miembro_AEP_1",
-            "empresa_2","calidad_de_miembro_AEP_2",
-        
+        "process_date_1", "investigation_type_1", "cause_1", "autority_1", "process_state_1", "responsible_1",
+        "process_date_2", "investigation_type_2", "cause_2", "autority_2", "process_state_2", "responsible_2",
     )
 
-    # ----------  CAMPOS PARA BUSCAR  ----------
+    # ----------  FIELDS TO ENABLE SEARCHING  ----------
     search_fields = (
-            "salarios_y_demas_ingresos_laborales","cesantías_e_intereses_de_cesantías","arriendos","honorarios","otros_ingresos_y_rentas",
-            "entidad_financiera_1", "tipo_de_cuenta_1", "numero_de_cuenta_1","entidad_financiera_2", "tipo_de_cuenta_2", "numero_de_cuenta_2",
-         
-
-            "tipo_bien_1","ubicacion_bien_1","identificacion_bien_1","avaluo_comercial_bien_1",
-            "tipo_bien_2","ubicacion_bien_2","identificacion_bien_2","avaluo_comercial_bien_2",
-  
-
-            "entidad_o_persona_obligacion_1", "concepto_obligacion_1", "valor_1",
-            "entidad_o_persona_obligacion_2", "concepto_obligacion_2", "valor_2",
- 
-
-            "entidad_o_institucion_1","calidad_de_miembro_1",
-            "entidad_o_institucion_2","calidad_de_miembro_2",
-    
-
-            "empresa_1","calidad_de_miembro_AEP_1",
-            "empresa_2","calidad_de_miembro_AEP_2",
-       
+        "process_date_1", "investigation_type_1", "cause_1", "autority_1", "process_state_1", "responsible_1",
+        "process_date_2", "investigation_type_2", "cause_2", "autority_2", "process_state_2", "responsible_2",
     )
 
-    # ----------  FILTROS LATERALES  ----------
+    # ----------  SIDEBAR FILTERS  ----------
     list_filter = (
     )
-
-@admin.register(SituacionJuridica)
-class SituacionJuridicaAdmin(admin.ModelAdmin):
-    # ----------  QUÉ COLUMNAS MOSTRAR EN LA LISTA  ----------
-    list_display = (
-            "fecha_proceso_1", "tipo_de_investigacion_1", "causa_1", "autoridad_1", "estado_del_proceso_1", "responsable_1",
-            "fecha_proceso_2", "tipo_de_investigacion_2", "causa_2", "autoridad_2", "estado_del_proceso_2", "responsable_2",
-    )
-
-    # ----------  CAMPOS PARA BUSCAR  ----------
-    search_fields = (
-            "fecha_proceso_1", "tipo_de_investigacion_1", "causa_1", "autoridad_1", "estado_del_proceso_1", "responsable_1",
-            "fecha_proceso_2", "tipo_de_investigacion_2", "causa_2", "autoridad_2", "estado_del_proceso_2", "responsable_2",
-    )
-
-    # ----------  FILTROS LATERALES  ----------
-    list_filter = (
-    )
-
-
