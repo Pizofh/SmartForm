@@ -225,7 +225,7 @@ class FamilyDataForm(BaseHelperMixin, forms.ModelForm):
                 HTML("""
                 <div class="mt-3">
                     <h5>Formatted address:</h5>
-                    <div id="direccion-preview_conyugue" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
+                    <div id="spouse_preview_address" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
                 </div>
                 """),
                 "spouse_preview_address",
@@ -255,7 +255,7 @@ class FamilyDataForm(BaseHelperMixin, forms.ModelForm):
                 HTML("""
                 <div class="mt-3">
                     <h5>Formatted address:</h5>
-                    <div id="direccion-preview_padre" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
+                    <div id="father_preview_address" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
                 </div>
                 """),
                 "father_preview_address",
@@ -285,7 +285,7 @@ class FamilyDataForm(BaseHelperMixin, forms.ModelForm):
                 HTML("""
                 <div class="mt-3">
                     <h5>Formatted address:</h5>
-                    <div id="direccion-preview_madre" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
+                    <div id="mother_preview_address" class="alert alert-info py-2 px-3 mb-0 fw-bold"></div>
                 </div>
                 """),
                 "mother_preview_address",

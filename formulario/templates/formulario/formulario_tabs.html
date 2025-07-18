@@ -119,8 +119,8 @@
     let address = parts.filter(Boolean).join(' ');
     if (v('spouse_complement')) address += ', ' + v('spouse_complement');
 
-    const div = document.getElementById('direccion-preview_conyugue');
-    const hidden = document.getElementById(id('direccion_preview_conyugue'));
+    const div = document.getElementById('spouse_preview_address');
+    const hidden = document.getElementById(id('spouse_preview_address'));
     if (div) div.textContent = address;
     if (hidden) hidden.value = address;
   }
@@ -170,8 +170,8 @@
     let address = parts.filter(Boolean).join(' ');
     if (v('father_complement')) address += ', ' + v('father_complement');
 
-    const div = document.getElementById('direccion-preview_padre');
-    const hidden = document.getElementById(id('direccion_preview_padre'));
+    const div = document.getElementById('father_preview_address');
+    const hidden = document.getElementById(id('father_preview_address'));
     if (div) div.textContent = address;
     if (hidden) hidden.value = address;
   }
@@ -221,8 +221,8 @@
     let address = parts.filter(Boolean).join(' ');
     if (v('mother_complement')) address += ', ' + v('mother_complement');
 
-    const div = document.getElementById('direccion-preview_madre');
-    const hidden = document.getElementById(id('direccion_preview_madre'));
+    const div = document.getElementById('mother_preview_address');
+    const hidden = document.getElementById(id('mother_preview_address'));
     if (div) div.textContent = address;
     if (hidden) hidden.value = address;
   }
@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", function () {
     totalForms.value = index + 1;
     updateTitles();
     const newCard = formset.lastElementChild;
-    bindDireccionSiblingEvents(newCard);
+    bindSiblingAddressEvents(newCard);
   });
 
   formset.addEventListener("click", function (e) {
@@ -344,70 +344,76 @@ function bindSiblingAddressEvents(card) {
   if (card.dataset.binded === "true") return;
   card.dataset.binded = "true";
 
+  /* ⬇️  Usa los nombres reales de los campos  ⬇️ */
   const fields = [
-    'street_type_Sibling', 'principal_number_Sibling', 'principal_letter_Sibling',
-    'bis_Sibling', 'bis_letter_Sibling', 'quadrant_Sibling',
-    'second_number_Sibling', 'second_letter_Sibling',
-    'second_quadrant_Sibling', 'nmbr_Sibling', 'complement_Sibling'
+    'sibling_street_type', 'sibling_principal_number', 'sibling_principal_letter',
+    'sibling_bis', 'sibling_bis_letter', 'sibling_quadrant',
+    'sibling_second_number', 'sibling_second_letter',
+    'sibling_second_quadrant', 'sibling_nmbr', 'sibling_complement'
   ];
 
-  function getValue(name) {
-    return card.querySelector(`[name*='-${name}']`)?.value || '';
-  }
+  const getValue = name =>
+    card.querySelector(`[name$='-${name}']`)?.value || '';
 
-  function isChecked(name) {
-    return card.querySelector(`[name*='-${name}']`)?.checked || false;
-  }
+  const isChecked = name =>
+    card.querySelector(`[name$='-${name}']`)?.checked || false;
 
   function buildAddress() {
     const parts = [
-      getValue('street_type_Sibling'),
-      getValue('principal_number_Sibling'),
-      getValue('principal_letter_Sibling'),
-      isChecked('bis_Sibling') ? 'BIS' : '',
-      getValue('bis_letter_Sibling'),
-      getValue('quadrant_Sibling')
+      getValue('sibling_street_type'),
+      getValue('sibling_principal_number'),
+      getValue('sibling_principal_letter'),
+      isChecked('sibling_bis') ? 'BIS' : '',
+      getValue('sibling_bis_letter'),
+      getValue('sibling_quadrant')
     ];
 
-    if (getValue('second_number_Sibling')) {
+    if (getValue('sibling_second_number')) {
       parts.push('#',
-        getValue('second_number_Sibling'),
-        getValue('second_letter_Sibling'),
-        getValue('second_quadrant_Sibling')
+        getValue('sibling_second_number'),
+        getValue('sibling_second_letter'),
+        getValue('sibling_second_quadrant')
       );
     }
 
-    parts.push(getValue('nmbr_Sibling'));
+    parts.push(getValue('sibling_nmbr'));
 
     let address = parts.filter(Boolean).join(' ');
-    if (getValue('complement_Sibling')) {
-      address += ', ' + getValue('complement_Sibling');
+    if (getValue('sibling_complement')) {
+      address += ', ' + getValue('sibling_complement');
     }
 
     const output = card.querySelector('.direccion-preview_Sibling');
-    const hidden = [...card.querySelectorAll("input[type='hidden']")].find(
-      input => input.name.includes("-formatted_address_Sibling")
-    );
+    const hidden = card.querySelector("input[name$='-sibling_built_address']");
 
     if (output) output.textContent = address;
     if (hidden) hidden.value = address;
   }
 
+  /* Escucha cambios */
   fields.forEach(name => {
-    const input = card.querySelector(`[name*='-${name}']`);
+    const input = card.querySelector(`[name$='-${name}']`);
     if (input) {
-      input.addEventListener(input.type === 'checkbox' ? 'change' : 'input', buildAddress);
+      input.addEventListener(
+        input.type === 'checkbox' ? 'change' : 'input',
+        buildAddress
+      );
     }
   });
 
   buildAddress();
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll('.Sibling-form').forEach(bindSiblingAddressEvents);
+document.addEventListener('DOMContentLoaded', () => {
+  document
+    .querySelectorAll('.Sibling-form')
+    .forEach(bindSiblingAddressEvents);
 
+  /* Nuevo hermano → vuelve a enlazar */
   const observer = new MutationObserver(() => {
-    document.querySelectorAll('.Sibling-form').forEach(bindSiblingAddressEvents);
+    document
+      .querySelectorAll('.Sibling-form')
+      .forEach(bindSiblingAddressEvents);
   });
 
   observer.observe(document.getElementById('formset-Sibling'), {
