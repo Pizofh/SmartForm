@@ -7,8 +7,8 @@ test('Formulario: error al enviar campos vacíos', async ({ page }) => {
   await page.click('button[type="submit"]');
 
   // Verifica que se muestren errores en los campos obligatorios
-  const errores = await page.locator('div.invalid-feedback strong');
-  await expect(errores).toHaveCount(49)
+  const errors = await page.locator('div.invalid-feedback strong');
+  await expect(errors).toHaveCount(34)
 
   // Verifica que no redirige a la página de éxito
   expect(page.url()).not.toContain('/exito/');

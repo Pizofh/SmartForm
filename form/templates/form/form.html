@@ -1,0 +1,29 @@
+{% extends "formu/base.html" %}
+{% block title %}Form with CAPTCHA{% endblock %}
+{% block content %}
+  <h1 class="mb-4">CAPTCHA Test</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button class="btn btn-primary mt-3">Submit</button>
+  </form>
+{% endblock %}
+
+
+{#
+  Test template for the form with CAPTCHA.
+
+  Inherits from: form/base.html
+
+  Overwritten blocks:
+  - `title`: Changes the document title to "Form with CAPTCHA".
+  - `content`: Renders a basic form that includes:
+      - An <h1> heading.
+      - The `form` rendered using the `|crispy` filter, meaning it uses django-crispy-forms.
+      - CSRF protection with `{% csrf_token %}`.
+      - A submit button styled with Bootstrap.
+
+  Intended use:
+  - Manual tests for integration of Google reCAPTCHA v2.
+  - Behavior verification in development and testing environments.
+#}

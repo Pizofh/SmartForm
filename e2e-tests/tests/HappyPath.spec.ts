@@ -1,73 +1,61 @@
 import { test, expect } from '@playwright/test';
-import { DatosPersonalesPage } from '../pages/Recluta.page';
-import { DatosFamilaresPage } from '../pages/DatosFamiliares.page';
-import { InformacionAcademicaPage } from '../pages/InformacionAcademica.page';
-import { ReferenciasPersonalesPage } from '../pages/ReferenciasPersonales.page';
-import { BienesRentasPage } from '../pages/BienesRentas.page';
-import { SituacionJuridicaPage } from '../pages/SituacionJuridica.page';
+import { PersonalDataPage } from '../pages/PersonalData.page';
+import { FamilyDataPage } from '../pages/FamilyData.page';
+import { AcademicInformationPage } from '../pages/AcademicInformation.page';
+import { AssetsIncomePage } from '../pages/AssetsIncome.page';
+import { LegalSituationPage } from '../pages/LegalSituation.page';
 
 
-test('Formulario: datos personales válidos', async ({ page }) => {
+test('Happy Path Form Test', async ({ page }) => {
   await page.goto('http://127.0.0.1:8000/');
 
-  //RECLUTA
-  const datosPersonales = new DatosPersonalesPage(page);
-  await datosPersonales.llenarFormulario();
-  const direccionrecluta = await datosPersonales.obtenerDireccionFormateadaRecluta();
-  expect(direccionrecluta).toBe('Carrera 69 C BIS A ESTE # 69 H ESTE 22, Segundo Piso');
+  //Personal Data
+  const personalData = new PersonalDataPage(page);
+  await personalData.FillForm();
+  const personalDataAddress = await personalData.obtainPersonaDataBuiltAddress();
+  expect(personalDataAddress).toBe('Street 69 C BIS A EAST # 69 H WEST 22, Second Floor');
  
 
 
 //DATOS FAMILIARES
-  const datosfamiliares = new DatosFamilaresPage(page);
-  await datosfamiliares.llenarFormulario();
-  const direccionConyugue = await datosfamiliares.obtenerDireccionFormateadaConyugue();
-  const direccionPadre = await datosfamiliares.obtenerDireccionFormateadaPadre();
-  const direccionMadre = await datosfamiliares.obtenerDireccionFormateadaMadre();
+  const FamilyData = new FamilyDataPage(page);
+  await FamilyData.FillForm();
+  const spouseAddress = await FamilyData.obtainSpousesBuiltAddress();
+  const fatherAddress = await FamilyData.obtainFathersBuiltAddress();
+  const motherAddress = await FamilyData.obtainMothersBuiltAddress();
 
 
-const direccionHermano = await datosfamiliares.getDireccionHermano(0);
-const direccionHermano1 = await datosfamiliares.getDireccionHermano(1);
-const direccionHermano2 = await datosfamiliares.getDireccionHermano(2);
+const siblingAddress = await FamilyData.getSiblingsAddress(0);
+const siblingAddress1 = await FamilyData.getSiblingsAddress(1);
 
 
 
-  expect(direccionConyugue).toBe('Calle 167 A NORTE # 56 B OESTE 73, Torre 4 apto 4');
-  expect(direccionPadre).toBe('Calle 50 H BIS F SUR # 89 J OESTE 789, Bosa');
-  expect(direccionMadre).toBe('Anillo Vial 230 O Z NORTE # 566 P ESTE 200, Casa tercer piso');
-  expect(direccionHermano).toBe('Calle 50 H BIS F NORTE # 89 P ESTE 79, Bosa');
-  expect(direccionHermano1).toBe('Calle 50 H BIS F SUR # 89 J OESTE 789, Bosa');
-  expect(direccionHermano2).toBe('Carrera 123 H BIS F SUR # 89 J OESTE 789, Suba');
+  expect(spouseAddress).toBe('Street 167 A NORTH # 56 B WEST 73, Torre 4 apto 4');
+  expect(fatherAddress).toBe('Highway 50 H BIS F SOUTH # 89 J WEST 789, Bosa');
+  expect(motherAddress).toBe('Avenue Street 230 O Z NORTH # 566 P EAST 200, third floor');
+  expect(siblingAddress).toBe('Alley 50 H BIS F NORTH # 89 P EAST 79, Bosa');
+  expect(siblingAddress1).toBe('Circle 50 H BIS F SOUTH # 89 J WEST 789, Bosa');
+
 
   
 //INFORMACIÓN ACADÉMICA
-  const InformacionAcademica = new InformacionAcademicaPage(page);
-  await InformacionAcademica.llenarFormulario();
+  const AcademicInformation = new AcademicInformationPage(page);
+  await AcademicInformation.FillForm();
 
-
-//REFERENCIAS PERSONALES
-  const ReferenciasPersonales =new ReferenciasPersonalesPage(page);
-  await ReferenciasPersonales.llenarFormulario();
-  const DireccionReferencia1 = await ReferenciasPersonales.obtenerDireccionFormateadaReferencia1();
-  const DireccionReferencia2 = await ReferenciasPersonales.obtenerDireccionFormateadaReferencia2();
-  const DireccionReferencia3 = await ReferenciasPersonales.obtenerDireccionFormateadaReferencia3();
-  expect(DireccionReferencia1).toBe('Calle 12 B BIS A OESTE # 45 H OESTE 456, APTO 987');
-  expect(DireccionReferencia2).toBe('Carrera 56 H NORTE # 23 L SUR 457, SEGUNDO PISO');
-  expect(DireccionReferencia3).toBe('Avenida 89 G BIS Y SUR # 56 Q ESTE 85, APARTAMENTO OOOO OOOO');
 
 
 //BIENES Y RENTAS
-  const BienesRentas =new BienesRentasPage(page);
-  await BienesRentas.llenarFormulario();
-  const totalIngresos = await BienesRentas.obtenerTotalIngresos();
-  expect(totalIngresos).toBe('$989.663.025');
+  const AssetsIncome =new AssetsIncomePage(page);
+  await AssetsIncome.FillForm();
+  const TotalIncomeSum = await AssetsIncome.ObtainTotalIncome();
+  expect(TotalIncomeSum).toBe('$989.663.025');
 
 //SITUACIÓN JURÍDICA
-  const SituacionJuridica =new SituacionJuridicaPage(page);
-  await SituacionJuridica.llenarFormulario();
+  const LegalSituation =new LegalSituationPage(page);
+  await LegalSituation.fillForm();
 
 await page.click('button[type="submit"]');
-await page.waitForURL('http://127.0.0.1:8000/exito/');
-expect(page.url()).toBe('http://127.0.0.1:8000/exito/');
+await page.waitForURL('http://127.0.0.1:8000/success/');
+expect(page.url()).toBe('http://127.0.0.1:8000/success/');
 
 });

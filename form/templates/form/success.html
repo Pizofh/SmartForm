@@ -1,0 +1,25 @@
+{% extends "form/base.html" %}
+{% block title %}Successful Registration{% endblock %}
+
+{% block content %}
+  <div class="bg-success text-white text-center p-5 rounded">
+    <h1>Thank you for submitting your information!</h1>
+    <p>Your registration has been successfully received.</p>
+  </div>
+{% endblock %}
+
+
+{# 
+  Confirmation template for successful registration.
+
+  This template extends from `form/base.html` and displays a visual success message 
+  after completing and submitting the main recruitment form.
+
+  Overwritten blocks:
+  - title: Sets the page title to "Successful Registration".
+  - content: Renders a green container with a header and thank-you message.
+
+  Usage:
+  - Typically accessed from the `ReclutaTabsView` view by redirecting to `form_success` 
+    after all forms have been successfully saved.
+#}

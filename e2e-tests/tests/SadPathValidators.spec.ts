@@ -1,18 +1,18 @@
 import { test, expect } from '@playwright/test';
-import { DatosPersonalesPage } from '../pages/Recluta.page';
-import { DatosFamilaresPage } from '../pages/DatosFamiliares.page';
-import { InformacionAcademicaPage } from '../pages/InformacionAcademica.page';
+import { PersonalDataPage } from '../pages/PersonalData.page';
+import { FamilyDataPage } from '../pages/FamilyData.page';
+import { AcademicInformationPage } from '../pages/AcademicInformation.page';
 
 test('Forms: displays validation errors when constraints are violated', async ({ page }) => {
   await page.goto('http://127.0.0.1:8000/');
   
-  const PersonalData = new DatosPersonalesPage(page);
+  const PersonalData = new PersonalDataPage(page);
   await PersonalData.FillFormWithErrors();
 
-  const FamilyData = new DatosFamilaresPage(page);
+  const FamilyData = new FamilyDataPage(page);
   await FamilyData.FillFormWithErrors();
 
-  const AcademicInfo = new InformacionAcademicaPage(page);
+  const AcademicInfo = new AcademicInformationPage(page);
   await AcademicInfo.FillFormWithErrors();
 
   await page.click('button[type="submit"]');
@@ -78,7 +78,7 @@ test('Forms: displays validation errors when constraints are violated', async ({
   
 // DATOS FAMILIARES
   
-  await FamilyData.DatosFamiliaresTab.click();
+  await FamilyData.FamilyDataTab.click();
 
 
   await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-nombre_conyugue'))
@@ -163,7 +163,7 @@ test('Forms: displays validation errors when constraints are violated', async ({
 
 // INFORMACIÓN ACADÉMICA
 
-  await AcademicInfo.informacion_academica_tab.click();
+  await AcademicInfo.academic_information_tab.click();
 
   await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-estudios_1'))
   .toHaveText('Solo se permiten letras y espacios.');
