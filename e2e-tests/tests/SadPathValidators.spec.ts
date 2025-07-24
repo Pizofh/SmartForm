@@ -17,198 +17,193 @@ test('Forms: displays validation errors when constraints are violated', async ({
 
   await page.click('button[type="submit"]');
 
-//RECLUTA
+//PERSONAL DATA
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-primer_nombre'))
-  .toHaveText('Solo se permiten letras y espacios.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-first_name'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-segundo_nombre'))
-  .toHaveText('Solo se permiten letras y espacios.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-second_name'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-primer_apellido'))
-  .toHaveText('Solo se permiten letras y espacios.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-lastname'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-segundo_apellido'))
-  .toHaveText('Solo se permiten letras y espacios.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-second_lastname'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-numero_documento'))
-  .toHaveText('Asegúrese de que este valor es mayor o igual a 1000.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-document_number'))
+  .toHaveText('Ensure this value is greater than or equal to 1000.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-lugar_expedición'))
-  .toHaveText('Solo se permiten letras y espacios.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-expedition_place'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-pasaporte_numero'))
-  .toHaveText('Solo se permiten letras, números y espacios.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-passport_number'))
+  .toHaveText('Only letters, numbers, and spaces are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-año_nacimiento'))
-  .toHaveText('Asegúrese de que este valor es menor o igual a 2025.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-birth_year'))
+  .toHaveText('Ensure this value is less than or equal to 2025.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-profesion_oficio'))
-  .toHaveText('Solo se permiten letras y espacios.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-profession'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-profesion_oficio'))
-  .toHaveText('Solo se permiten letras y espacios.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-tarjeta_profesional'))
-  .toHaveText('Solo se permiten letras, números y espacios.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-profesional_id'))
+  .toHaveText('Only letters, numbers, and spaces are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-señales_corporales'))
-  .toHaveText('Solo letras (incluyendo diéresis), números, espacios y signos básicos.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-body_marks'))
+  .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-estatura'))
-  .toHaveText('Asegúrese de que este valor es mayor o igual a 80.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-height'))
+  .toHaveText('Ensure this value is greater than or equal to 80.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-peso'))
-  .toHaveText('Asegúrese de que este valor es menor o igual a 500.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-weight'))
+  .toHaveText('Ensure this value is less than or equal to 500.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-barrio'))
-  .toHaveText('Solo se permiten letras, números y espacios.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-neighborhood'))
+  .toHaveText('Only letters, numbers, and spaces are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-numero_celular'))
-  .toHaveText('Asegúrese de que este valor es mayor o igual a 1000.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-phone_number'))
+  .toHaveText('Ensure this value is greater than or equal to 1000.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-ciudad'))
-  .toHaveText('Solo se permiten letras y espacios.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-city'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-departamento'))
-  .toHaveText('Solo se permiten letras y espacios.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-department'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(PersonalData.getErrorMessageForField('id_recluta-correo_electronico_personal'))
-  .toHaveText('Introduzca una dirección de correo electrónico válida.');
+  await expect(PersonalData.getErrorMessageForField('id_PersonalData-personal_email'))
+  .toHaveText('Enter a valid email address.');
   
 // DATOS FAMILIARES
   
   await FamilyData.FamilyDataTab.click();
 
 
-  await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-nombre_conyugue'))
-  .toHaveText('Solo se permiten letras y espacios.');
+  await expect(FamilyData.getErrorMessageForField('id_FamilyData-spouse_name'))
+  .toHaveText("Only letters and spaces are allowed.");
 
-  await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-cedula_conyugue'))
-  .toHaveText('Asegúrese de que este valor es mayor o igual a 1000.');
+await expect(FamilyData.getErrorMessageForField('id_FamilyData-spouse_id'))
+  .toHaveText("Ensure this value is greater than or equal to 1000.");
 
-  await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-profesion_oficio_conyugue'))
-  .toHaveText('Solo se permiten letras y espacios.');
+await expect(FamilyData.getErrorMessageForField('id_FamilyData-spouse_profession'))
+  .toHaveText("Only letters and spaces are allowed.");
 
-    await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-celular_conyugue'))
-  .toHaveText('Asegúrese de que este valor es mayor o igual a 1000.');
+await expect(FamilyData.getErrorMessageForField('id_FamilyData-spouse_phone'))
+  .toHaveText("Ensure this value is greater than or equal to 1000.");
 
       // DATOS PADRE    
 
 
-  await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-nombre_padre'))
-  .toHaveText('Solo se permiten letras y espacios.');
+await expect(FamilyData.getErrorMessageForField('id_FamilyData-father_name'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-identificación_padre'))
-  .toHaveText('Asegúrese de que este valor es mayor o igual a 100.');
+await expect(FamilyData.getErrorMessageForField('id_FamilyData-father_id'))
+  .toHaveText('Ensure this value is greater than or equal to 100.');
 
-  await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-telefono_padre'))
-  .toHaveText('Asegúrese de que este valor es mayor o igual a 100.');
+await expect(FamilyData.getErrorMessageForField('id_FamilyData-father_phone'))
+  .toHaveText('Ensure this value is greater than or equal to 100.');
 
-    await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-oficio_profesion_padre'))
-  .toHaveText('Solo se permiten letras y espacios.');
+await expect(FamilyData.getErrorMessageForField('id_FamilyData-father_profession'))
+  .toHaveText('Only letters and spaces are allowed.');
+
 
 
   // DATOS MADRE
 
 
-  await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-nombre_madre'))
-  .toHaveText('Solo se permiten letras y espacios.');
+await expect(FamilyData.getErrorMessageForField('id_FamilyData-mother_name'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-identificación_madre'))
-  .toHaveText('Asegúrese de que este valor es menor o igual a 99999999999.');
+await expect(FamilyData.getErrorMessageForField('id_FamilyData-mother_id'))
+  .toHaveText('Ensure this value is less than or equal to 99999999999.');
 
-  await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-telefono_madre'))
-  .toHaveText('Asegúrese de que este valor es mayor o igual a 100.');
+await expect(FamilyData.getErrorMessageForField('id_FamilyData-mother_phone'))
+  .toHaveText('Ensure this value is greater than or equal to 100.');
 
-    await expect(FamilyData.getErrorMessageForField('id_DatosFamiliares-oficio_profesion_madre'))
-  .toHaveText('Solo se permiten letras y espacios.');
+await expect(FamilyData.getErrorMessageForField('id_FamilyData-mother_profession'))
+  .toHaveText('Only letters and spaces are allowed.');
+
 
   
 // DATOS HIJO
 
 
-  await expect(FamilyData.getErrorMessageForField('id_hijos-0-nombre'))
-  .toHaveText('Solo se permiten letras y espacios.');
+  await expect(FamilyData.getErrorMessageForField('id_Child-0-name'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_hijos-0-edad'))
-  .toHaveText('Asegúrese de que este valor es menor o igual a 200.');
+  await expect(FamilyData.getErrorMessageForField('id_Child-0-age'))
+  .toHaveText('Ensure this value is less than or equal to 200.');
 
 
     
 // DATOS HERMANO
 
 
-  await expect(FamilyData.getErrorMessageForField('id_hermanos-0-primer_apellido_hermano'))
-  .toHaveText('Solo se permiten letras y espacios.');
+  await expect(FamilyData.getErrorMessageForField('id_Sibling-0-sibling_lastname'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_hermanos-0-segundo_apellido_hermano'))
-  .toHaveText('Solo se permiten letras y espacios.');
+await expect(FamilyData.getErrorMessageForField('id_Sibling-0-sibling_second_lastname'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_hermanos-0-primer_nombre_hermano'))
-  .toHaveText('Solo se permiten letras y espacios.');
+await expect(FamilyData.getErrorMessageForField('id_Sibling-0-sibling_first_name'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_hermanos-0-segundo_nombre_hermano'))
-  .toHaveText('Solo se permiten letras y espacios.');
+await expect(FamilyData.getErrorMessageForField('id_Sibling-0-sibling_second_name'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-    await expect(FamilyData.getErrorMessageForField('id_hermanos-0-identificacion_hermano'))
-  .toHaveText('Asegúrese de que este valor es mayor o igual a 100.');
+await expect(FamilyData.getErrorMessageForField('id_Sibling-0-sibling_id'))
+  .toHaveText('Ensure this value is greater than or equal to 100.');
 
-  await expect(FamilyData.getErrorMessageForField('id_hermanos-0-ocupacion_hermano'))
-  .toHaveText('Solo se permiten letras y espacios.');
+await expect(FamilyData.getErrorMessageForField('id_Sibling-0-sibling_occupation'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_hermanos-0-celular_hermano'))
-  .toHaveText('Asegúrese de que este valor es menor o igual a 99999999999.');
+await expect(FamilyData.getErrorMessageForField('id_Sibling-0-sibling_phone'))
+  .toHaveText('Ensure this value is less than or equal to 99999999999.');
+
 
 
 // INFORMACIÓN ACADÉMICA
 
-  await AcademicInfo.academic_information_tab.click();
+ await AcademicInfo.academic_information_tab.click();
 
-  await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-estudios_1'))
-  .toHaveText('Solo se permiten letras y espacios.');
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-studies_1'))
+  .toHaveText('Only letters and spaces are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-año_estudios_1'))
-  .toHaveText('Asegúrese de que este valor es mayor o igual a 1900.');
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-studies_1_year'))
+  .toHaveText('Ensure this value is greater than or equal to 1900.');
 
-  await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-titulo_estudios_1'))
-  .toHaveText('Solo letras (incluyendo diéresis), números, espacios y signos básicos.');
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-studies_title_1'))
+  .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-nombre_institucion_estudios_1'))
-  .toHaveText('Solo letras (incluyendo diéresis), números, espacios y signos básicos.');
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-studies_institution_name_1'))
+  .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
-    await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-ciudad_estudios_1'))
-  .toHaveText('Solo letras (incluyendo diéresis), números, espacios y signos básicos.');
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-studies_city_1'))
+  .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-studies_2'))
+  .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-studies_2_year'))
+  .toHaveText('Ensure this value is less than or equal to 2030.');
 
-    await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-estudios_2'))
-  .toHaveText('Solo letras (incluyendo diéresis), números, espacios y signos básicos.');
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-studies_title_2'))
+  .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-año_estudios_2'))
-  .toHaveText('Asegúrese de que este valor es menor o igual a 2030.');
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-studies_institution_name_2'))
+  .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-titulo_estudios_2'))
-  .toHaveText('Solo letras (incluyendo diéresis), números, espacios y signos básicos.');
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-studies_city_2'))
+  .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
-  await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-nombre_institucion_estudios_2'))
-  .toHaveText('Solo letras (incluyendo diéresis), números, espacios y signos básicos.');
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-foreign_language_1'))
+  .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
-    await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-ciudad_estudios_2'))
-  .toHaveText('Solo letras (incluyendo diéresis), números, espacios y signos básicos.');
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-foreign_language_2'))
+  .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
-
-    await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-idioma_extranjero_1'))
-  .toHaveText('Solo letras (incluyendo diéresis), números, espacios y signos básicos.');
-
-    await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-idioma_extranjero_2'))
-  .toHaveText('Solo letras (incluyendo diéresis), números, espacios y signos básicos.');
-
-
-
-
-    await expect(FamilyData.getErrorMessageForField('id_InformacionAcademica-otro_check'))
-  .toHaveText('Solo letras (incluyendo diéresis), números, espacios y signos básicos.');
+await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-other_check'))
+  .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
 
 }); 

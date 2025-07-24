@@ -160,10 +160,8 @@ constructor(page: Page) {
     await this.lastname.fill('123');
     await this.second_lastname.fill('123');
     await this.document_number.fill(wrongdocument);
-    await this.expedition_date.fill('2018-08-14');
     await this.expedition_place.fill('123');
     await this.passport_number.fill('x#$"%&%YRTGERFEDC');
-    await this.passport_date.fill('2019-05-04');
     await this.birth_year.fill('999999999');
     await this.profession.fill('ADFV3"$RR$#%#EREADSFG#"4234SDF');
     await this.profesional_id.fill('IA12"#"$%$&%YU/&&%3456');

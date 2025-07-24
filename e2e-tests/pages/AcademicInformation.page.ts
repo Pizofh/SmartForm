@@ -159,4 +159,8 @@ this.other_check = page.locator('#id_AcademicInformation-other_check');
    await this.other_check.fill('EDWFDGFBYY&%$#""');
   
       }
+
+        getErrorMessageForField(fieldId: string): Locator {
+    return this.page.locator(`#${fieldId}_error strong`);
+  }
 }
