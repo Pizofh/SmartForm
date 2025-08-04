@@ -1,4 +1,4 @@
-## SmartForm – Intelligent Recruitment Form for INDUMIL
+## SmartForm – Intelligent Recruitment Form
 A full-featured intelligent web form, designed for efficient recruitment data collection. Includes dynamic multi-tab sections, advanced field validation, file uploads, and automatic document generation.
 
 ## 🛠️ Technologies Used
