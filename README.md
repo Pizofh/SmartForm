@@ -86,15 +86,18 @@ npx playwright test
 Generate trace report:
 ```bash
 npx playwright test --trace on
-npx playwright show-trace trace.zip
 ```
-📡 API Tests (Postman + Newman)
+View trace report: 
+```bash
+npx playwright show-trace
+```
+## 📡 API Tests (Postman + Newman)
 
-e2e-tests/SmartFormAPITests.postman_collection.json: API endpoint test collection
 
 Run Postman collection via Newman:
 ``` bash
-newman run e2e-tests/SmartFormAPITests.postman_collection.json -r cli,html --reporter-html-export postman-report.html
+npx newman run e2e-tests/SmartFormAPITests.postman_collection.json
+
 ```
 
 ## 👤 Author

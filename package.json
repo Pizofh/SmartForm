@@ -1,0 +1,25 @@
+{
+  "name": "smart-form",
+  "version": "1.0.0",
+  "description": "A full-featured intelligent web form, designed for efficient recruitment data collection. Includes dynamic multi-tab sections, advanced field validation, file uploads, and automatic document generation.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pizofh/FormularioInteligente.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Pizofh/FormularioInteligente/issues"
+  },
+  "homepage": "https://github.com/Pizofh/FormularioInteligente#readme",
+  "devDependencies": {
+    "newman": "^4.6.1",
+    "newman-reporter-html": "^1.0.5"
+  }
+}
