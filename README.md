@@ -1,55 +1,106 @@
-# FormularioInteligenteIndumil
+## SmartForm – Intelligent Recruitment Form for INDUMIL
+A full-featured intelligent web form, designed for efficient recruitment data collection. Includes dynamic multi-tab sections, advanced field validation, file uploads, and automatic document generation.
 
-Formulario web inteligente desarrollado para INDUMIL, orientado a la recolección eficiente de datos de reclutamiento. Incluye validaciones avanzadas, secciones dinámicas por pestañas, carga de archivos y generación automática de documentos.
-
-## 🛠️ Tecnologías utilizadas
-
+## 🛠️ Technologies Used
 - Python 3
 - Django
 - Bootstrap 5
 - crispy-forms
 - django-recaptcha
 - htmx
-- SQLite (modo local)
+- SQLite (local mode)
+- PostgreSQL (production mode)
+- Playwright (E2E testing)
+- Postman + Newman (API testing)
 
-## 🚀 Funcionalidades
+## 🚀 Features
+- Multi-tab form structure collecting:
+  - Personal info
+  - Identity
+  - Contact
+  - Family
+  - Education
+  - Experience
+  - Financial data
+  - Legal Situation
 
-- Formulario en pestañas para recolectar:
-  - Datos personales, identidad, contacto, familiares, educación, experiencia, economía.
-- Validación con reCAPTCHA.
-- Subida de archivos (hojas de vida, certificados).
-- Generación de documentos `.docx`.
-- Seguridad básica integrada.
+- Dynamic field validation
 
-## ⚙️ Instalación local
+- Basic built-in security features
 
-1. Clona el repositorio:
+## ⚙️ Local Setup
+Clone the repository:
 
-git clone https://github.com/tuusuario/FormularioInteligenteIndumil.git
-cd FormularioInteligenteIndumil
-Crea un entorno virtual e instálalo:
+``` bash
+git clone https://github.com/Pizofh/SmartForm.git
+cd SmartForm
+```
 
-2. Crea un entorno virtual e instálalo:
+Create and activate a virtual environment:
 
+```bash
 python -m venv venv
+```
+- Windows
+```bash
 .\venv\Scripts\activate
+```
+- Unix/macOS
+```bash
+source venv/bin/activate
+```
+Install dependencies:
+```bash
 pip install -r requirements.txt
+```
 
-3.  Configura el archivo .env si es necesario (por ejemplo para la clave de reCAPTCHA).
-
-4.  Aplica migraciones:
-
+Apply database migrations:
+```bash
 python manage.py migrate
+```
 
-5. Ejecuta el servidor:
-
+Run the development server:
+```bash
 python manage.py runserver
-Accede desde el navegador en http://localhost:8000
+```
 
+Then open in your browser:
 
-📝 Notas
-Si estás en entorno de pruebas o desarrollo, el CAPTCHA se puede desactivar con un flag en la configuración.
-Los archivos se almacenan en la carpeta ../media.
+http://127.0.0.1:8000/
 
+## 📂 Automated Testing
+This project includes full automated testing coverage.
 
+## ▶️ End-to-End Tests (Playwright)
+- e2e-tests/HappyPath.spec.ts: full successful user flow
+
+- e2e-tests/SadPath.spec.ts: validation for required fields
+
+- e2e-tests/SadPathValidators.spec.ts: edge cases for custom validators across tabs
+
+Run Playwright tests:
+```bash
+npx playwright install
+npx playwright test
+```
+Generate trace report:
+```bash
+npx playwright test --trace on
+npx playwright show-trace trace.zip
+```
+📡 API Tests (Postman + Newman)
+
+e2e-tests/SmartFormAPITests.postman_collection.json: API endpoint test collection
+
+Run Postman collection via Newman:
+``` bash
+newman run e2e-tests/SmartFormAPITests.postman_collection.json -r cli,html --reporter-html-export postman-report.html
+```
+
+## 👤 Author
+**Brian Steve Garnica Sandoval**
+[LinkedIn Profile](https://www.linkedin.com/in/steve-garnica)
+DevOps Engineer
+
+_This project is part of a real-world DevOps portfolio. Designed, tested, and deployed to reflect full-cycle engineering practices._
 
