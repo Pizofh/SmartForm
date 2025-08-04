@@ -68,7 +68,25 @@ async fillForm() {
   await this.responsible_2.selectOption('Yes');
 }
 
+async fillFormWithErrors() {
+  await this.legal_situation_tab.click();
 
+  // First Legal Case
+  await this.investigation_type_1.fill('Legal#$%$&');
+  await this.cause_1.fill('Investigation Cause 1"$#%&$');
+  await this.authority_1.fill('Comptrollers Office"##$%#$#');
+  await this.process_state_1.fill('In progress"#$%$');
+
+  // Second Legal Case
+
+  await this.investigation_type_2.fill('Lega#"$#%l');
+  await this.cause_2.fill('Investigation Cause 2"#$#%$&');
+  await this.authority_2.fill('Inspector Generals Offic"#$%e');
+  await this.process_state_2.fill('In progress"#$%&');
+}
+      getErrorMessageForField(fieldId: string): Locator {
+    return this.page.locator(`#${fieldId}_error strong`);
+  }
 
 }
 

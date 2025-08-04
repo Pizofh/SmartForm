@@ -1,0 +1,1189 @@
+{
+	"info": {
+		"_postman_id": "cb73ef66-fd30-4238-8263-f44ceca5b7a0",
+		"name": "SmartForm API Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46944892",
+		"_collection_link": "https://stevegs-8506913.postman.co/workspace/SteveGarnica's-Workspace~2c9f707b-08b1-45ab-8c68-9333225e1200/collection/46944892-cb73ef66-fd30-4238-8263-f44ceca5b7a0?action=share&source=collection_link&creator=46944892"
+	},
+	"item": [
+		{
+			"name": "PersonalData",
+			"item": [
+				{
+					"name": "HappyPath PersonalData",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifies that the response returns a 200 OK status\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Ensures that the response contains at least one result\r",
+									"pm.test(\"There should be at least one result\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Checks that each item in the response includes a 'first_name' property\r",
+									"pm.test(\"Each entry has a 'first_name' property\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    json.forEach((item) => {\r",
+									"        pm.expect(item).to.have.property(\"first_name\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// Validates that the first item has an 'id' field of type number\r",
+									"pm.test(\"The first item has a numeric ID\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json[0].id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"// Confirms that the first item includes the nested 'FamilyData' relationship\r",
+									"pm.test(\"Includes 'FamilyData' in the first item\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json[0]).to.have.property(\"FamilyData\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/PersonalData/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"PersonalData",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HappyPath PersonalData",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generates a random integer between 0 and 999999\r",
+									"const random = Math.floor(Math.random() * 1000000);\r",
+									"\r",
+									"// Sets a dynamic 'document_number' variable starting from 700000000\r",
+									"pm.variables.set(\"document_number\", 700000000 + random);\r",
+									"\r",
+									"// Sets a dynamic 'phone_number' variable starting from 300000000\r",
+									"pm.variables.set(\"phone_number\", 300000000 + random);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifies that the API successfully created a resource with HTTP 201 Created\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"// Asserts that the response includes both 'id' and 'first_name' properties\r",
+									"pm.test(\"Response has ID and first_name\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json).to.have.property(\"first_name\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"first_name\": \"Ana\",\r\n  \"second_name\": \"Lucía\",\r\n  \"lastname\": \"Ramírez\",\r\n  \"second_lastname\": \"Díaz\",\r\n  \"document_type\": \"CI\",\r\n  \"document_number\": {{document_number}},\r\n  \"expedition_date\": \"2015-06-15\",\r\n  \"expedition_place\": \"Bogotá\",\r\n  \"birth_day\": 22,\r\n  \"birth_month\": \"10\",\r\n  \"birth_year\": 1995,\r\n  \"relationships\": \"Single\",\r\n  \"profession\": \"Engineer\",\r\n  \"height\": 165,\r\n  \"weight\": 60,\r\n  \"street_type\": \"Street\",\r\n  \"principal_number\": \"45\",\r\n  \"principal_letter\": \"B\",\r\n  \"bis\": false,\r\n  \"quadrant\": \"NORTH\",\r\n  \"secondary_number\": \"89\",\r\n  \"secondary_letter\": \"A\",\r\n  \"quadrant_2\": \"WEST\",\r\n  \"nmbr\": \"12\",\r\n  \"complement\": \"Apto 101\",\r\n  \"neighborhood\": \"Centro\",\r\n  \"phone_number\": {{phone_number}},\r\n  \"city\": \"Medellín\",\r\n  \"department\": \"Antioquia\",\r\n  \"personal_email\": \"ana@example.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/PersonalData/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"PersonalData",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SadPath PersonalData",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validates that the response returns either 404 Not Found or 400 Bad Request.\r",
+									"// 404 is expected if the resource does not exist.\r",
+									"// 400 may occur if the backend performs type checking and rejects invalid ID formats.\r",
+									"pm.test(\"Status code is 404 or 400\", function () {\r",
+									"    pm.expect(pm.response.code === 404 || pm.response.code === 400).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/PersonalData/invalid-id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"PersonalData",
+								"invalid-id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SadPath PersonalData",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validates that the response returns either 404 Not Found or 400 Bad Request.\r",
+									"// 404 is expected if the resource does not exist.\r",
+									"// 400 may occur if the backend performs type checking and rejects invalid ID formats.\r",
+									"pm.test(\"Status code is 404 or 400\", function () {\r",
+									"    pm.expect(pm.response.code === 404 || pm.response.code === 400).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"lastname\": \"Doe\",\r\n    \"document_type\": \"CI\",\r\n    \"document_number\": 1234567,\r\n    \"expedition_date\": \"2023-01-01\",\r\n    \"expedition_place\": \"Bogotá\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/PersonalData/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"PersonalData",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FamilyData",
+			"item": [
+				{
+					"name": "HappyPath FamilyData",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifies that the API responded successfully with HTTP 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Ensures that the response contains at least one item\r",
+									"pm.test(\"At least one result exists\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Checks that each item in the response is associated with a 'PersonalData' object\r",
+									"pm.test(\"Each item is linked to PersonalData\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    json.forEach(item => {\r",
+									"        pm.expect(item).to.have.property(\"PersonalData\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/FamilyData/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"FamilyData",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HappyPath Child",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// 1. Verifies that the response status is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// 2. Ensures that at least one child is present in the response\r",
+									"pm.test(\"At least one child exists\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// 3. Validates that each child object includes all required fields\r",
+									"pm.test(\"Each child has required fields\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    json.forEach(child => {\r",
+									"        pm.expect(child).to.have.property(\"id\");\r",
+									"        pm.expect(child).to.have.property(\"name\");\r",
+									"        pm.expect(child).to.have.property(\"age\");\r",
+									"        pm.expect(child).to.have.property(\"child_id\");\r",
+									"        pm.expect(child).to.have.property(\"FamilyData\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// 4. Checks that each field has the expected data type\r",
+									"pm.test(\"Each child has correct data types\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    json.forEach(child => {\r",
+									"        pm.expect(child.id).to.be.a(\"number\");\r",
+									"        pm.expect(child.name).to.be.a(\"string\");\r",
+									"        pm.expect(child.age).to.be.a(\"number\");\r",
+									"        pm.expect(child.child_id).to.be.a(\"number\");\r",
+									"        pm.expect(child.FamilyData).to.be.a(\"number\"); // Assuming this is a foreign key ID\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/Child/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"Child",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HappyPath Siblings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// 1. Verifies that the response has HTTP 200 OK status\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// 2. Ensures that at least one sibling is present in the response\r",
+									"pm.test(\"At least one sibling exists\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// 3. Validates that each sibling object includes all expected fields\r",
+									"pm.test(\"Each sibling has all required fields\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    const expectedFields = [\r",
+									"        \"id\",\r",
+									"        \"sibling_lastname\",\r",
+									"        \"sibling_second_lastname\",\r",
+									"        \"sibling_first_name\",\r",
+									"        \"sibling_second_name\",\r",
+									"        \"sibling_id\",\r",
+									"        \"sibling_occupation\",\r",
+									"        \"sibling_phone\",\r",
+									"        \"sibling_street_type\",\r",
+									"        \"sibling_principal_number\",\r",
+									"        \"sibling_principal_letter\",\r",
+									"        \"sibling_bis\",\r",
+									"        \"sibling_bis_letter\",\r",
+									"        \"sibling_quadrant\",\r",
+									"        \"sibling_second_number\",\r",
+									"        \"sibling_second_letter\",\r",
+									"        \"sibling_second_quadrant\",\r",
+									"        \"sibling_nmbr\",\r",
+									"        \"sibling_complement\",\r",
+									"        \"sibling_built_address\",\r",
+									"        \"FamilyData\"\r",
+									"    ];\r",
+									"    json.forEach(sibling => {\r",
+									"        expectedFields.forEach(field => {\r",
+									"            pm.expect(sibling).to.have.property(field);\r",
+									"        });\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// 4. Verifies that each field has the correct data type\r",
+									"pm.test(\"Each sibling has correct data types\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    json.forEach(sibling => {\r",
+									"        pm.expect(sibling.id).to.be.a(\"number\");\r",
+									"        pm.expect(sibling.sibling_lastname).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_second_lastname).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_first_name).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_second_name === null || typeof sibling.sibling_second_name === \"string\").to.be.true;\r",
+									"        pm.expect(sibling.sibling_id).to.be.a(\"number\");\r",
+									"        pm.expect(sibling.sibling_occupation).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_phone).to.be.a(\"number\");\r",
+									"        pm.expect(sibling.sibling_street_type).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_principal_number).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_principal_letter).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_bis).to.be.a(\"boolean\");\r",
+									"        pm.expect(sibling.sibling_bis_letter).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_quadrant).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_second_number).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_second_letter).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_second_quadrant).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_nmbr).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_complement).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.sibling_built_address).to.be.a(\"string\");\r",
+									"        pm.expect(sibling.FamilyData).to.be.a(\"number\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/Sibling/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"Sibling",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SadPath FamilyData",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validates that the response returns either 404 Not Found or 400 Bad Request.\r",
+									"// 404 is expected if the resource does not exist.\r",
+									"// 400 may occur if the backend performs type checking and rejects invalid ID formats.\r",
+									"pm.test(\"Status code is 404 or 400\", function () {\r",
+									"    pm.expect(pm.response.code === 404 || pm.response.code === 400).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/FamilyData/invalid-id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"FamilyData",
+								"invalid-id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SadPath Child",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validates that the response returns either 404 Not Found or 400 Bad Request.\r",
+									"// 404 is expected if the resource does not exist.\r",
+									"// 400 may occur if the backend performs type checking and rejects invalid ID formats.\r",
+									"pm.test(\"Status code is 404 or 400\", function () {\r",
+									"    pm.expect(pm.response.code === 404 || pm.response.code === 400).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/Child/invalid-id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"Child",
+								"invalid-id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SadPath Siblings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validates that the response returns either 404 Not Found or 400 Bad Request.\r",
+									"// 404 is expected if the resource does not exist.\r",
+									"// 400 may occur if the backend performs type checking and rejects invalid ID formats.\r",
+									"pm.test(\"Status code is 404 or 400\", function () {\r",
+									"    pm.expect(pm.response.code === 404 || pm.response.code === 400).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/Siblings/invalid-id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"Siblings",
+								"invalid-id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AcademicInformation",
+			"item": [
+				{
+					"name": "HappyPath AcademicInformation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifies that the response status is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Ensures that the response contains at least one item\r",
+									"pm.test(\"At least one result exists\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Validates that each item in the response is associated with a 'PersonalData' reference\r",
+									"pm.test(\"Each item is linked to PersonalData\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    json.forEach(item => {\r",
+									"        pm.expect(item).to.have.property(\"PersonalData\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/AcademicInformation/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"AcademicInformation",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SadPath AcademicInformation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validates that the response returns either 404 Not Found or 400 Bad Request.\r",
+									"// 404 is expected if the resource does not exist.\r",
+									"// 400 may occur if the backend performs type checking and rejects invalid ID formats.\r",
+									"pm.test(\"Status code is 404 or 400\", function () {\r",
+									"    pm.expect(pm.response.code === 404 || pm.response.code === 400).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/AcademicInformation/invalid-id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"AcademicInformation",
+								"invalid-id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AssetsIncomeAEP",
+			"item": [
+				{
+					"name": "HappyPath AssetsIncomeAEP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifies that the response returns HTTP 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Ensures that the response contains at least one item\r",
+									"pm.test(\"At least one result exists\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Confirms that each item in the response includes the 'PersonalData' field\r",
+									"pm.test(\"Each item is linked to PersonalData\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    json.forEach(item => {\r",
+									"        pm.expect(item).to.have.property(\"PersonalData\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/AssetsIncomeAEP/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"AssetsIncomeAEP",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SadPath AssetsIncomeAEP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validates that the response returns either 404 Not Found or 400 Bad Request.\r",
+									"// 404 is expected if the resource does not exist.\r",
+									"// 400 may occur if the backend performs type checking and rejects invalid ID formats.\r",
+									"pm.test(\"Status code is 404 or 400\", function () {\r",
+									"    pm.expect(pm.response.code === 404 || pm.response.code === 400).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/AssetsIncomeAEP/invalid-id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"AssetsIncomeAEP",
+								"invalid-id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LegalSituation",
+			"item": [
+				{
+					"name": "HappyPath LegalSituation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifies that the response returns HTTP 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Confirms that each item in the response includes the 'PersonalData' field\r",
+									"pm.test(\"Each item is linked to PersonalData\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"    json.forEach(item => {\r",
+									"        pm.expect(item).to.have.property(\"PersonalData\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/LegalSituation/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"LegalSituation",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SadPath LegalSituation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validates that the response returns either 404 Not Found or 400 Bad Request.\r",
+									"// 404 is expected if the resource does not exist.\r",
+									"// 400 may occur if the backend performs type checking and rejects invalid ID formats.\r",
+									"pm.test(\"Status code is 404 or 400\", function () {\r",
+									"    pm.expect(pm.response.code === 404 || pm.response.code === 400).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Bsgs1010100094!",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "SteveGS",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/LegalSituation/invalid-id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"LegalSituation",
+								"invalid-id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

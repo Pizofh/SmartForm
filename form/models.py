@@ -165,7 +165,7 @@ class FamilyData(models.Model):
     """
 
     # One-to-one relationship with PersonalData
-    PersonalData = models.OneToOneField(PersonalData, on_delete=models.CASCADE, null=True)
+    PersonalData = models.OneToOneField(PersonalData, on_delete=models.CASCADE, null=True, related_name='FamilyData')
 
     # --- Spouse data ---
     spouse_name = models.CharField("Spouse's Name", max_length=50, blank=True, validators=[only_letters])
@@ -225,7 +225,7 @@ class FamilyData(models.Model):
 
     # --- Mother data ---
     mother_name = models.CharField("Mother's Name", max_length=55, null=True, validators=[only_letters])
-    mother_lives = models.CharField("Is Alive?", null=True, choices=[("Sí", "Yes"), ("No", "No")])
+    mother_lives = models.CharField("Is Alive?", null=True, choices=[("Yes", "Yes"), ("No", "No")])
     mother_id = models.IntegerField("ID No.", null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
     mother_phone = models.IntegerField("Mother's Phone", blank=True, null=True, validators=[MinValueValidator(100), MaxValueValidator(99_999_999_999)])
     mother_profession = models.CharField("Mother's Profession", blank=True, null=True, max_length=50, validators=[only_letters])

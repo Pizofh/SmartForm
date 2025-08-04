@@ -214,4 +214,78 @@ this.kind_of_member_AEP_2 = page.locator('#id_AssetsIncomeAEP-kind_of_member_AEP
   const totalsum = await this.total_income.inputValue();
   return totalsum.trim();
 }
+
+
+
+async FillFormWithErrors() {
+
+    await this.AssetsIncome_tab.click();
+
+  //Total income last fiscal year
+    await this.salary_and_other_income.fill('999999999999999999999999999999999999999999999999999999999999999');
+    await this.layoff_and_interests.fill('999999999999999999999999999999999999999999999999999999999999999');
+    await this.representation_expenses.fill('999999999999999999999999999999999999999999999999999999999999999');
+    await this.leases.fill('999999999999999999999999999999999999999999999999999999999999999');
+    await this.fee.fill('999999999999999999999999999999999999999999999999999999999999999');
+    await this.other_income.fill('999999999999999999999999999999999999999999999999999999999999999');
+
+//Bank accounts in Colombia and abroad
+
+  await this.financial_entity_1.fill('ADSFE"##$%&Y%');
+  await this.account_type_1.fill('ADSFE"##$%&Y%');
+  await this.account_number_1.fill('999999999999999999999999999999999999999999999999999999999999999');
+
+  await this.financial_entity_2.fill('ADSFE"##$%&Y%');
+  await this.account_type_2.fill('ADSFE"##$%&Y%');
+  await this.account_number_2.fill('999999999999999999999999999999999999999999999999999999999999999');
+
+
+//Assets
+
+  await this.good_type_1.fill('CarADSFE"##$%&Y%');
+  await this.good_location_1.fill('TunjaADSFE"##$%&Y%');
+  await this.good_id_1.fill('Id3nt1f1c4tionADSFE"##$%&Y%');
+  await this.good_appraisal_1.fill('999999999999999999999999999999999999999999999999999999999999999');
+
+  await this.good_type_2.fill('houseADSFE"##$%&Y%');
+  await this.good_location_2.fill('YopalADSFE"##$%&Y%');
+  await this.good_id_2.fill('123456789ADSFE"##$%&Y%'); 
+  await this.good_appraisal_2.fill('999999999999999999999999999999999999999999999999999999999999999');
+
+
+
+//Current debts
+  await this.obligation_entity_person_1.fill('Obligation ADSFE"##$%&Y%1');
+  await this.obligation_concept_1.fill('The reason for thisADSFE"##$%&Y%');
+  await this.value_1.fill('999999999999999999999999999999999999999999999999999999999999999');
+
+  await this.obligation_entity_person_2.fill('ObligationADSFE"##$%&Y% 2');
+  await this.obligation_concept_2.fill('Reason number ADSFE"##$%&Y%two');
+  await this.value_2.fill('999999999999999999999999999999999999999999999999999999999999999');
+
+
+//Participation in organizations, NGOs, societies
+
+  await this.entity_or_institution_1.fill('OrgADSFE"##$%&Y%anization');
+  await this.kind_of_member_1.fill('Member 1ADSFE"##$%&Y%');
+
+  await this.entity_or_institution_2.fill('CorporationADSFE"##$%&Y%');
+  await this.kind_of_member_2.fill('ManagerADSFE"##$%&Y%');
+
+
+  //Private economic activity
+    
+  await this.company_1.fill('Company 1ADSFE"##$%&Y%');
+  await this.kind_of_member_AEP_1.fill('PresidentADSFE"##$%&Y%'); 
+
+  await this.company_2.fill('Company 2ADSFE"##$%&Y%');
+  await this.kind_of_member_AEP_2.fill('TheoneADSFE"##$%&Y%'); 
+
+
+  
+  }
+  
+      getErrorMessageForField(fieldId: string): Locator {
+    return this.page.locator(`#${fieldId}_error strong`);
+  }
 }

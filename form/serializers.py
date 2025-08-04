@@ -50,12 +50,13 @@ class SiblingSerializer(serializers.ModelSerializer):
 
 
 class FamilyDataSerializer(serializers.ModelSerializer):
-    Child = ChildSerializer(many=True, read_only=True)
-    Sibling = SiblingSerializer(many=True, read_only=True)
+    children = ChildSerializer(many=True, read_only=True)
+    siblings = SiblingSerializer(many=True, read_only=True)
 
     class Meta:
         model = FamilyData
         fields = '__all__'
+
 
 
 class AcademicInformationSerializer(serializers.ModelSerializer):
@@ -84,9 +85,9 @@ class DocumentoGeneradoSerializer(serializers.ModelSerializer):
 
 class PersonalDataSerializer(serializers.ModelSerializer):
     FamilyData = FamilyDataSerializer(read_only=True)
-    AcademicInformation = AcademicInformationSerializer(many=True, read_only=True)
+    academic_information = AcademicInformationSerializer(many=True, read_only=True)
+    legal_situations = LegalSituationSerializer(many=True, read_only=True)
     AssetsIncomeAEP = AssetsIncomeAEPSerializer(many=True, read_only=True)
-    LegalSituation = LegalSituationSerializer(many=True, read_only=True)
     documentogenerado_set = DocumentoGeneradoSerializer(many=True, read_only=True)
 
     class Meta:

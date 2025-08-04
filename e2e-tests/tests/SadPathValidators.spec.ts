@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 import { PersonalDataPage } from '../pages/PersonalData.page';
 import { FamilyDataPage } from '../pages/FamilyData.page';
 import { AcademicInformationPage } from '../pages/AcademicInformation.page';
+import { AssetsIncomePage} from '../pages/AssetsIncome.page';
+import { LegalSituationPage } from '../pages/LegalSituation.page';
 
 test('Forms: displays validation errors when constraints are violated', async ({ page }) => {
   await page.goto('http://127.0.0.1:8000/');
@@ -14,6 +16,12 @@ test('Forms: displays validation errors when constraints are violated', async ({
 
   const AcademicInfo = new AcademicInformationPage(page);
   await AcademicInfo.FillFormWithErrors();
+
+  const AssetsIncome = new AssetsIncomePage(page);
+  await AssetsIncome.FillFormWithErrors();
+
+  const LegalSituation = new LegalSituationPage(page);
+  await LegalSituation.fillFormWithErrors();
 
   await page.click('button[type="submit"]');
 
@@ -162,7 +170,7 @@ await expect(FamilyData.getErrorMessageForField('id_Sibling-0-sibling_phone'))
 
 
 
-// INFORMACIÓN ACADÉMICA
+// ACADEMIC INFORMATION
 
  await AcademicInfo.academic_information_tab.click();
 
@@ -205,5 +213,135 @@ await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-foreig
 await expect(AcademicInfo.getErrorMessageForField('id_AcademicInformation-other_check'))
   .toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
 
+
+// ASSETS INCOME 
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-salary_and_other_income'))
+.toHaveText('Ensure this value is less than or equal to 999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-layoff_and_interests'))
+.toHaveText('Ensure this value is less than or equal to 999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-representation_expenses'))
+.toHaveText('Ensure this value is less than or equal to 999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-leases'))
+.toHaveText('Ensure this value is less than or equal to 999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-other_income'))
+.toHaveText('Ensure this value is less than or equal to 999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-financial_entity_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-account_type_1'))
+.toHaveText('Only letters, numbers, and spaces are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-account_number_1'))
+.toHaveText('Ensure this value is less than or equal to 999999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-financial_entity_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-account_type_2'))
+.toHaveText('Only letters, numbers, and spaces are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-account_number_2'))
+.toHaveText('Ensure this value is less than or equal to 999999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-account_number_2'))
+.toHaveText('Ensure this value is less than or equal to 999999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-good_type_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-good_location_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-good_id_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-good_appraisal_1'))
+.toHaveText('Ensure this value is less than or equal to 999999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-good_type_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-good_location_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-good_id_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-good_appraisal_2'))
+.toHaveText('Ensure this value is less than or equal to 999999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-obligation_entity_person_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-obligation_concept_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-value_1'))
+.toHaveText('Ensure this value is less than or equal to 999999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-obligation_entity_person_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-obligation_concept_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-value_2'))
+.toHaveText('Ensure this value is less than or equal to 999999999999999.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-entity_or_institution_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-kind_of_member_1'))
+.toHaveText('Only letters, numbers, and spaces are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-entity_or_institution_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-kind_of_member_2'))
+.toHaveText('Only letters, numbers, and spaces are allowed.');
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-company_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');  
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-kind_of_member_AEP_1'))
+.toHaveText('Only letters, numbers, and spaces are allowed.');  
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-company_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');  
+
+await expect(AssetsIncome.getErrorMessageForField('id_AssetsIncomeAEP-kind_of_member_AEP_2'))
+.toHaveText('Only letters, numbers, and spaces are allowed.');  
+
+// LEGAL SITUATION
+
+await expect(LegalSituation.getErrorMessageForField('id_LegalSituation-investigation_type_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');  
+
+await expect(LegalSituation.getErrorMessageForField('id_LegalSituation-cause_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.'); 
+
+await expect(LegalSituation.getErrorMessageForField('id_LegalSituation-autority_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.'); 
+
+await expect(LegalSituation.getErrorMessageForField('id_LegalSituation-process_state_1'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.'); 
+
+await expect(LegalSituation.getErrorMessageForField('id_LegalSituation-investigation_type_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.');  
+
+await expect(LegalSituation.getErrorMessageForField('id_LegalSituation-cause_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.'); 
+
+await expect(LegalSituation.getErrorMessageForField('id_LegalSituation-autority_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.'); 
+
+await expect(LegalSituation.getErrorMessageForField('id_LegalSituation-process_state_2'))
+.toHaveText('Only letters (including umlauts), numbers, spaces, and basic symbols are allowed.'); 
 
 }); 
