@@ -773,30 +773,12 @@ class LegalSituationForm(BaseHelperMixin, forms.ModelForm):
 
 
 
-
 class ConfirmacionForm(BaseHelperMixin, forms.Form):
-
-    """
-    Formulario de confirmación que incluye validación CAPTCHA condicional.
-
-    Características:
-    - Este formulario se utiliza típicamente al final de un proceso de recolección de datos
-      para confirmar la veracidad o aceptación de la información ingresada.
-    - Si no se está ejecutando en un entorno de pruebas automatizadas (E2E),
-      incluye un campo CAPTCHA (`ReCaptchaV2Checkbox`) para prevenir envíos automáticos.
-    - Si la configuración `settings.IS_E2E_TEST` está activada, el campo CAPTCHA se excluye,
-      permitiendo que las pruebas se realicen sin requerir validación humana.
-
-    Este comportamiento permite pruebas automatizadas sin fricciones, sin comprometer
-    la seguridad en producción.
-    """
-        
-class MyForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if not getattr(settings, 'DISABLE_CAPTCHA', False):
-            print("✅ CAPTCHA INCLUIDO")
+        if not getattr(settings, 'IS_E2E_TEST', False):
+            print("✅ CAPTCHA EN ConfirmacionForm")
             self.fields['captcha'] = ReCaptchaField(widget=ReCaptchaV2Checkbox)
         else:
-            print("❌ CAPTCHA EXCLUIDO")
+            print("❌ CAPTCHA DESHABILITADO EN ConfirmacionForm")

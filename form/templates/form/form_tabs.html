@@ -33,7 +33,16 @@
     <div class="tab-pane fade" id="AcademicInformation" role="tabpanel">{% crispy f_AcademicInformation %}</div>
     <div class="tab-pane fade" id="AssetsIncomeAEP" role="tabpanel">{% crispy f_AssetsIncomeAEP %}</div>
     <div class="tab-pane fade" id="LegalSituation" role="tabpanel">{% crispy f_LegalSituation %}</div>
-    <div class="tab-pane fade" id="confirmar" role="tabpanel">{% crispy f_confirm %}</div>
+    <div class="tab-pane fade" id="confirmar" role="tabpanel">
+  {% crispy f_confirm %}
+  
+  {% if f_confirm.fields.captcha %}
+    <div class="mb-3">
+      {{ f_confirm.captcha }}
+    </div>
+  {% endif %}
+</div>
+
   </div>
 
   <button type="submit" class="btn btn-success mt-4">Submit</button>
@@ -577,5 +586,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 {% endblock %}
