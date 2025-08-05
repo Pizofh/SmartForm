@@ -93,7 +93,7 @@ class PersonalDataForm(BaseHelperMixin, forms.ModelForm):
        
             
             Fieldset(
-                'Dirección',
+                'Address',
                 Row(
                     Column('street_type', css_class='col-md-2'),
                     Column('principal_number', css_class='col-md-1'),
@@ -778,7 +778,7 @@ class ConfirmacionForm(BaseHelperMixin, forms.Form):
         super().__init__(*args, **kwargs)
 
         if not getattr(settings, 'IS_E2E_TEST', False):
-            print("✅ CAPTCHA EN ConfirmacionForm")
+            print("✅ ")
             self.fields['captcha'] = ReCaptchaField(widget=ReCaptchaV2Checkbox)
         else:
-            print("❌ CAPTCHA DESHABILITADO EN ConfirmacionForm")
+            print("❌ Disabled Captcha")
