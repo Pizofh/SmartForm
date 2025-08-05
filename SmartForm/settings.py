@@ -1,3 +1,4 @@
+
 """
 Django project settings for "SmartForm".
 
@@ -11,10 +12,11 @@ General notes:
 - Includes Google reCAPTCHA to protect forms.
 - Supports basic and session authentication for the REST API.
 """
-
+import dj_database_url
 import os
 from pathlib import Path
 from decouple import config, Csv
+
 
 # Defines the root of the project and the directories for user-uploaded files.
 
@@ -105,25 +107,9 @@ WSGI_APPLICATION = "SmartForm.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-if config('DATABASE_NAME', default=None):
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": config('DATABASE_NAME'),
-            "USER": config('DATABASE_USER'),
-            "PASSWORD": config('DATABASE_PASSWORD'),
-            "HOST": config('DATABASE_HOST'),
-            "PORT": config('DATABASE_PORT', default='5432'),
-        }
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
-
+DATABASES = {
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
