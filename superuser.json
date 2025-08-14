@@ -1,0 +1,20 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$bDq0cyiGlb4YVcqnXIBKSQ$+jh6DzBDi5/BEhfsN7rvziIU0txy+B1hE+X3VGtjgIY=",
+    "last_login": "2025-08-05T15:15:33.258Z",
+    "is_superuser": true,
+    "username": "SteveGS",
+    "first_name": "",
+    "last_name": "",
+    "email": "stevegarnicas@hotmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-07-20T02:27:00.130Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
