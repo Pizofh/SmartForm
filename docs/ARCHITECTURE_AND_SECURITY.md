@@ -17,7 +17,7 @@ flowchart TD
     App -->|When configured for Compose| PG
 ```
 
-Django settings load the database connection through `DATABASE_URL`. The `docker-compose.yml` file defines `web`, `db`, a persistent PostgreSQL volume, and a development-style bind mount. The image uses `python:3.10-slim`, installs `requirements.txt`, and invokes `entrypoint.sh`. The entrypoint collects static files, runs migrations, initializes a privileged Django account and starts Gunicorn.
+Django settings load the database connection through `DATABASE_URL`. The `docker-compose.yml` file defines `web`, `db`, a persistent PostgreSQL volume, and a development-style bind mount. The image uses `python:3.10-slim`, installs `requirements.txt`, and invokes `entrypoint.sh`. The entrypoint collects static files, runs migrations and starts Gunicorn. Administrator provisioning must be performed explicitly using Django management commands.
 
 The presence of a Dockerfile and Compose configuration does **not** demonstrate an HA deployment, production monitoring or validated disaster recovery.
 
@@ -25,7 +25,7 @@ The presence of a Dockerfile and Compose configuration does **not** demonstrate 
 
 For a host-based development environment, the root README provides a virtualenv and `python manage.py migrate` / `runserver` sequence. Before running Django, configure the required variables indicated by `SmartForm/settings.py`: `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`, `DATABASE_URL`, `RECAPTCHA_PUBLIC_KEY`, and `RECAPTCHA_PRIVATE_KEY`. Do not commit real values.
 
-For Compose, check `.env` and database connection settings before `docker compose up --build`. The current Compose configuration includes a development-oriented database credential and exposed web port; it is **not a secure production deployment template**.
+For Compose, check `.env` and database connection settings before `docker compose up --build`. The current Compose configuration requires `POSTGRES_PASSWORD` and `DATABASE_URL` supplied in a private `.env`. The example file contains placeholders, not deployable secrets. This development Compose configuration remains **not a hardened production deployment template**.
 
 ## Testing
 
@@ -35,13 +35,13 @@ The root README describes Playwright end-to-end flows and Newman API collections
 
 These are observations from checked-in configuration, **not confirmed exploitability or evidence of leaked real customer data**:
 
-1. `docker-compose.yml` embeds a PostgreSQL password. Move the credential to environment/secret management and rotate it if it was reused.
-2. `entrypoint.sh` interpolates environment-derived administrative credentials into a `manage.py shell -c` Python expression and resets the superuser password on startup. This deserves a security review for credential handling and predictable administrative privilege setup.
+1. The hard-coded PostgreSQL password was removed from Compose. Inject a new password via a private `.env` and never reuse the old checked-in value.
+2. Automatic superuser creation, elevation and password resets were removed from the entrypoint. Provision admin users deliberately via `python manage.py createsuperuser`.
 3. `SmartForm/settings.py` enables Django REST Framework BasicAuthentication as well as session authentication; verify HTTPS termination and authentication requirements for any actual deployment.
-4. Check whether tracked files include databases, `.env.prod`, `superuser.json`, uploaded documents or dependencies. A `.gitignore` does not remove content already in Git history. **Do not publish real personal records or secrets in an issue or PR.**
+4. The tracked `.env.prod`, `superuser.json` and `db.sqlite3` files were removed in the security cleanup. Their **historical Git copies still exist**, potentially exposing a Django secret key, account password hash and personal records. Rotate all potentially exposed credentials and coordinate history remediation if needed. **Do not copy sensitive contents into issues, PRs or logs.**
 5. Keep debug configuration, CAPTCHA keys, allowed hosts and media handling environment-specific.
 
-No files or history are removed by this documentation change. If credentials were ever real and exposed, revoke/rotate them and separately plan repository cleanup after assessing dependencies and backups.
+Existing deployments must update environment variables, rotate secrets, and ensure they have a database backup before pulling the removal of a tracked local SQLite database. This change does not rewrite Git history.
 
 ## Scope of evidence
 

@@ -1,36 +1,30 @@
-# Entornos virtuales
+# Python virtual environments and cache
 venv/
 env/
-
-# Archivos de Python
 __pycache__/
 *.py[cod]
 *.pyo
 
-# Archivos de entorno
+# Secrets and local settings
 .env
+.env.*
 !.env.example
+superuser.json
 
-# Archivos de base de datos SQLite
+# Local databases and generated files
 *.sqlite3
-
-# Archivos de log
+*.db
 *.log
-
-# Archivos del editor
-.vscode/
-.idea/
-*.swp
-
-# Archivos del sistema
-.DS_Store
-Thumbs.db
-
-# Archivos estáticos y media (si se generan automáticamente)
 staticfiles/
 media/
-
-# Playwright
+node_modules/
 playwright-report/
 test-results/
 trace.zip
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
