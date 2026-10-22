@@ -1,6 +1,8 @@
 ## SmartForm – Intelligent Recruitment Form
 A full-featured intelligent web form, designed for efficient recruitment data collection. Includes dynamic multi-tab sections, advanced field validation, file uploads, and automatic document generation.
 
+[Architecture and security review](docs/ARCHITECTURE_AND_SECURITY.md) — runtime topology, deployment boundaries, and configuration risks.
+
 ## 🛠️ Technologies Used
 - Python 3
 - Django
